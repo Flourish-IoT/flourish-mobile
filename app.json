@@ -1,7 +1,7 @@
 {
 	"expo": {
-		"name": "sproutify",
-		"slug": "sproutify",
+		"name": "Flourish",
+		"slug": "Flourish",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
@@ -17,11 +17,13 @@
 		"ios": {
 			"supportsTablet": true,
 			"infoPlist": {
+				"NSPhotoLibraryUsageDescription": true,
 				"NSAppTransportSecurity": {
 					"NSAllowsArbitraryLoads": true
 				},
 				"ITSAppUsesNonExemptEncryption": false
-			}
+			},
+			"bundleIdentifier": "com.dev.flourish"
 		},
 		"android": {
 			"adaptiveIcon": {
