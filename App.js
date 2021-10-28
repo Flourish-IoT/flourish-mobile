@@ -1,10 +1,24 @@
 import React from 'react';
+import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './screens/Login';
 import RegisterScreen from './screens/Register';
 import HomeScreen from './screens/Home';
+
+axios.defaults.baseURL = 'http://localhost:5000';
+// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.interceptors.response.use((res) => { // Status codes in the 200s
+	// Do something with response data
+	return res;
+}, (error) => { // Status outside of the 200s
+	const statusCode = error.response.status;
+	const messageTitle = statusCode == 500 ? 'Internal Server Error' : 'Unknown Error';
+	alert(messageTitle + ': ' + error.response.data);
+	return Promise.reject(error);
+});
 
 const Stack = createStackNavigator();
 const globalScreenOptions = {

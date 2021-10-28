@@ -17,11 +17,8 @@ export default function RegisterScreen({ navigation }) {
     }, [navigation]);
 
     const register = () => {
-        axios.post('/create-account', {
-            email,
-            password
-        }).then((res) => {
-            console.log(res.data);
+        axios.get('/request-posts').then((res) => {
+            alert(res.data);
         }).catch((error) => {
             alert(error.message);
         });
@@ -32,7 +29,7 @@ export default function RegisterScreen({ navigation }) {
             <StatusBar style="light" />
 
             <Text h3 style={{ marginBottom: 50 }}>
-                Create a Sproutify account
+                Create a {require('../app.json').expo.name} account
             </Text>
 
             <View style={styles.inputContainer}>
