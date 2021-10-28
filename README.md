@@ -34,3 +34,12 @@ On your mobile device you can download the "Expo Go" app.
 
     - Sign up for a student account with a .edu email.
     - Scan the QR code in the Expo Console to run the app.
+
+### Important Notes
+
+1. **DO NOT** commit sensitive information to this repo. It's public.
+    - API keys and environment specific variables should go into the environment variables where it is not tracked by git.
+2. 99% of the time we should be making pull requests with new branches to mere code.
+3. React Native gets us most of the way there for compiling. But some things will still need to be platform specific.
+    - Ex. accessing the camera or photos.
+    - Use the Platform.OS variable to detect what platform you are running when developing similar features. It will either be "ios" or "android".
