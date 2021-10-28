@@ -18,7 +18,7 @@ export default function LoginScreen({ navigation }) {
     }, []);
 
     const signIn = () => {
-
+        navigation.navigate('Home');
     };
 
     return (

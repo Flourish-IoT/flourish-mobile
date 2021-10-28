@@ -1,10 +1,29 @@
-import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import React, { useLayoutEffect, } from 'react';
+import { Platform, Linking, CameraRoll, StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+
 export default function HomeScreen({ navigation }) {
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerBackTitle: 'Logout'
+        });
+    }, [navigation]);
+
+    const openPhotos = () => {
+        switch (Platform.OS) {
+            case 'ios':
+                Linking.openURL('photos-redirect://');
+                break;
+            case 'android':
+                Linking.openURL('content://media/internal/images/media');
+                break;
+            default:
+                alert('Could not open gallery app');
+        }
+    };
+
     return (
-        <Text style={styles.inputContainer}>
-            Welcome Home!
-        </Text>
+        <Button onPress={openPhotos} raised title='Select Photo' />
     );
 }
 
