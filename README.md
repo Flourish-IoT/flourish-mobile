@@ -28,14 +28,14 @@ From here you can launch your app simulator:
     - "Run on Android Device/Simulator"
     - "Run in web browser" (Good for debugging network requests)
 
-### Live Mobile Preview
+## Live Mobile Preview
 
 On your mobile device you can download the "Expo Go" app.
 
     - Sign up for a student account with a .edu email.
     - Scan the QR code in the Expo Console to run the app.
 
-### Important Notes
+## Important Notes
 
 1. **DO NOT** commit sensitive information to this repo. It's public.
     - API keys and environment specific variables should go into the environment variables where it is not tracked by git.
