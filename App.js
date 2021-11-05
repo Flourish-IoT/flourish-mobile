@@ -7,8 +7,7 @@ import LoginScreen from './screens/Login';
 import RegisterScreen from './screens/Register';
 import HomeScreen from './screens/Home';
 
-axios.defaults.baseURL = 'http://localhost:5000';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.baseURL = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.response.use((res) => { // Status codes in the 200s
 	// Do something with response data

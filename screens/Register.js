@@ -17,7 +17,7 @@ export default function RegisterScreen({ navigation }) {
     }, [navigation]);
 
     const register = () => {
-        axios.get('/request-posts').then((res) => {
+        axios.get('/flourish-test').then((res) => {
             alert(res.data);
         }).catch((error) => {
             alert(error.message);
