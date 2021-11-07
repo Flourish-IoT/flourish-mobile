@@ -8,7 +8,6 @@ export default function RegisterScreen({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [profilePicUrl, setProfilePicUrl] = useState('');
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -18,7 +17,7 @@ export default function RegisterScreen({ navigation }) {
 
     const register = () => {
         axios.get('/flourish-test').then((res) => {
-            alert(res.data);
+            alert(JSON.stringify(res.data));
         }).catch((error) => {
             alert(error.message);
         });
@@ -36,7 +35,6 @@ export default function RegisterScreen({ navigation }) {
                 <Input placeholder='Name' autoFocus type='text' value={name} onChangeText={setName} />
                 <Input placeholder='Email' type='text' value={email} onChangeText={setEmail} />
                 <Input placeholder='Password' type='password' secureTextEntry value={password} onChangeText={setPassword} />
-                <Input placeholder='Profile Picture URL (Optional)' type='text' value={profilePicUrl} onChangeText={setProfilePicUrl} />
                 <Button onPress={register} raised title='Register' />
             </View>
 
