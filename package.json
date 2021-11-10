@@ -31,13 +31,13 @@
 	"version": "1.0.2",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hmh84/flourish-mobile.git"
+		"url": "git+https://github.com/Flourish-IoT/flourish-mobile.git"
 	},
-	"author": "",
+	"author": "The Flourish Team",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/hmh84/flourish-mobile/issues"
+		"url": "https://github.com/Flourish-IoT/flourish-mobile/issues"
 	},
-	"homepage": "https://github.com/hmh84/flourish-mobile#readme",
-	"description": ""
+	"homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
+	"description": "Mobile app for The Flourish Project"
 }
