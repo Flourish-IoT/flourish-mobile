@@ -1,8 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { Button, Input, Image } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
-import axios from 'axios';
 
 export default function RegisterScreen({ navigation }) {
     const [name, setName] = useState('');
@@ -16,10 +15,9 @@ export default function RegisterScreen({ navigation }) {
     }, [navigation]);
 
     const register = () => {
-        axios.get('/flourish-test').then((res) => {
-            alert(JSON.stringify(res.data));
-        }).catch((error) => {
-            alert(error.message);
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' }]
         });
     };
 

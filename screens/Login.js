@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { Button, Input, Image } from 'react-native-elements';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import Logo from '../lib/icons/Logo';
 
@@ -8,18 +8,11 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    useEffect(() => {
-        // const unsub = auth.onAuthStateChanged((authUser) => {
-        //     if (authUser) {
-        //         navigation.replace('Home');
-        //     }
-        // });
-
-        // return unsub();
-    }, []);
-
     const signIn = () => {
-        navigation.navigate('Home');
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' }]
+        });
     };
 
     return (
