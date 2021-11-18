@@ -2,9 +2,19 @@
 	"expo": {
 		"name": "Flourish",
 		"slug": "Flourish",
-		"version": "1.0.4",
+		"version": "1.0.5",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
+		"platforms": ["ios", "android"],
+		"assetBundlePatterns": ["**/*"],
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#0C3A2F"
+		},
 		"plugins": [
 			[
 				"expo-image-picker",
@@ -14,34 +24,22 @@
 				}
 			]
 		],
-		"splash": {
-			"image": "./assets/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#0C3A2F"
-		},
-		"updates": {
-			"fallbackToCacheTimeout": 0
-		},
-		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
+			"bundleIdentifier": "com.dev.flourish",
 			"infoPlist": {
 				"NSPhotoLibraryUsageDescription": true,
+				"ITSAppUsesNonExemptEncryption": false,
 				"NSAppTransportSecurity": {
 					"NSAllowsArbitraryLoads": true
-				},
-				"ITSAppUsesNonExemptEncryption": false
-			},
-			"bundleIdentifier": "com.dev.flourish"
+				}
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#0C3A2F"
 			}
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
 		}
 	}
 }

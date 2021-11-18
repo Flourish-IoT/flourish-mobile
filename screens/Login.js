@@ -17,14 +17,14 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <KeyboardAvoidingView behavior='padding' style={styles.container}>
-            <StatusBar style="light" />
+            <StatusBar style='light' />
             {/* <Image
                 source={require('../assets/logo.png')}
                 style={{ width: 125, height: 125 }}
             /> */}
             <Logo />
             <View style={styles.inputContainer}>
-                <Input placeholder='Email' autoFocus type='email' value={email} onChangeText={setEmail} />
+                <Input placeholder='Email' type='email' value={email} onChangeText={setEmail} />
                 <Input placeholder='Password' secureTextEntry type='password' value={password} onChangeText={setPassword} />
                 <Button containerStyle={styles.button} onPress={signIn} title='Login' />
                 <Button containerStyle={styles.button} onPress={() => navigation.navigate('Register')} title='Register' type='outline' />

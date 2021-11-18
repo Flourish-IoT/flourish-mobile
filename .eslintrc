@@ -1,12 +1,23 @@
 {
-	"extends": ["react-app", "react-app/jest"],
+	"extends": ["react-app", "prettier"],
+	"plugins": ["prettier"],
 	"settings": {
-		// "import/resolver": {
-		//     "typescript": {}
-		// }
+		"import/resolver": {
+			// "typescript": {},
+			"node": {
+				"extensions": [".js", ".jsx", ".ts", ".tsx"]
+			}
+		}
 	},
 	"rules": {
 		// enforce having an empty line between import groups
-		"import/order": ["warn", { "newlines-between": "always" }]
+		"import/order": ["warn", { "newlines-between": "always" }],
+		"quotes": [
+			"error",
+			"single",
+			{
+				"avoidEscape": true
+			}
+		]
 	}
 }

@@ -23,7 +23,7 @@ export default function RegisterScreen({ navigation }) {
 
     return (
         <KeyboardAvoidingView behavior='padding' style={styles.container}>
-            <StatusBar style="light" />
+            <StatusBar style='light' />
 
             <Text h3 style={{ marginBottom: 50 }}>
                 Create a {require('../app.json').expo.name} account

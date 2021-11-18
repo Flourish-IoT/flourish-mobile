@@ -1,15 +1,9 @@
-import * as React from "react";
-import Svg, { G, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, { G, Path } from 'react-native-svg';
 
 export default function Logo() {
 	return (
-		<Svg
-			width='109'
-			height='110'
-			viewBox='0 0 109 110'
-			fill='none'
-			xmlns='http://www.w3.org/2000/svg'
-		>
+		<Svg width='109' height='110' viewBox='0 0 109 110' fill='none' xmlns='http://www.w3.org/2000/svg'>
 			<Path
 				fill-rule='evenodd'
 				clip-rule='evenodd'
