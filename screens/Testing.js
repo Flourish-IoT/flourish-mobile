@@ -26,8 +26,6 @@ export default function TestingScreen({ navigation }) {
     }, [navigation]);
 
     const openPhotos = async () => {
-        if (photosPermission) return alert(`You must allow ${require('../app.json').expo.name} to access photos to do this.`);
-
         const photo = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
