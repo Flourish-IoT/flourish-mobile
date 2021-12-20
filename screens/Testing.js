@@ -8,8 +8,10 @@ import { Camera } from 'expo-camera';
 import { useTestEndpoint } from '../data/common';
 import Loading from '../lib/components/Loading';
 import Theme from '../lib/theme';
+import { useToast } from "react-native-toast-notifications";
 
 export default function TestingScreen({ navigation }) {
+    const toast = useToast();
     const [image, setImage] = useState(null);
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const [cameraRef, setCameraRef] = useState();
@@ -131,6 +133,14 @@ export default function TestingScreen({ navigation }) {
                     </TouchableOpacity>
                 </Camera>
             </View>
+            <Button style={styles.button} raised title='Toast notification'
+                onPress={() => {
+                    toast.show("normal", { type: "normal" });
+                    toast.show("success", { type: "success" });
+                    toast.show("danger", { type: "danger" });
+                    toast.show("warning", { type: "warning" });
+                }}
+            />
         </View >
     );
 }

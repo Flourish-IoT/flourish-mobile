@@ -9,6 +9,7 @@ import LoginScreen from './screens/Login';
 import RegisterScreen from './screens/Register';
 import HomeScreen from './screens/Home';
 import TestingScreen from './screens/Testing';
+import { ToastProvider } from 'react-native-toast-notifications';
 import { StatusBar } from 'expo-status-bar';
 
 axios.defaults.baseURL = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
@@ -41,16 +42,18 @@ const globalScreenOptions = {
 export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<NavigationContainer>
-				<StatusBar style='light' />
-				<Stack.Navigator screenOptions={globalScreenOptions}>
-					<Stack.Screen name='Login' component={LoginScreen} />
-					<Stack.Screen name='Register' component={RegisterScreen} />
-					<Stack.Screen name='Home' component={HomeScreen} />
-					<Stack.Screen name='Testing' component={TestingScreen} />
-				</Stack.Navigator>
-				<AppBar />
-			</NavigationContainer>
+			<ToastProvider>
+				<NavigationContainer>
+					<StatusBar style='light' />
+					<Stack.Navigator screenOptions={globalScreenOptions}>
+						<Stack.Screen name='Login' component={LoginScreen} />
+						<Stack.Screen name='Register' component={RegisterScreen} />
+						<Stack.Screen name='Home' component={HomeScreen} />
+						<Stack.Screen name='Testing' component={TestingScreen} />
+					</Stack.Navigator>
+					<AppBar />
+				</NavigationContainer>
+			</ToastProvider>
 		</QueryClientProvider>
 	);
 }
