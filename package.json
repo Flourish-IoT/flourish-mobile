@@ -1,47 +1,47 @@
 {
-	"main": "node_modules/expo/AppEntry.js",
-	"private": true,
-	"name": "flourish",
-	"version": "1.0.5",
-	"author": "The Flourish Team",
-	"license": "ISC",
-	"homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
-	"description": "Mobile app for The Flourish Project",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Flourish-IoT/flourish-mobile.git"
-	},
-	"bugs": {
-		"url": "https://github.com/Flourish-IoT/flourish-mobile/issues"
-	},
-	"scripts": {
-		"start": "expo start",
-		"android": "expo start --android",
-		"ios": "expo start --ios",
-		"eject": "expo eject"
-	},
-	"dependencies": {
-		"@react-navigation/native": "^6.0.6",
-		"@react-navigation/stack": "^6.0.11",
-		"axios": "^0.23.0",
-		"expo": "~42.0.1",
-		"expo-camera": "~11.2.2",
-		"expo-image-manipulator": "^10.1.2",
-		"expo-image-picker": "~10.2.2",
-		"expo-status-bar": "~1.0.4",
-		"lottie-react-native": "^5.0.0",
-		"moment": "^2.29.1",
-		"react": "16.13.1",
-		"react-dom": "16.13.1",
-		"react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
-		"react-native-elements": "^3.4.2",
-		"react-native-svg": "12.1.1",
-		"react-native-toast-notifications": "^3.2.3",
-		"react-native-web": "~0.13.12",
-		"react-query": "^3.33.1"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.9.0",
-		"typescript": "~4.0.0"
-	}
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "name": "flourish",
+  "version": "1.0.5",
+  "author": "The Flourish Team",
+  "license": "ISC",
+  "homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
+  "description": "Mobile app for The Flourish Project",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flourish-IoT/flourish-mobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Flourish-IoT/flourish-mobile/issues"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/stack": "^6.0.11",
+    "axios": "^0.23.0",
+    "expo": "~42.0.1",
+    "expo-camera": "~11.2.2",
+    "expo-image-manipulator": "~9.2.2",
+    "expo-image-picker": "~10.2.2",
+    "expo-status-bar": "~1.0.4",
+    "lottie-react-native": "4.0.2",
+    "moment": "^2.29.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-elements": "^3.4.2",
+    "react-native-svg": "12.1.1",
+    "react-native-toast-notifications": "^3.2.3",
+    "react-native-web": "~0.13.12",
+    "react-query": "^3.33.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "typescript": "~4.0.0"
+  }
 }
