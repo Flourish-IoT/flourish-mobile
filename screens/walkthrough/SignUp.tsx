@@ -17,7 +17,7 @@ export default function SignUpScreen({ navigation }) {
 
 	return (
 		<>
-			<StepContainer>
+			<StepContainer navigation={navigation} canGoBack={false}>
 				<Logo />
 				<Button
 					title='Sign Up'

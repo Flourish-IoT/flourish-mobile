@@ -15,13 +15,6 @@ import { StatusBar } from 'expo-status-bar';
 
 axios.defaults.baseURL = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.interceptors.response.use((res) => { // Status codes 100-399
-	// Do something with response data
-	return res;
-}, (error) => { // Status codes 400-599
-	alert(`Woops.. ${error.response.status}: ${error.response.data}`);
-	return Promise.reject(error);
-});
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -37,21 +30,22 @@ const Stack = createStackNavigator();
 const globalScreenOptions = {
 	headerStyle: { backgroundColor: Theme.colors.primary },
 	headerTitleStyle: { color: 'white' },
-	headerTintColor: 'white'
+	headerTintColor: 'white',
 };
 
 export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ToastProvider>
-				<NavigationContainer>
+				<NavigationContainer
+					theme={{
+						// @ts-ignore
+						colors: { background: 'white' },
+					}}
+				>
 					<StatusBar style='light' />
 					<Stack.Navigator screenOptions={globalScreenOptions}>
-						<Stack.Screen
-							name="Signup"
-							component={WalkthroughIndex}
-							options={{ headerShown: false }}
-						/>
+						<Stack.Screen name='Signup' component={WalkthroughIndex} options={{ headerShown: false }} />
 						<Stack.Screen name='Login' component={LoginScreen} />
 						<Stack.Screen name='Register' component={RegisterScreen} />
 						<Stack.Screen name='Home' component={HomeScreen} />
