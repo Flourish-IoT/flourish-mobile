@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 
+const AppConfig = require('../../app.json');
+
+export const AppName = AppConfig.expo.name;
+
 export const getLoggedIn = async () => {
 	return (await AsyncStorage.getItem('loggedIn')) === 'TRUE';
 };

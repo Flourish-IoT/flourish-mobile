@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import LoginScreen from '../Login';
 import { View } from 'react-native';
 import StepContainer from './components/StepContainer';
-import { getLoggedIn } from '../../lib/utils/helper';
+import { AppName, getLoggedIn } from '../../lib/utils/helper';
 import Logo from '../../lib/icons/Logo';
 import { Button } from 'react-native-elements';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -58,7 +58,7 @@ export default function WelcomeScreenStack() {
 					name='SignUp'
 					component={WelcomeScreen}
 					options={{
-						headerTitle: 'Flourish',
+						headerTitle: AppName,
 					}}
 				/>
 				<Stack.Screen

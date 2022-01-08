@@ -8,7 +8,7 @@ import Facebook from '../../../lib/icons/Facebook';
 import Google from '../../../lib/icons/Google';
 import Apple from '../../../lib/icons/Apple';
 import Email from '../../../lib/icons/Email';
-import { getLoggedIn, isValidEmail, isValidPassword, setLoggedIn } from '../../../lib/utils/helper';
+import { AppName, getLoggedIn, isValidEmail, isValidPassword, setLoggedIn } from '../../../lib/utils/helper';
 import { checkEmailVerificationCode, sendEmailVerificationCode } from '../../../data/auth';
 import RadioButton from '../../../lib/components/RadioButton';
 import Confidence from '../../../lib/icons/Confidence';
@@ -68,7 +68,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 
 	return (
 		<StepContainer navigation={navigation}>
-			<Text>Sign up to begin your journey with Flourish</Text>
+			<Text>Sign up to begin your journey with {AppName}</Text>
 			{services.map(({ name, icon }) => (
 				<Button
 					key={name}

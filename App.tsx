@@ -3,7 +3,6 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AppBar from './lib/components/AppBar';
 import Theme from './lib/theme';
 import LoginScreen from './screens/Login';
 import WelcomeScreenStack from './screens/welcome/index';
@@ -12,8 +11,9 @@ import HomeScreen from './screens/Home';
 import TestingScreen from './screens/Testing';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { StatusBar } from 'expo-status-bar';
+import { ApiUrl } from './data/api';
 
-axios.defaults.baseURL = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
+axios.defaults.baseURL = ApiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const queryClient = new QueryClient({
@@ -51,7 +51,6 @@ export default function App() {
 						<Stack.Screen name='Home' component={HomeScreen} />
 						<Stack.Screen name='Testing' component={TestingScreen} />
 					</Stack.Navigator>
-					{/* <AppBar /> */}
 				</NavigationContainer>
 			</ToastProvider>
 		</QueryClientProvider>
