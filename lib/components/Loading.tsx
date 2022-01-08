@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Loading = ({ style, text = 'Loading' }) => {
+export default function Loading({ style, text = 'Loading' }) {
 	return (
 		<View style={[styles.loaderContainer, style]}>
 			<LottieView
@@ -33,4 +33,4 @@ export default Loading = ({ style, text = 'Loading' }) => {
 			{!!text && <Text style={styles.emptyText}>{String(text)}</Text>}
 		</View>
 	);
-};
+}
