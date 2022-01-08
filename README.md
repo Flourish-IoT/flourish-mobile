@@ -3,7 +3,7 @@
 Clone the repo to your local computer
 
 1. In your terminal `cd` to the project root folder and run `npm install`.
-2. Install the expo cli globally with `npm install -g expo-cli`.
+2. Install the expo cli globally with `npm install -g expo-cli@4.13.0`.
 3. Install eslint for VSCode: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 4. Install your preferred simulator:
 
