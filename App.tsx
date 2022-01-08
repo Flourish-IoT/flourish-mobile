@@ -10,7 +10,6 @@ import RegisterScreen from './screens/Register';
 import HomeScreen from './screens/Home';
 import TestingScreen from './screens/Testing';
 import { ToastProvider } from 'react-native-toast-notifications';
-import { StatusBar } from 'expo-status-bar';
 import { ApiUrl } from './data/api';
 
 axios.defaults.baseURL = ApiUrl;
@@ -43,7 +42,6 @@ export default function App() {
 						colors: { background: 'white' },
 					}}
 				>
-					<StatusBar style='light' />
 					<Stack.Navigator screenOptions={globalScreenOptions}>
 						<Stack.Screen name='Signup' component={WelcomeScreenStack} options={{ headerShown: false }} />
 						<Stack.Screen name='Login' component={LoginScreen} />

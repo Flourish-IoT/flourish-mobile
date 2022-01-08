@@ -127,9 +127,7 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 				navigation.navigate('EmailVerification', { email, password });
 			})
 			.catch(error => {
-				// TODO: Remove the DEV BYPASS when the backend call is available
-				navigation.navigate('EmailVerification', { email, password }); // DEV BYPASS
-				// alert('There was an error while processing your request');
+				alert('There was an error while processing your request');
 			})
 			.finally(() => {
 				setFormIsLoading(false);
@@ -168,15 +166,18 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 
 	const formIsValid = String(code).trim().length === 4;
 	const disableVerifyBtn = !formIsValid || formIsLoading || attempts > 0;
+	const disableResendBtn = formIsLoading || attempts === 0;
 
 	useEffect(() => {
 		formIsValid && Keyboard.dismiss();
 	}, [code]);
 
-	const onSubmit = async () => {
+	const onResend = async () => {
 		setFormIsLoading(true);
 		sendEmailVerificationCode(email, password)
-			.then(res => {})
+			.then(res => {
+				setAttempts(0);
+			})
 			.catch(error => {
 				alert('There was an error while processing your request');
 			})
@@ -195,9 +196,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 				navigation.navigate('RateExpertise');
 			})
 			.catch(error => {
-				// TODO: Remove the DEV BYPASS when the backend call is available
-				navigation.navigate('RateExpertise'); // DEV BYPASS
-				// alert('There was an error while processing your request');
+				alert('There was an error while processing your request');
 			})
 			.finally(() => {
 				setFormIsLoading(false);
@@ -210,8 +209,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			<Text>Verification Code</Text>
 			<Text>We have sent a verification code to "{email}"</Text>
 			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
-			<Text>Didn't receive a code</Text>
-			<Button title={'Resend Code'} type='clear' onPress={onSubmit} disabled={formIsLoading} />
+			<Text>Didn't receive a code?</Text>
+			<Button title={'Resend Code'} type='clear' onPress={onResend} disabled={disableResendBtn} />
 			<Button
 				title='Verify'
 				type={disableVerifyBtn ? 'outline' : 'solid'}
@@ -233,7 +232,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 	return (
 		<>
-			<StepContainer navigation={navigation}>
+			<StepContainer navigation={navigation} canGoBack={false}>
 				<Text>How would you rate your confidence in caring for your plants?</Text>
 				<Confidence rating={userRating} />
 				<Text>{getConfidenceText(userRating)}</Text>
@@ -312,6 +311,7 @@ export default function WalkthroughScreen() {
 					backgroundColor: 'white',
 					padding: 10,
 					borderRadius: 30,
+					overflow: 'hidden',
 				}}
 			>
 				<Stack.Navigator>

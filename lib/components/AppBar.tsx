@@ -1,61 +1,32 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { View, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
-import Theme from '../theme';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import TestingScreen from '../../screens/Testing';
+import WelcomeScreenStack from '../../screens/welcome';
 
-export default function AppBar() {
-	const navigation = useNavigation();
-	const onNavigate = newScreen => {
-		navigation.navigate(newScreen);
-	};
+const Tab = createBottomTabNavigator();
 
+export default function AppBar({ children }) {
 	return (
-		<View style={styles.container}>
-			<Button
-				type='clear'
-				style={styles.target}
-				onPress={() => {
-					onNavigate('Home');
-				}}
-				icon={{
-					name: 'home',
-					size: 40,
-					color: 'white',
+		<Tab.Navigator initialRouteName='WelcomeScreen'>
+			{children}
+			<Tab.Screen
+				name='WelcomeScreen'
+				component={WelcomeScreenStack}
+				options={{
+					tabBarLabel: 'Welcome',
+					tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name='home' color={color} size={size} />,
 				}}
 			/>
-			<Button
-				type='clear'
-				style={styles.target}
-				onPress={() => {
-					onNavigate('Testing');
-				}}
-				icon={{
-					name: 'menu',
-					size: 40,
-					color: 'white',
+			<Tab.Screen
+				name='TestingScreen'
+				component={TestingScreen}
+				options={{
+					tabBarLabel: 'Testing',
+					tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name='bell' color={color} size={size} />,
+					tabBarBadge: 3,
 				}}
 			/>
-		</View>
+		</Tab.Navigator>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: Theme.colors.primary,
-		position: 'absolute',
-		bottom: 0,
-		paddingBottom: 15,
-		paddingTop: 5,
-		width: '100%',
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-	},
-	target: {
-		alignItems: 'center',
-	},
-	icon: {
-		width: '100%',
-	},
-});
