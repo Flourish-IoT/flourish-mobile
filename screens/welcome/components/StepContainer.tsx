@@ -18,6 +18,7 @@ export default function StepContainer({ children, navigation, canGoBack = true, 
 			style={{
 				flex: 1,
 				backgroundColor: 'transparent',
+				...style,
 			}}
 		>
 			{canGoBack && (

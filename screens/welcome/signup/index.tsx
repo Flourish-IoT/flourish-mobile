@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import Theme from '../../lib/theme';
+import Theme from '../../../lib/theme';
 import { Button, Input } from 'react-native-elements';
 import { View, Text, Keyboard, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import StepContainer from './components/StepContainer';
-import Facebook from '../../lib/icons/Facebook';
-import Google from '../../lib/icons/Google';
-import Apple from '../../lib/icons/Apple';
-import Email from '../../lib/icons/Email';
-import { getLoggedIn, isValidEmail, isValidPassword, setLoggedIn } from '../../lib/utils/helper';
-import { checkEmailVerificationCode, sendEmailVerificationCode } from '../../data/auth';
-import RadioButton from '../../lib/components/RadioButton';
-import Confidence from '../../lib/icons/Confidence';
-import { getConfidenceText, ConfidenceRating } from '../../data/user';
+import StepContainer from '../components/StepContainer';
+import Facebook from '../../../lib/icons/Facebook';
+import Google from '../../../lib/icons/Google';
+import Apple from '../../../lib/icons/Apple';
+import Email from '../../../lib/icons/Email';
+import { getLoggedIn, isValidEmail, isValidPassword, setLoggedIn } from '../../../lib/utils/helper';
+import { checkEmailVerificationCode, sendEmailVerificationCode } from '../../../data/auth';
+import RadioButton from '../../../lib/components/RadioButton';
+import Confidence from '../../../lib/icons/Confidence';
+import { getConfidenceText, ConfidenceRating } from '../../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
+
+type Service = 'Facebook' | 'Google' | 'Apple' | 'Email';
 
 interface ServiceObj {
 	name: Service;
 	icon: JSX.Element;
 }
-
-type Service = 'Facebook' | 'Google' | 'Apple' | 'Email';
 
 const services: ServiceObj[] = [
 	{
@@ -43,12 +43,12 @@ const services: ServiceObj[] = [
 	},
 ];
 
-interface StepParams {
+interface StepProps {
 	navigation: NavigationProp<ParamListBase>;
 	route: RouteProp<ParamListBase>;
 }
 
-const ContinueWithServiceStep = ({ navigation }: StepParams) => {
+const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const handleSignWithService = (service: Service) => {
 		switch (service) {
 			case 'Facebook':
@@ -83,7 +83,7 @@ const ContinueWithServiceStep = ({ navigation }: StepParams) => {
 	);
 };
 
-const SignUpWithEmailStep = ({ navigation }: StepParams) => {
+const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const [formIsLoading, setFormIsLoading] = useState(false);
 
 	const [email, setEmail] = useState('');
@@ -158,7 +158,7 @@ const SignUpWithEmailStep = ({ navigation }: StepParams) => {
 	);
 };
 
-const EmailVerificationStep = ({ route, navigation }: StepParams) => {
+const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	// @ts-ignore
 	const { email, password } = route.params;
 
@@ -223,7 +223,7 @@ const EmailVerificationStep = ({ route, navigation }: StepParams) => {
 	);
 };
 
-const RateExpertiseStep = ({ navigation }: StepParams) => {
+const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
 	const ratings: ConfidenceRating[] = [1, 2, 3];
 

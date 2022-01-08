@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AppBar from './lib/components/AppBar';
 import Theme from './lib/theme';
 import LoginScreen from './screens/Login';
-import WalkthroughIndex from './screens/walkthrough/index';
+import WelcomeScreenStack from './screens/welcome/index';
 import RegisterScreen from './screens/Register';
 import HomeScreen from './screens/Home';
 import TestingScreen from './screens/Testing';
@@ -45,7 +45,7 @@ export default function App() {
 				>
 					<StatusBar style='light' />
 					<Stack.Navigator screenOptions={globalScreenOptions}>
-						<Stack.Screen name='Signup' component={WalkthroughIndex} options={{ headerShown: false }} />
+						<Stack.Screen name='Signup' component={WelcomeScreenStack} options={{ headerShown: false }} />
 						<Stack.Screen name='Login' component={LoginScreen} />
 						<Stack.Screen name='Register' component={RegisterScreen} />
 						<Stack.Screen name='Home' component={HomeScreen} />
