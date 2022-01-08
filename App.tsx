@@ -4,10 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Theme from './lib/theme';
-import LoginScreen from './screens/Login';
 import WelcomeScreenStack from './screens/welcome/index';
-import RegisterScreen from './screens/Register';
-import HomeScreen from './screens/Home';
 import TestingScreen from './screens/Testing';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { ApiUrl } from './data/api';
@@ -43,10 +40,7 @@ export default function App() {
 					}}
 				>
 					<Stack.Navigator screenOptions={globalScreenOptions}>
-						<Stack.Screen name='Signup' component={WelcomeScreenStack} options={{ headerShown: false }} />
-						<Stack.Screen name='Login' component={LoginScreen} />
-						<Stack.Screen name='Register' component={RegisterScreen} />
-						<Stack.Screen name='Home' component={HomeScreen} />
+						<Stack.Screen name='Welcome' component={WelcomeScreenStack} options={{ headerShown: false }} />
 						<Stack.Screen name='Testing' component={TestingScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>

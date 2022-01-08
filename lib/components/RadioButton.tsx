@@ -1,29 +1,28 @@
 import React from 'react';
-import { ViewStyle, View } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface RadioButtonProps {
-	isSelected: boolean;
+	isSelected?: boolean;
 	onPress: () => void;
 	style?: ViewStyle;
 }
 
-export default function RadioButton({ isSelected, onPress, style = {}, ...rest }: RadioButtonProps) {
+export default function RadioButton({ isSelected, style, onPress }: RadioButtonProps) {
 	return (
 		<TouchableOpacity
 			onPress={onPress}
 			style={{
-				height: 24,
-				width: 24,
+				height: 30,
+				width: 30,
 				borderStyle: 'solid',
-				borderColor: 'white',
-				borderWidth: 10,
-				borderRadius: 12,
+				borderColor: '#e5e5e5',
+				borderWidth: 5,
+				borderRadius: 15,
 				display: 'flex',
 				backgroundColor: isSelected ? 'black' : 'white',
 				...style,
 			}}
-			{...rest}
 		/>
 	);
 }
