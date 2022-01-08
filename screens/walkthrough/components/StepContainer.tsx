@@ -1,11 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Chevron from '../../../lib/icons/Chevron';
 
-export default function StepContainer({ children, navigation, canGoBack = true }) {
+interface StepContainerProps {
+	canGoBack?: boolean;
+	style?: ViewStyle;
+	children?: React.ReactNode;
+	navigation?: NavigationProp<ParamListBase>;
+}
+
+export default function StepContainer({ children, navigation, canGoBack = true, style = {}, ...rest }: StepContainerProps) {
 	return (
 		<View
+			{...rest}
 			style={{
 				flex: 1,
 				backgroundColor: 'transparent',

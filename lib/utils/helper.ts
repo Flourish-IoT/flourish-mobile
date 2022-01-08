@@ -28,12 +28,10 @@ export const setRefreshToken = async (value: string) => {
 export const isValidEmail = (value: string) => {
 	const regex =
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	// return value.toLowerCase().match(regex);
 	return regex.test(value.toLowerCase());
 };
 
 export const isValidPassword = (value: string) => {
 	const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-	// return value.match(regex);
 	return regex.test(value);
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Theme from '../../lib/theme';
 import { Button, Input } from 'react-native-elements';
-import { View, Text, Keyboard } from 'react-native';
+import { View, Text, Keyboard, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from './components/StepContainer';
 import Facebook from '../../lib/icons/Facebook';
@@ -10,6 +10,10 @@ import Apple from '../../lib/icons/Apple';
 import Email from '../../lib/icons/Email';
 import { getLoggedIn, isValidEmail, isValidPassword, setLoggedIn } from '../../lib/utils/helper';
 import { checkEmailVerificationCode, sendEmailVerificationCode } from '../../data/auth';
+import RadioButton from '../../lib/components/RadioButton';
+import Confidence from '../../lib/icons/Confidence';
+import { getConfidenceText, ConfidenceRating } from '../../data/user';
+import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -39,213 +43,263 @@ const services: ServiceObj[] = [
 	},
 ];
 
-export default function WalkthroughScreen({ navigation }) {
-	const [stepNum, setSepNum] = useState(0);
+interface StepParams {
+	navigation: NavigationProp<ParamListBase>;
+	route: RouteProp<ParamListBase>;
+}
 
-	const prevStep = () => {
-		const theNextStep = stepNum - 1;
-		setSepNum(theNextStep);
+const ContinueWithServiceStep = ({ navigation }: StepParams) => {
+	const handleSignWithService = (service: Service) => {
+		switch (service) {
+			case 'Facebook':
+				alert(service + ' SSO is not setup.');
+				break;
+			case 'Google':
+				alert(service + ' SSO is not setup.');
+				break;
+			case 'Apple':
+				alert(service + ' SSO is not setup.');
+				break;
+			case 'Email':
+				navigation.navigate('SignUpWithEmail');
+				break;
+		}
 	};
 
-	const nextStep = () => {
-		const theNextStep = stepNum + 1;
-		setSepNum(theNextStep);
+	return (
+		<StepContainer navigation={navigation}>
+			<Text>Sign up to begin your journey with Flourish</Text>
+			{services.map(({ name, icon }) => (
+				<Button
+					key={name}
+					icon={icon}
+					title={`Continue with ${name}`}
+					type='outline'
+					onPress={() => handleSignWithService(name)}
+					containerStyle={{ width: '100%', marginTop: 10 }}
+				/>
+			))}
+		</StepContainer>
+	);
+};
+
+const SignUpWithEmailStep = ({ navigation }: StepParams) => {
+	const [formIsLoading, setFormIsLoading] = useState(false);
+
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+
+	const emailIsValid = isValidEmail(email);
+	const passwordMatches = password === confirmPassword;
+	const passwordIsSecure = isValidPassword(password);
+
+	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
+	const disableNextBtn = !formIsValid || formIsLoading;
+
+	const getEmailErrorMsg = () => {
+		if (email.trim().length === 0) return undefined;
+		if (!emailIsValid) return 'Email is invalid';
+		return undefined;
 	};
 
-	const steps = [
-		{
-			name: 'ContinueWithService',
-			component: () => {
-				const handleSignWithService = (service: Service) => {
-					switch (service) {
-						case 'Facebook':
-							alert(service + ' SSO is not setup.');
-							break;
-						case 'Google':
-							alert(service + ' SSO is not setup.');
-							break;
-						case 'Apple':
-							alert(service + ' SSO is not setup.');
-							break;
-						case 'Email':
-							navigation.navigate('SignUpWithEmail');
-							break;
-					}
-				};
+	const getPasswordErrorMsg = () => {
+		if (password.trim().length === 0) return undefined;
+		if (!passwordIsSecure) return 'Minimum six characters and have at least one letter and one number';
+		return undefined;
+	};
 
-				return (
-					<StepContainer navigation={navigation}>
-						<Text>Sign up to begin your journey with Flourish</Text>
-						{services.map(({ name, icon }) => (
-							<Button
-								key={name}
-								icon={icon}
-								title={`Continue with ${name}`}
-								type='outline'
-								onPress={() => handleSignWithService(name)}
-								containerStyle={{ width: '100%', marginTop: 10 }}
-							/>
-						))}
-					</StepContainer>
-				);
-			},
-		},
-		{
-			name: 'SignUpWithEmail',
-			component: ({ navigation }) => {
-				const [formIsLoading, setFormIsLoading] = useState(false);
+	const getPasswordConfirmErrorMsg = () => {
+		if (confirmPassword.trim().length === 0) return undefined;
+		if (!passwordMatches) return 'Passwords do no match';
+		return undefined;
+	};
 
-				const [email, setEmail] = useState('');
-				const [password, setPassword] = useState('');
-				const [confirmPassword, setConfirmPassword] = useState('');
+	const onLogoutPress = async () => {
+		await setLoggedIn(false);
+		setLoggedIn(false);
+	};
 
-				const emailIsValid = isValidEmail(email);
-				const passwordMatches = password === confirmPassword;
-				const passwordIsSecure = isValidPassword(password);
+	const onSubmit = async () => {
+		setFormIsLoading(true);
+		sendEmailVerificationCode(email, password)
+			.then(res => {
+				navigation.navigate('EmailVerification', { email, password });
+			})
+			.catch(error => {
+				// TODO: Remove the DEV BYPASS when the backend call is available
+				navigation.navigate('EmailVerification', { email, password }); // DEV BYPASS
+				// alert('There was an error while processing your request');
+			})
+			.finally(() => {
+				setFormIsLoading(false);
+			});
+	};
 
-				const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
-				const disableNextBtn = !formIsValid || formIsLoading;
+	return (
+		<StepContainer navigation={navigation}>
+			<Text>Sign up with your email address</Text>
+			<Input placeholder='Email' autoFocus onChangeText={setEmail} errorMessage={getEmailErrorMsg()} />
+			<Input placeholder='Password' secureTextEntry onChangeText={setPassword} errorMessage={getPasswordErrorMsg()} />
+			<Input
+				placeholder='Confirm Password'
+				secureTextEntry
+				onChangeText={setConfirmPassword}
+				errorMessage={getPasswordConfirmErrorMsg()}
+			/>
+			<Button
+				title='Next'
+				type={disableNextBtn ? 'outline' : 'solid'}
+				onPress={onSubmit}
+				containerStyle={{ width: '100%' }}
+				disabled={disableNextBtn}
+			/>
+		</StepContainer>
+	);
+};
 
-				const getEmailErrorMsg = () => {
-					if (email.trim().length === 0) return undefined;
-					if (!emailIsValid) return 'Email is invald';
-					return undefined;
-				};
+const EmailVerificationStep = ({ route, navigation }: StepParams) => {
+	// @ts-ignore
+	const { email, password } = route.params;
 
-				const getPasswordErrorMsg = () => {
-					if (password.trim().length === 0) return undefined;
-					if (!passwordIsSecure) return 'Minimum six characters and have at least one letter and one number';
-					return undefined;
-				};
+	const [formIsLoading, setFormIsLoading] = useState(false);
+	const [code, setCode] = useState<string>();
+	const [attempts, setAttempts] = useState(0);
 
-				const getPasswordConfirmErrorMsg = () => {
-					if (confirmPassword.trim().length === 0) return undefined;
-					if (!passwordMatches) return 'Passwords do no match';
-					return undefined;
-				};
+	const formIsValid = String(code).trim().length === 4;
+	const disableVerifyBtn = !formIsValid || formIsLoading || attempts > 0;
 
-				const onLogoutPress = async () => {
-					await setLoggedIn(false);
-					setLoggedInState(false);
-				};
+	useEffect(() => {
+		formIsValid && Keyboard.dismiss();
+	}, [code]);
 
-				const onSubmit = async () => {
-					setFormIsLoading(true);
-					sendEmailVerificationCode(email, password)
-						.then(res => {
-							navigation.navigate('EmailVerification', { email, password });
-						})
-						.catch(error => {
-							// TODO: Remove the DEV BYPASS when the backend call is available
-							navigation.navigate('EmailVerification', { email, password }); // DEV BYPASS
-							// alert('There was an error while processing your request');
-						})
-						.finally(() => {
-							setFormIsLoading(false);
-						});
-				};
+	const onSubmit = async () => {
+		setFormIsLoading(true);
+		sendEmailVerificationCode(email, password)
+			.then(res => {})
+			.catch(error => {
+				alert('There was an error while processing your request');
+			})
+			.finally(() => {
+				setFormIsLoading(false);
+			});
+	};
 
-				return (
-					<StepContainer navigation={navigation}>
-						<Text>Sign up with your email address</Text>
-						<Input placeholder='Email' autoFocus onChangeText={setEmail} errorMessage={getEmailErrorMsg()} />
-						<Input
-							placeholder='Password'
-							secureTextEntry
-							onChangeText={setPassword}
-							errorMessage={getPasswordErrorMsg()}
-						/>
-						<Input
-							placeholder='Confirm Password'
-							secureTextEntry
-							onChangeText={setConfirmPassword}
-							errorMessage={getPasswordConfirmErrorMsg()}
-						/>
-						<Button
-							title={'Next'}
-							type={disableNextBtn ? 'outline' : 'solid'}
-							onPress={onSubmit}
-							containerStyle={{ width: '100%' }}
-							disabled={disableNextBtn}
-						/>
-					</StepContainer>
-				);
-			},
-		},
-		{
-			name: 'EmailVerification',
-			component: ({ route, navigation }) => {
-				const { email, password } = route.params;
+	const onVerifyPress = () => {
+		setFormIsLoading(true);
 
-				const [formIsLoading, setFormIsLoading] = useState(false);
-				const [code, setCode] = useState<string>();
-				const [attempts, setAttempts] = useState(0);
+		checkEmailVerificationCode(email, code)
+			.then(async res => {
+				await setLoggedIn(true);
+				setLoggedIn(true);
+				navigation.navigate('RateExpertise');
+			})
+			.catch(error => {
+				// TODO: Remove the DEV BYPASS when the backend call is available
+				navigation.navigate('RateExpertise'); // DEV BYPASS
+				// alert('There was an error while processing your request');
+			})
+			.finally(() => {
+				setFormIsLoading(false);
+				setAttempts(attempts + 1);
+			});
+	};
 
-				const formIsValid = String(code).trim().length === 4;
-				const disableVeryifyBtn = !formIsValid || formIsLoading || attempts > 0;
+	return (
+		<StepContainer navigation={navigation}>
+			<Text>Verification Code</Text>
+			<Text>We have sent a verification code to "{email}"</Text>
+			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
+			<Text>Didn't receive a code</Text>
+			<Button title={'Resend Code'} type='clear' onPress={onSubmit} disabled={formIsLoading} />
+			<Button
+				title='Verify'
+				type={disableVerifyBtn ? 'outline' : 'solid'}
+				onPress={onVerifyPress}
+				containerStyle={{ width: '100%' }}
+				disabled={disableVerifyBtn}
+			/>
+		</StepContainer>
+	);
+};
 
-				useEffect(() => {
-					formIsValid && Keyboard.dismiss();
-				}, [code]);
+const RateExpertiseStep = ({ navigation }: StepParams) => {
+	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
+	const ratings: ConfidenceRating[] = [1, 2, 3];
 
-				const onSubmit = async () => {
-					setFormIsLoading(true);
-					sendEmailVerificationCode(email, password)
-						.then(res => {})
-						.catch(error => {
-							alert('There was an error while processing your request');
-						})
-						.finally(() => {
-							setFormIsLoading(false);
-						});
-				};
+	const onSubmitPress = () => {};
 
-				const onVerifyPress = () => {
-					setFormIsLoading(true);
+	const onSkipPress = () => {};
 
-					checkEmailVerificationCode(email, code)
-						.then(async res => {
-							await setLoggedIn(true);
-							setLoggedInState(true);
-							navigation.navigate('RateExpertise');
-						})
-						.catch(error => {
-							// TODO: Remove the DEV BYPASS when the backend call is available
-							navigation.navigate('RateExpertise'); // DEV BYPASS
-							// alert('There was an error while processing your request');
-						})
-						.finally(() => {
-							setFormIsLoading(false);
-							setAttempts(attempts + 1);
-						});
-				};
+	return (
+		<>
+			<StepContainer navigation={navigation}>
+				<Text>How would you rate your confidence in caring for your plants?</Text>
+				<Confidence rating={userRating} />
+				<Text>{getConfidenceText(userRating)}</Text>
+				<View
+					style={{
+						height: 100,
+						width: '100%',
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+					}}
+				>
+					{/* <TouchableOpacity
+						onPress={() => setUserRating(1)}
+						style={{
+							height: 30,
+							width: 30,
+							borderStyle: 'solid',
+							borderColor: 'white',
+							borderWidth: 10,
+							borderRadius: 15,
+							display: 'flex',
+							backgroundColor: userRating === 1 ? 'black' : 'white',
+						}}
+					/>
+					; */}
+					{/* {ratings.map(btnRating => {
+						<RadioButton
+							key={btnRating}
+							isSelected={btnRating === userRating}
+							onPress={() => setUserRating(btnRating)}
+						/>;
+					})} */}
+				</View>
+				<Button title='Submit' type='solid' onPress={onSubmitPress} containerStyle={{ width: '100%' }} />
+				<Button title={'Skip for now'} type='clear' onPress={onSkipPress} />
+			</StepContainer>
+		</>
+	);
+};
 
-				return (
-					<StepContainer navigation={navigation}>
-						<Text>Verification Code</Text>
-						<Text>We have sent a verification code to "{email}"</Text>
-						<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
-						<Text>Didn't receive a code</Text>
-						<Button title={'Resend Code'} type='clear' onPress={onSubmit} disabled={formIsLoading} />
-						<Button
-							title={'Verify'}
-							type={disableVeryifyBtn ? 'outline' : 'solid'}
-							onPress={onVerifyPress}
-							containerStyle={{ width: '100%' }}
-							disabled={disableVeryifyBtn}
-						/>
-					</StepContainer>
-				);
-			},
-		},
-		{
-			name: 'RateExpertise',
-			component: () => {
-				return <Text>Rate Expertise</Text>;
-			},
-		},
-	];
+interface WalkthroughStep {
+	name: string;
+	component: (props) => JSX.Element;
+}
 
+const steps: WalkthroughStep[] = [
+	{
+		name: 'ContinueWithService',
+		component: ContinueWithServiceStep,
+	},
+	{
+		name: 'SignUpWithEmail',
+		component: SignUpWithEmailStep,
+	},
+	{
+		name: 'EmailVerification',
+		component: EmailVerificationStep,
+	},
+	{
+		name: 'RateExpertise',
+		component: RateExpertiseStep,
+	},
+];
+
+export default function WalkthroughScreen() {
 	return (
 		<View
 			// Modal backdrop
@@ -261,7 +315,7 @@ export default function WalkthroughScreen({ navigation }) {
 				}}
 			>
 				<Stack.Navigator>
-					{steps.map((s, sIndex) => (
+					{steps.map(s => (
 						<Stack.Screen
 							key={s.name}
 							name={s.name}
@@ -271,21 +325,8 @@ export default function WalkthroughScreen({ navigation }) {
 							}}
 						/>
 					))}
-					{/* {stepNum !== 0 && (
-						<View
-							style={{
-								flexDirection: 'row',
-							}}
-						>
-							<Button title='Back' type='outline' onPress={prevStep} style={{ marginRight: 10 }} />
-							<Button title={stepNum === steps.length ? 'Complete' : 'Next'} type='outline' onPress={nextStep} />
-						</View>
-					)} */}
 				</Stack.Navigator>
 			</View>
 		</View>
 	);
-}
-function setLoggedInState(loggedIn: boolean) {
-	throw new Error('Function not implemented.');
 }
