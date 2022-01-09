@@ -5,11 +5,11 @@ Clone the repo to your local computer
 1. In your terminal `cd` to the project root folder and run `npm install`.
 2. Install the expo cli globally with `npm install -g expo-cli@4.13.0`.
 3. Install eslint for VSCode: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-4. Install your preferred simulator:
+4. (Optional) Install a mobile simulator:
 
     - Mac: Xcode or Android Simulator
     - Windows: Android Simulator
-    > [Android Simulator Setup Intructions](https://drexel0.sharepoint.com/:o:/r/sites/SeniorProject309/Shared%20Documents/Dev/Front-End%20Research/Research?d=wf8b2f89e9edc44af83276e2f12223827&csf=1&web=1&e=AV77dR)
+        > [Android Simulator Setup Intructions](https://drexel0.sharepoint.com/:o:/r/sites/SeniorProject309/Shared%20Documents/Dev/Front-End%20Research/Research?d=wf8b2f89e9edc44af83276e2f12223827&csf=1&web=1&e=AV77dR)
 
 ## Available Scripts
 
@@ -25,12 +25,14 @@ Expo compiles the React Native code for iOS, Android, and Web. Though not all fe
 
 Expo will also automatically re-compile when you save files and refresh your browser or device using something called "Hot-Reloading" with React using the state management. So you don't usually need to reload manually depending on the update you made.
 
-From here you can launch your app simulator:
+## Live Preview
+
+From here you can launch your mobile simulator:
 
     - "Run on iOS Simulator"
     - "Run on Android Device/Simulator"
 
-## Live Mobile Preview
+#### ~ OR ~
 
 On your mobile device you can download the "Expo Go" app.
 
