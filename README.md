@@ -9,7 +9,7 @@ Clone the repo to your local computer
 
     - Mac: Xcode or Android Simulator
     - Windows: Android Simulator
-        > [Android Simulator Setup Intructions](https://drexel0.sharepoint.com/:o:/r/sites/SeniorProject309/Shared%20Documents/Dev/Front-End%20Research/Research?d=wf8b2f89e9edc44af83276e2f12223827&csf=1&web=1&e=AV77dR)
+        > [Android Simulator Setup Instructions](https://drexel0.sharepoint.com/:o:/r/sites/SeniorProject309/Shared%20Documents/Dev/Front-End%20Research/Research?d=wf8b2f89e9edc44af83276e2f12223827&csf=1&web=1&e=AV77dR)
 
 ## Available Scripts
 
