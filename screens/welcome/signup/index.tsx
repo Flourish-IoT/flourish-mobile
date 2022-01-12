@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Theme from '../../../lib/theme';
-import { Button, Input } from 'react-native-elements';
+import { Input } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import { View, Text, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from '../components/StepContainer';
-import Facebook from '../../../lib/icons/Facebook';
-import Google from '../../../lib/icons/Google';
-import Apple from '../../../lib/icons/Apple';
-import Email from '../../../lib/icons/Email';
+import SsoServices from '../../../lib/icons/SsoServices';
 import { AppName, isValidEmail, isValidPassword } from '../../../lib/utils/helper';
 import { checkEmailVerificationCode, finishAccountSetup, sendEmailVerificationCode, setLoggedIn } from '../../../data/auth';
 import RadioButton from '../../../lib/components/RadioButton';
@@ -20,29 +17,7 @@ const Stack = createStackNavigator();
 
 export type Service = 'Facebook' | 'Google' | 'Apple' | 'Email';
 
-interface ServiceObj {
-	name: Service;
-	icon: JSX.Element;
-}
-
-export const services: ServiceObj[] = [
-	{
-		name: 'Facebook',
-		icon: <Facebook width={30} height={30} style={{ alignSelf: 'flex-start' }} />,
-	},
-	{
-		name: 'Google',
-		icon: <Google width={30} height={30} />,
-	},
-	{
-		name: 'Apple',
-		icon: <Apple width={30} height={30} />,
-	},
-	{
-		name: 'Email',
-		icon: <Email width={30} height={30} />,
-	},
-];
+export const services: Service[] = ['Facebook', 'Google', 'Apple', 'Email'];
 
 interface StepProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -70,15 +45,16 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up to begin your journey with {AppName}</Text>
-			{services.map(({ name, icon }) => (
+			{services.map(name => (
 				<Button
 					key={name}
-					icon={icon}
-					title={`Continue with ${name}`}
-					type='outline'
+					icon={() => <SsoServices type={name} />}
+					mode='outlined'
 					onPress={() => handleSignUpWithService(name)}
-					containerStyle={{ width: '100%', marginTop: 10 }}
-				/>
+					style={{ width: '100%', marginTop: 10 }}
+				>
+					Continue with {name}
+				</Button>
 			))}
 		</StepContainer>
 	);
@@ -96,7 +72,7 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const passwordIsSecure = isValidPassword(password);
 
 	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
-	const disableNextBtn = !formIsValid || formIsLoading;
+	const disableNextBtn = !formIsValid;
 
 	const getEmailErrorMsg = () => {
 		if (email.trim().length === 0) return undefined;
@@ -149,12 +125,14 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 				value={confirmPassword}
 			/>
 			<Button
-				title='Next'
-				type={disableNextBtn ? 'outline' : 'solid'}
+				mode={disableNextBtn ? 'outlined' : 'contained'}
 				onPress={onSubmit}
-				containerStyle={{ width: '100%' }}
+				style={{ width: '100%' }}
 				disabled={disableNextBtn}
-			/>
+				loading={formIsLoading}
+			>
+				Next
+			</Button>
 		</StepContainer>
 	);
 };
@@ -168,8 +146,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const [attempts, setAttempts] = useState(0);
 
 	const formIsValid = String(code).trim().length === 4;
-	const disableVerifyBtn = !formIsValid || formIsLoading || attempts > 0;
-	const disableResendBtn = formIsLoading || attempts === 0;
+	const disableVerifyBtn = !formIsValid || attempts > 0;
+	const disableResendBtn = attempts === 0;
 
 	useEffect(() => {
 		formIsValid && Keyboard.dismiss();
@@ -213,14 +191,18 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			<Text>We have sent a verification code to "{email}"</Text>
 			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
 			<Text>Didn't receive a code?</Text>
-			<Button title={'Resend Code'} type='clear' onPress={onResend} disabled={disableResendBtn} />
+			<Button mode='text' onPress={onResend} disabled={disableResendBtn} loading={disableResendBtn && formIsLoading}>
+				Resend Code
+			</Button>
 			<Button
-				title='Verify'
-				type={disableVerifyBtn ? 'outline' : 'solid'}
+				mode={disableVerifyBtn ? 'outlined' : 'contained'}
 				onPress={onVerifyPress}
-				containerStyle={{ width: '100%' }}
 				disabled={disableVerifyBtn}
-			/>
+				loading={disableVerifyBtn && formIsLoading}
+				style={{ width: '100%' }}
+			>
+				Verify
+			</Button>
 		</StepContainer>
 	);
 };
@@ -271,14 +253,12 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 						<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
 					))}
 				</View>
-				<Button
-					title='Submit'
-					type='solid'
-					onPress={proceed}
-					containerStyle={{ width: '100%' }}
-					disabled={formIsLoading}
-				/>
-				<Button title={'Skip for now'} type='clear' onPress={onSkipPress} disabled={formIsLoading} />
+				<Button mode='contained' onPress={proceed} style={{ width: '100%' }} loading={formIsLoading}>
+					Submit
+				</Button>
+				<Button mode='text' onPress={onSkipPress} loading={formIsLoading}>
+					Skip for now
+				</Button>
 			</StepContainer>
 		</>
 	);

@@ -1,8 +1,10 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Text } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Input } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import { attemptEmailLogin, setAccessToken } from '../../data/auth';
+import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
 import StepContainer from './components/StepContainer';
 import StepModal from './components/StepModal';
@@ -52,27 +54,27 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 			<StepContainer navigation={navigation}>
 				<Text>Sign in to continue with {AppName}</Text>
 				{services
-					.filter(s => s.name !== 'Email')
-					.map(({ name, icon }) => (
+					.filter(s => s !== 'Email')
+					.map(name => (
 						<Button
 							key={name}
-							icon={icon}
-							title={`Continue with ${name}`}
-							type='outline'
+							icon={() => <SsoServices type={name} />}
+							mode='outlined'
 							onPress={() => handleSignInWithService(name)}
-							containerStyle={{ width: '100%', marginTop: 10 }}
-						/>
+							style={{ width: '100%', marginTop: 10 }}
+						>
+							Continue with {name}
+						</Button>
 					))}
 				<Text>Sign up with your email address</Text>
 				<Input placeholder='Email' onChangeText={setEmail} value={email} />
 				<Input placeholder='Password' secureTextEntry onChangeText={setPassword} value={password} />
-				<Button title='Next' onPress={onSubmit} containerStyle={{ width: '100%' }} disabled={formIsLoading} />
-				<Button
-					title='Forgot Password'
-					type='clear'
-					onPress={() => navigation.navigate('ForgotPassword')}
-					containerStyle={{ alignSelf: 'flex-start' }}
-				/>
+				<Button onPress={onSubmit} style={{ width: '100%' }} disabled={formIsLoading}>
+					Next
+				</Button>
+				<Button mode='text' onPress={() => navigation.navigate('ForgotPassword')} style={{ alignSelf: 'flex-start' }}>
+					Forgot Password
+				</Button>
 			</StepContainer>
 		</StepModal>
 	);

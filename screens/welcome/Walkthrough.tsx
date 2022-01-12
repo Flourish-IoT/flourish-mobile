@@ -1,46 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Theme from '../../lib/theme';
-import { Button, Input } from 'react-native-elements';
+import { Input } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import { View, Text, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from './components/StepContainer';
-import Facebook from '../../lib/icons/Facebook';
-import Google from '../../lib/icons/Google';
-import Apple from '../../lib/icons/Apple';
-import Email from '../../lib/icons/Email';
 import { AppName, isValidEmail, isValidPassword } from '../../lib/utils/helper';
 import { checkEmailVerificationCode, sendEmailVerificationCode, setLoggedIn } from '../../data/auth';
 import Confidence from '../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
+import SsoServices from '../../lib/icons/SsoServices';
+import { Theme } from '../../providers/Theme';
 
 const Stack = createStackNavigator();
 
-interface ServiceObj {
-	name: Service;
-	icon: JSX.Element;
-}
-
 type Service = 'Facebook' | 'Google' | 'Apple' | 'Email';
 
-const services: ServiceObj[] = [
-	{
-		name: 'Facebook',
-		icon: <Facebook width={30} height={30} style={{ alignSelf: 'flex-start' }} />,
-	},
-	{
-		name: 'Google',
-		icon: <Google width={30} height={30} />,
-	},
-	{
-		name: 'Apple',
-		icon: <Apple width={30} height={30} />,
-	},
-	{
-		name: 'Email',
-		icon: <Email width={30} height={30} />,
-	},
-];
+const services: Service[] = ['Facebook', 'Google', 'Apple', 'Email'];
 
 interface StepParams {
 	navigation: NavigationProp<ParamListBase>;
@@ -68,15 +44,16 @@ const ContinueWithServiceStep = ({ navigation }: StepParams) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up to begin your journey with {AppName}</Text>
-			{services.map(({ name, icon }) => (
+			{services.map(name => (
 				<Button
 					key={name}
-					icon={icon}
-					title={`Continue with ${name}`}
-					type='outline'
+					icon={() => <SsoServices type={name} />}
+					mode='outlined'
 					onPress={() => handleSignWithService(name)}
-					containerStyle={{ width: '100%', marginTop: 10 }}
-				/>
+					style={{ width: '100%', marginTop: 10 }}
+				>
+					Continue with {name}
+				</Button>
 			))}
 		</StepContainer>
 	);
@@ -94,7 +71,7 @@ const SignUpWithEmailStep = ({ navigation }: StepParams) => {
 	const passwordIsSecure = isValidPassword(password);
 
 	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
-	const disableNextBtn = !formIsValid || formIsLoading;
+	const disableNextBtn = !formIsValid;
 
 	const getEmailErrorMsg = () => {
 		if (email.trim().length === 0) return undefined;
@@ -142,12 +119,14 @@ const SignUpWithEmailStep = ({ navigation }: StepParams) => {
 				errorMessage={getPasswordConfirmErrorMsg()}
 			/>
 			<Button
-				title='Next'
-				type={disableNextBtn ? 'outline' : 'solid'}
+				mode={disableNextBtn ? 'outlined' : 'contained'}
 				onPress={onSubmit}
-				containerStyle={{ width: '100%' }}
-				disabled={disableNextBtn}
-			/>
+				style={{ width: '100%' }}
+				disabled={!formIsValid}
+				loading={formIsLoading}
+			>
+				Next
+			</Button>
 		</StepContainer>
 	);
 };
@@ -161,7 +140,7 @@ const EmailVerificationStep = ({ route, navigation }: StepParams) => {
 	const [attempts, setAttempts] = useState(0);
 
 	const formIsValid = String(code).trim().length === 4;
-	const disableVerifyBtn = !formIsValid || formIsLoading || attempts > 0;
+	const disableVerifyBtn = !formIsValid || attempts > 0;
 
 	useEffect(() => {
 		formIsValid && Keyboard.dismiss();
@@ -202,14 +181,18 @@ const EmailVerificationStep = ({ route, navigation }: StepParams) => {
 			<Text>We have sent a verification code to "{email}"</Text>
 			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
 			<Text>Didn't receive a code</Text>
-			<Button title={'Resend Code'} type='clear' onPress={onSubmit} disabled={formIsLoading} />
+			<Button mode='text' onPress={onSubmit} loading={formIsLoading}>
+				Resend Code
+			</Button>
 			<Button
-				title='Verify'
-				type={disableVerifyBtn ? 'outline' : 'solid'}
+				mode={disableVerifyBtn ? 'outlined' : 'contained'}
 				onPress={onVerifyPress}
-				containerStyle={{ width: '100%' }}
+				style={{ width: '100%' }}
 				disabled={disableVerifyBtn}
-			/>
+				loading={formIsLoading}
+			>
+				Verify
+			</Button>
 		</StepContainer>
 	);
 };
@@ -259,8 +242,12 @@ const RateExpertiseStep = ({ navigation }: StepParams) => {
 						/>;
 					})} */}
 				</View>
-				<Button title='Submit' type='solid' onPress={onSubmitPress} containerStyle={{ width: '100%' }} />
-				<Button title={'Skip for now'} type='clear' onPress={onSkipPress} />
+				<Button mode='contained' onPress={onSubmitPress} style={{ width: '100%' }}>
+					Submit
+				</Button>
+				<Button mode='text' onPress={onSkipPress}>
+					Skip for now
+				</Button>
 			</StepContainer>
 		</>
 	);
@@ -294,7 +281,7 @@ export default function WalkthroughScreen() {
 	return (
 		<View
 			// Modal backdrop
-			style={{ flex: 1, paddingVertical: '30%', paddingHorizontal: '5%', backgroundColor: Theme.colors.secondary }}
+			style={{ flex: 1, paddingVertical: '30%', paddingHorizontal: '5%', backgroundColor: Theme.colors.background }}
 		>
 			<View
 				// Modal content

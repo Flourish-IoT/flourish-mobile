@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ToastProvider } from 'react-native-toast-notifications';
 import QueryProvider from './QueryClient';
+import ThemeProvider from './Theme';
 
 interface AppProvidersProps {
 	children: ReactNode;
@@ -9,7 +10,9 @@ interface AppProvidersProps {
 export default function AppProviders({ children }: AppProvidersProps) {
 	return (
 		<QueryProvider>
-			<ToastProvider>{children}</ToastProvider>
+			<ThemeProvider>
+				<ToastProvider>{children}</ToastProvider>
+			</ThemeProvider>
 		</QueryProvider>
 	);
 }

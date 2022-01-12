@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import StepContainer from './components/StepContainer';
 import { AppName } from '../../lib/utils/helper';
 import Logo from '../../lib/icons/Logo';
-import { Button } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getLoggedIn } from '../../data/auth';
 
@@ -31,20 +31,30 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 			<StepContainer navigation={navigation} canGoBack={false}>
 				<Logo />
 				<Button
-					title='Sign Up'
-					type='outline'
-					containerStyle={{ width: '100%', maxWidth: 300, marginVertical: 10 }}
+					mode='outlined'
+					style={{ width: '100%', maxWidth: 300, marginVertical: 10 }}
 					onPress={() => {
 						navigation.navigate('Walkthrough');
 					}}
-				/>
+				>
+					Sign Up
+				</Button>
 				<Button
-					title='already have an account? log in'
-					type='clear'
+					mode='text'
 					onPress={() => {
 						navigation.navigate('Login');
 					}}
-				/>
+				>
+					already have an account? log in
+				</Button>
+				<Button
+					mode='text'
+					onPress={() => {
+						navigation.navigate('Testing');
+					}}
+				>
+					**Testing Screen**
+				</Button>
 			</StepContainer>
 		</>
 	);

@@ -1,6 +1,6 @@
 import React from 'react';
-import Theme from '../../../lib/theme';
 import { View, ViewStyle } from 'react-native';
+import { Theme } from '../../../providers/Theme';
 
 interface StepModalProps {
 	children: React.ReactNode;
@@ -16,7 +16,7 @@ export default function StepModal({ children, backdropStyle, contentStyle }: Ste
 				flex: 1,
 				paddingVertical: '30%',
 				paddingHorizontal: '5%',
-				backgroundColor: Theme.colors.secondary,
+				backgroundColor: Theme.colors.primary,
 				...backdropStyle,
 			}}
 		>

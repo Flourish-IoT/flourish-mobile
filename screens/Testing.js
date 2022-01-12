@@ -2,12 +2,11 @@ import React, { useState, useLayoutEffect } from 'react';
 import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import { Button } from 'react-native-elements';
+import { Button } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import { useTestEndpoint } from '../data/common';
 import Loading from '../lib/components/Loading';
-import Theme from '../lib/theme';
 import { useToast } from "react-native-toast-notifications";
 
 export default function TestingScreen({ navigation }) {
@@ -79,7 +78,6 @@ export default function TestingScreen({ navigation }) {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 10,
-                backgroundColor: Theme.colors.gray_1,
                 borderRadius: 10,
                 overflow: 'hidden'
             }}>
@@ -95,8 +93,8 @@ export default function TestingScreen({ navigation }) {
                     <Text>Temp: {testData.temperature}</Text>
                 </View>
             </View>
-            <Button style={styles.button} onPress={openPhotos} raised title='Select Photo' />
-            <View style={{ width: '100%', height: 350 }} >
+            <Button style={styles.button} onPress={openPhotos} raised>Button</Button>
+            <View style={{ width: '100%', height: 350 }}>
                 <Camera
                     type={cameraType}
                     style={{ flex: 1 }}
@@ -123,7 +121,7 @@ export default function TestingScreen({ navigation }) {
                             alignSelf: 'center',
                             opacity: imageIsProcessing ? 0.2 : 1
                         }}
-                        disabled={imageIsProcessing}
+                        loading={imageIsProcessing}
                         onPress={takePicture}
                     >
                         <Ionicons
@@ -133,14 +131,14 @@ export default function TestingScreen({ navigation }) {
                     </TouchableOpacity>
                 </Camera>
             </View>
-            <Button style={styles.button} raised title='Toast notification'
+            <Button style={styles.button} raised
                 onPress={() => {
                     toast.show("normal", { type: "normal" });
                     toast.show("success", { type: "success" });
                     toast.show("danger", { type: "danger" });
                     toast.show("warning", { type: "warning" });
                 }}
-            />
+            >Toast notification</Button>
         </View >
     );
 }

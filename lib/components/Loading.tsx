@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
-import Theme from '../theme';
 import LottieView from 'lottie-react-native';
+import { Theme } from '../../providers/Theme';
 
 const styles = StyleSheet.create({
 	loaderContainer: {

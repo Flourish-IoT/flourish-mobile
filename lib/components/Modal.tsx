@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Modal, View } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Modal, View, Text } from 'react-native';
 
 interface ModalProps {
 	visible: boolean;
