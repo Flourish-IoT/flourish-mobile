@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Theme from '../theme';
 import LottieView from 'lottie-react-native';
 
@@ -20,7 +20,12 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default function Loading({ style, text = 'Loading' }) {
+interface LoadingParams {
+	style?: ViewStyle;
+	text?: string;
+}
+
+export default function Loading({ style, text = 'Loading' }: LoadingParams) {
 	return (
 		<View style={[styles.loaderContainer, style]}>
 			<LottieView

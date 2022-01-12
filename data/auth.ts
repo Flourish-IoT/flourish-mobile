@@ -1,7 +1,6 @@
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { mockEndpoint } from './api';
+import { AxiosInstance, mockEndpoint } from './api';
 import { ConfidenceRating } from './user';
 
 interface SignUpParams {
@@ -26,20 +25,20 @@ export const setLoggedIn = async (value: boolean) => {
 
 export const sendEmailVerificationCode = (email: string, password: string) => {
 	mockEndpoint(0).onPost('/send_email_verification_code', { params: { email, password } }).reply(200, true);
-	return axios.post('/send_email_verification_code', { params: { email, password } });
+	return AxiosInstance.post('/send_email_verification_code', { params: { email, password } });
 };
 
 export const checkEmailVerificationCode = (email: string, code: string) => {
 	mockEndpoint(100).onPost('/users/${user_id}/verify', { params: { code } }).reply(200, true);
-	return axios.post('/users/${user_id}/verify', { params: { code } });
+	return AxiosInstance.post('/users/${user_id}/verify', { params: { code } });
 };
 
 export const finishAccountSetup = (signUpParams: SignUpParams) => {
 	mockEndpoint(100).onPost('/finish_account_setup', { params: { signUpParams } }).reply(200, true);
-	return axios.post('/finish_account_setup', { params: { signUpParams } });
+	return AxiosInstance.post('/finish_account_setup', { params: { signUpParams } });
 };
 
 export const attemptEmailLogin = (email: string, password: string) => {
 	mockEndpoint(100).onPost('/users/login', { params: { email, password } }).reply(200, '123abc');
-	return axios.post<string>('/users/login', { params: { email, password } });
+	return AxiosInstance.post<string>('/users/login', { params: { email, password } });
 };

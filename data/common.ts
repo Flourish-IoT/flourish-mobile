@@ -1,5 +1,12 @@
 import { useQuery } from 'react-query';
-import axios from 'axios';
+import { AxiosInstance } from './api';
+
+export interface Plant {
+	id: number;
+	name: string;
+	scientificName: string;
+	image: string | undefined;
+}
 
 export interface Sensor {
 	sensorId: number;
@@ -10,13 +17,8 @@ export interface Sensor {
 	lux: number;
 }
 
-export interface Plant {
-	name: string;
-	id: number;
-}
-
 export const useTestEndpoint = () => {
 	return useQuery(['testEndpoint'], () => {
-		return axios.get<Sensor>('/flourish-test').then(res => res.data);
+		return AxiosInstance.get<Sensor>('/flourish-test').then(res => res.data);
 	});
 };

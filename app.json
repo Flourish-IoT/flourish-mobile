@@ -25,7 +25,7 @@
 			]
 		],
 		"ios": {
-			"supportsTablet": true,
+			"supportsTablet": false,
 			"bundleIdentifier": "com.dev.flourish",
 			"infoPlist": {
 				"NSPhotoLibraryUsageDescription": true,
