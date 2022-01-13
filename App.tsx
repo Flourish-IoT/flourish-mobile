@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreenStack from './screens/welcome/index';
 import TestingScreen from './screens/Testing';
 import AppProviders from './providers';
-import { Theme } from './providers/Theme';
+import { Theme, NavigatorTheme } from './providers/Theme';
 
 const Stack = createStackNavigator();
 
@@ -16,12 +16,7 @@ export default function App() {
 
 	return (
 		<AppProviders>
-			<NavigationContainer
-				theme={{
-					// @ts-ignore
-					colors: { background: 'white' },
-				}}
-			>
+			<NavigationContainer theme={NavigatorTheme}>
 				<Stack.Navigator screenOptions={globalScreenOptions}>
 					<Stack.Screen name='Welcome' component={WelcomeScreenStack} options={{ headerShown: false }} />
 					<Stack.Screen name='Testing' component={TestingScreen} />
