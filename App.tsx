@@ -4,20 +4,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreenStack from './screens/welcome/index';
 import TestingScreen from './screens/Testing';
 import AppProviders from './providers';
-import { Theme, NavigatorTheme } from './providers/Theme';
+import { NavigatorTheme, GlobalNavigatorOptions } from './providers/Theme';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-	const globalScreenOptions = {
-		headerStyle: { backgroundColor: Theme.colors.primary },
-		headerTitleStyle: { color: 'white' },
-	};
-
 	return (
 		<AppProviders>
 			<NavigationContainer theme={NavigatorTheme}>
-				<Stack.Navigator screenOptions={globalScreenOptions}>
+				<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
 					<Stack.Screen name='Welcome' component={WelcomeScreenStack} options={{ headerShown: false }} />
 					<Stack.Screen name='Testing' component={TestingScreen} />
 				</Stack.Navigator>

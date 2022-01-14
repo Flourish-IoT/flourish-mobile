@@ -1,3 +1,4 @@
+import { StackNavigationOptions } from '@react-navigation/stack';
 import * as React from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
@@ -15,6 +16,9 @@ export const Theme: OurThemeProps = {
 	dark: DefaultTheme.dark, // Whether this is a dark theme or light theme
 	mode: DefaultTheme.mode, // Color mode for dark theme
 	roundness: 2, // Roundness of common elements, such as buttons
+	animation: {
+		scale: DefaultTheme.animation.scale, // Scale for all animations
+	},
 	colors: {
 		primary: '#5ABB98', // Primary color for your app, usually your brand color
 		accent: '#f1c40f', // Secondary color for your app which complements the primary color
@@ -26,8 +30,8 @@ export const Theme: OurThemeProps = {
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for snackbars
 		notification: DefaultTheme.colors.notification, // Background color for badges
-		error: DefaultTheme.colors.error,
-		border: 'black',
+		error: DefaultTheme.colors.error, // The color of error text, for example the error message for text inputs
+		border: 'black', // The color of borders
 	},
 	fonts: {
 		regular: {
@@ -47,9 +51,6 @@ export const Theme: OurThemeProps = {
 			fontWeight: DefaultTheme.fonts.regular.fontWeight,
 		},
 	},
-	animation: {
-		scale: DefaultTheme.animation.scale, // Scale for all animations
-	},
 };
 
 export const NavigatorTheme = {
@@ -62,6 +63,11 @@ export const NavigatorTheme = {
 		card: Theme.colors.surface, // The background color of card-like elements, such as headers, tab bars etc.
 		border: Theme.colors.border, // The color of borders, e.g. header border, tab bar border etc.
 	},
+};
+
+export const GlobalNavigatorOptions: StackNavigationOptions = {
+	headerStyle: { backgroundColor: Theme.colors.primary },
+	headerTitleStyle: { color: 'white' },
 };
 
 interface ThemeProviderProps {
