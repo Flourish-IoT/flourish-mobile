@@ -5,6 +5,7 @@ import WelcomeScreenStack from './screens/welcome/index';
 import TestingScreen from './screens/Testing';
 import AppProviders from './providers';
 import { NavigatorTheme, GlobalNavigatorOptions } from './providers/Theme';
+import GardenScreenStack from './screens/garden';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
 			<NavigationContainer theme={NavigatorTheme}>
 				<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
 					<Stack.Screen name='Welcome' component={WelcomeScreenStack} options={{ headerShown: false }} />
+					<Stack.Screen name='Garden' component={GardenScreenStack} />
 					<Stack.Screen name='Testing' component={TestingScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
