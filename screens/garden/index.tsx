@@ -6,6 +6,7 @@ import Grid from '../../lib/icons/Grid';
 import Plant from './components/Plant';
 import { useTestEndpoint } from '../../data/common';
 import Loading from '../../lib/components/Loading';
+import Empty from '../../lib/components/Empty';
 
 interface GardenScreenStackProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -34,7 +35,11 @@ export default function GardenScreenStack({ navigation }: GardenScreenStackProps
 			</View>
 			<View>
 				{plantsIsLoading ? (
-					<Loading text='Loading plants...' />
+					<Loading animation='rings' text='Loading plants...' />
+				) : !plants ? (
+					<Empty animation='error' text='There was an error getting your plants...' />
+				) : plants.length === 0 ? (
+					<Empty animation='magnifyingGlass' text='No plants in your garden, try adding one to begin...' />
 				) : (
 					plants.map((p, index) => <Plant key={index + p.id} viewMode={viewType} plantName={p.name} />)
 				)}

@@ -1,5 +1,6 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
 import * as React from 'react';
+import { ViewStyle } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
@@ -7,9 +8,23 @@ interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	border: string;
 }
 
+export type LottieSize = 'sm' | 'md' | 'lg';
+
+interface LottieSizeObj {
+	sm: number;
+	md: number;
+	lg: number;
+}
+
 interface OurThemeProps extends ReactNativePaper.Theme {
 	// Custom theme property types here
 	colors: OurColorsProps;
+	lottie: {
+		wrapper: ViewStyle;
+		width: LottieSizeObj;
+		fontSize: LottieSizeObj;
+		fontWidth: LottieSizeObj;
+	};
 }
 
 export const Theme: OurThemeProps = {
@@ -18,6 +33,30 @@ export const Theme: OurThemeProps = {
 	roundness: 2, // Roundness of common elements, such as buttons
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
+	},
+	lottie: {
+		wrapper: {
+			height: '100%',
+			width: '100%',
+			alignSelf: 'center',
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
+		width: {
+			sm: 75,
+			md: 100,
+			lg: 200,
+		},
+		fontSize: {
+			sm: 10,
+			md: 15,
+			lg: 20,
+		},
+		fontWidth: {
+			sm: 100,
+			md: 175,
+			lg: 300,
+		},
 	},
 	colors: {
 		primary: '#5ABB98', // Primary color for your app, usually your brand color
