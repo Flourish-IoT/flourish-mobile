@@ -4,7 +4,7 @@ import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from '../components/StepContainer';
 import SsoServices from '../../../lib/icons/SsoServices';
-import { AppName, isValidEmail, isValidPassword } from '../../../lib/utils/helper';
+import { AppName, isValidEmail, isValidPassword, isValidUsername } from '../../../lib/utils/helper';
 import { checkEmailVerificationCode, finishAccountSetup, sendEmailVerificationCode, setLoggedIn } from '../../../data/auth';
 import RadioButton from '../../../lib/components/RadioButton';
 import Confidence from '../../../lib/icons/Confidence';
@@ -45,7 +45,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up to begin your journey with {AppName}</Text>
-			{services.map(name => (
+			{services.map((name) => (
 				<Button
 					key={name}
 					icon={() => <SsoServices type={name} />}
@@ -63,16 +63,24 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const [formIsLoading, setFormIsLoading] = useState(false);
 
+	const [username, setUsername] = useState('flourish-user-2000');
 	const [email, setEmail] = useState('user@gmail.com');
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
 
+	const usernameIsValid = isValidUsername(username);
 	const emailIsValid = isValidEmail(email);
 	const passwordMatches = password === confirmPassword;
 	const passwordIsSecure = isValidPassword(password);
 
 	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
 	const disableNextBtn = !formIsValid;
+
+	const getUsernameErrorMsg = () => {
+		if (email.trim().length === 0) return undefined;
+		if (!emailIsValid) return 'Username is invalid';
+		return undefined;
+	};
 
 	const getEmailErrorMsg = () => {
 		if (email.trim().length === 0) return undefined;
@@ -95,10 +103,10 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const onSubmit = async () => {
 		setFormIsLoading(true);
 		sendEmailVerificationCode(email, password)
-			.then(res => {
+			.then((res) => {
 				navigation.navigate('EmailVerification', { email, password });
 			})
-			.catch(error => {
+			.catch((error) => {
 				alert('There was an error while processing your request');
 			})
 			.finally(() => {
@@ -109,6 +117,12 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up with your email address</Text>
+			<TextInput
+				label={getUsernameErrorMsg() ?? 'Username'}
+				onChangeText={setUsername}
+				error={!!getUsernameErrorMsg()}
+				value={username}
+			/>
 			<TextInput label={getEmailErrorMsg() ?? 'Email'} onChangeText={setEmail} error={!!getEmailErrorMsg()} value={email} />
 			<TextInput
 				label={getPasswordErrorMsg() ?? 'Password'}
@@ -160,10 +174,10 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const onResend = async () => {
 		setFormIsLoading(true);
 		sendEmailVerificationCode(email, password)
-			.then(res => {
+			.then((res) => {
 				setAttempts(0);
 			})
-			.catch(error => {
+			.catch((error) => {
 				alert('There was an error while processing your request');
 			})
 			.finally(() => {
@@ -175,14 +189,14 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 		setFormIsLoading(true);
 
 		checkEmailVerificationCode(email, code)
-			.then(async res => {
+			.then(async (res) => {
 				await setLoggedIn(true);
 				navigation.reset({
 					index: 0,
 					routes: [{ name: 'RateExpertise' }],
 				});
 			})
-			.catch(error => {
+			.catch((error) => {
 				alert('There was an error while processing your request');
 				setAttempts(0);
 			})
@@ -230,14 +244,14 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 		setFormIsLoading(true);
 
 		finishAccountSetup({ confidenceRating: skip ? null : userRating })
-			.then(async res => {
+			.then(async (res) => {
 				await setLoggedIn(true);
 				navigation.reset({
 					index: 0,
 					routes: [{ name: 'Garden' }],
 				});
 			})
-			.catch(error => {
+			.catch((error) => {
 				alert('There was an error while processing your request');
 			})
 			.finally(() => {
@@ -260,7 +274,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					{ratings.map(r => (
+					{ratings.map((r) => (
 						<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
 					))}
 				</View>
@@ -303,7 +317,7 @@ export default function WalkthroughScreen() {
 	return (
 		<StepModal>
 			<Stack.Navigator>
-				{steps.map(s => (
+				{steps.map((s) => (
 					<Stack.Screen
 						key={s.name}
 						name={s.name}

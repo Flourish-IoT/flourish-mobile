@@ -42,3 +42,11 @@ export const attemptEmailLogin = (email: string, password: string) => {
 	mockEndpoint(100).onPost('/users/login', { params: { email, password } }).reply(200, '123abc');
 	return AxiosInstance.post<string>('/users/login', { params: { email, password } });
 };
+
+export const useUser = () => {
+	return {
+		id: 123,
+		username: 'flourish-user-2000',
+		email: 'user@gmail.com',
+	};
+};

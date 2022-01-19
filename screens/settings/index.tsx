@@ -16,6 +16,13 @@ interface SettingsScreenProps {
 const Stack = createStackNavigator();
 
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
+	const handleLogOut = () => {
+		navigation.reset({
+			index: 0,
+			routes: [{ name: 'Welcome' }],
+		});
+	};
+
 	return (
 		<View style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
 			<View>
@@ -28,7 +35,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 				<Button onPress={() => navigation.navigate('ExportData')}>Export Data</Button>
 			</View>
 			<View>
-				<Button onPress={() => {}}>Log Out</Button>
+				<Button onPress={handleLogOut}>Log Out</Button>
 				<Button onPress={() => navigation.navigate('DeleteAccount')}>Delete Account</Button>
 			</View>
 		</View>

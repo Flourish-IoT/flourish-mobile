@@ -1,8 +1,11 @@
-
-
 const AppConfig = require('../../app.json');
 
 export const AppName = AppConfig.expo.name;
+
+export const isValidUsername = (value: string) => {
+	const regex = /^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
+	return regex.test(value.toLowerCase());
+};
 
 export const isValidEmail = (value: string) => {
 	const regex =
