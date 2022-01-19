@@ -3,7 +3,7 @@
 Clone the repo to your local computer
 
 1. In your terminal `cd` to the project root folder and run `npm install`.
-2. Install the expo cli globally with `npm install -g expo-cli@4.13.0`.
+2. Install the expo cli globally with `npm install -g expo-cli@5.0.3`.
 3. Install eslint for VSCode: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 4. (Optional) Install a mobile simulator:
 
@@ -43,7 +43,8 @@ On your mobile device you can download the "Expo Go" app.
 
 1. **DO NOT** commit sensitive information to this repo. It's public.
     - API keys and environment specific variables should go into the environment variables where it is not tracked by git.
-2. 99% of the time we should be making pull requests with new branches to mere code into master.
+2. 99% of the time we should be making pull requests with new branches to mere code into the "Development" branch.
 3. React Native gets us most of the way there for compiling. But some things will still need to be platform specific.
     - Ex. accessing the camera or photos.
     - Use the `Platform.OS` variable in the code to detect what platform you are running when developing similar features. It will be a string of either "ios" or "android".
+4. In order to maintain the global theme, use components from the correct packages/locations. The import priority order is: `./lib/components/styled/` > `react-native-paper` > `react-native`.
