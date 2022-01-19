@@ -169,7 +169,10 @@ const EmailVerificationStep = ({ route, navigation }: StepParams) => {
 		checkEmailVerificationCode(email, code)
 			.then(async res => {
 				await setLoggedIn(true);
-				navigation.navigate('RateExpertise');
+				navigation.reset({
+					index: 0,
+					routes: [{ name: 'RateExpertise' }],
+				});
 			})
 			.catch(error => {
 				alert('There was an error while processing your request');

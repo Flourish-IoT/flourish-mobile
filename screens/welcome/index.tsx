@@ -84,6 +84,7 @@ export default function WelcomeScreenStack() {
 					component={WalkthroughScreen}
 					options={{
 						headerShown: false,
+						gestureEnabled: false,
 					}}
 				/>
 			</Stack.Navigator>

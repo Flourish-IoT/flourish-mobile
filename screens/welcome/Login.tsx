@@ -38,7 +38,10 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 		attemptEmailLogin(email, password)
 			.then(async ({ data: accessToken }) => {
 				await setAccessToken(accessToken);
-				navigation.navigate('Garden');
+				navigation.reset({
+					index: 0,
+					routes: [{ name: 'Garden' }],
+				});
 			})
 			.catch(error => {
 				alert('There was an error while processing your request');
