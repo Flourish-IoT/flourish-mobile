@@ -1,9 +1,8 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Text } from 'react-native';
-import { Input } from 'react-native-elements';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { attemptEmailLogin, setAccessToken } from '../../data/auth';
+import TextInput from '../../lib/components/styled/TextInput';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
 import StepContainer from './components/StepContainer';
@@ -67,8 +66,8 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 						</Button>
 					))}
 				<Text>Sign up with your email address</Text>
-				<Input placeholder='Email' onChangeText={setEmail} value={email} />
-				<Input placeholder='Password' secureTextEntry onChangeText={setPassword} value={password} />
+				<TextInput label='Email' value={email} onChangeText={setEmail} />
+				<TextInput label='Password' value={password} onChangeText={setPassword} secureTextEntry />
 				<Button onPress={onSubmit} style={{ width: '100%' }} disabled={formIsLoading}>
 					Next
 				</Button>

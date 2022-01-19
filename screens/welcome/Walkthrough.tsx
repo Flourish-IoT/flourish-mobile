@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Input } from 'react-native-elements';
-import { Button } from 'react-native-paper';
-import { View, Text, Keyboard } from 'react-native';
+import { Button, Text } from 'react-native-paper';
+import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from './components/StepContainer';
 import { AppName, isValidEmail, isValidPassword } from '../../lib/utils/helper';
@@ -11,6 +10,7 @@ import { getConfidenceText, ConfidenceRating } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import SsoServices from '../../lib/icons/SsoServices';
 import { Theme } from '../../providers/Theme';
+import TextInput from '../../lib/components/styled/TextInput';
 
 const Stack = createStackNavigator();
 
@@ -110,13 +110,18 @@ const SignUpWithEmailStep = ({ navigation }: StepParams) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up with your email address</Text>
-			<Input placeholder='Email' autoFocus onChangeText={setEmail} errorMessage={getEmailErrorMsg()} />
-			<Input placeholder='Password' secureTextEntry onChangeText={setPassword} errorMessage={getPasswordErrorMsg()} />
-			<Input
-				placeholder='Confirm Password'
+			<TextInput label={getEmailErrorMsg() ?? 'Email'} autoFocus onChangeText={setEmail} error={!!getEmailErrorMsg()} />
+			<TextInput
+				label={getEmailErrorMsg() ?? 'Password'}
+				secureTextEntry
+				onChangeText={setPassword}
+				error={!!getPasswordErrorMsg()}
+			/>
+			<TextInput
+				label={getPasswordConfirmErrorMsg() ?? 'Confirm Password'}
 				secureTextEntry
 				onChangeText={setConfirmPassword}
-				errorMessage={getPasswordConfirmErrorMsg()}
+				error={!!getPasswordConfirmErrorMsg()}
 			/>
 			<Button
 				mode={disableNextBtn ? 'outlined' : 'contained'}
@@ -179,7 +184,8 @@ const EmailVerificationStep = ({ route, navigation }: StepParams) => {
 		<StepContainer navigation={navigation}>
 			<Text>Verification Code</Text>
 			<Text>We have sent a verification code to "{email}"</Text>
-			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
+			{/* @ts-ignore */}
+			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} />
 			<Text>Didn't receive a code</Text>
 			<Button mode='text' onPress={onSubmit} loading={formIsLoading}>
 				Resend Code

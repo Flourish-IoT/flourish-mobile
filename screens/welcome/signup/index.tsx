@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Input } from 'react-native-elements';
-import { Button } from 'react-native-paper';
-import { View, Text, Keyboard } from 'react-native';
+import { Button, Text } from 'react-native-paper';
+import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from '../components/StepContainer';
 import SsoServices from '../../../lib/icons/SsoServices';
@@ -12,6 +11,7 @@ import Confidence from '../../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import StepModal from '../components/StepModal';
+import TextInput from '../../../lib/components/styled/TextInput';
 
 const Stack = createStackNavigator();
 
@@ -109,19 +109,19 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up with your email address</Text>
-			<Input placeholder='Email' onChangeText={setEmail} errorMessage={getEmailErrorMsg()} value={email} />
-			<Input
-				placeholder='Password'
+			<TextInput label={getEmailErrorMsg() ?? 'Email'} onChangeText={setEmail} error={!!getEmailErrorMsg()} value={email} />
+			<TextInput
+				label={getPasswordErrorMsg() ?? 'Password'}
 				secureTextEntry
 				onChangeText={setPassword}
-				errorMessage={getPasswordErrorMsg()}
+				error={!!getPasswordErrorMsg()}
 				value={password}
 			/>
-			<Input
-				placeholder='Confirm Password'
+			<TextInput
+				label={getPasswordConfirmErrorMsg() ?? 'Confirm Password'}
 				secureTextEntry
 				onChangeText={setConfirmPassword}
-				errorMessage={getPasswordConfirmErrorMsg()}
+				error={!!getPasswordConfirmErrorMsg()}
 				value={confirmPassword}
 			/>
 			<Button
@@ -137,9 +137,13 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	);
 };
 
+interface EmailVerificationStepProps {
+	email: string;
+	password: string;
+}
+
 const EmailVerificationStep = ({ route, navigation }: StepProps) => {
-	// @ts-ignore
-	const { email, password } = route.params;
+	const { email, password } = route.params as EmailVerificationStepProps;
 
 	const [formIsLoading, setFormIsLoading] = useState(false);
 	const [code, setCode] = useState<string>('2022');
@@ -189,7 +193,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 		<StepContainer navigation={navigation}>
 			<Text>Verification Code</Text>
 			<Text>We have sent a verification code to "{email}"</Text>
-			<Input placeholder='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
+			{/* @ts-ignore */}
+			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
 			<Text>Didn't receive a code?</Text>
 			<Button mode='text' onPress={onResend} disabled={disableResendBtn} loading={disableResendBtn && formIsLoading}>
 				Resend Code

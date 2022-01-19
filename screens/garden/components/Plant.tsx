@@ -1,6 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Image } from 'react-native-elements';
+import { View, Image } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ViewMode } from '..';
 
