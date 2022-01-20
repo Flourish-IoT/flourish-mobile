@@ -1,41 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { Theme } from '../../providers/Theme';
-
-const styles = StyleSheet.create({
-	loaderContainer: {
-		alignSelf: 'center',
-		height: '100%',
-		justifyContent: 'center',
-	},
-	animation: {
-		height: 300,
-	},
-	emptyText: {
-		fontWeight: 'bold',
-		fontSize: 20,
-		color: Theme.colors.primary,
-		alignSelf: 'center',
-	},
-});
+import { ViewStyle } from 'react-native';
+import { LottieSize } from '../../providers/Theme';
+import LottieBase from './LottieBase';
 
 interface LoadingParams {
-	style?: ViewStyle;
+	animation: 'rings' | 'growing';
 	text?: string;
+	style?: ViewStyle;
+	size?: LottieSize;
 }
 
-export default function Loading({ style, text = 'Loading' }: LoadingParams) {
-	return (
-		<View style={[styles.loaderContainer, style]}>
-			<LottieView
-				style={styles.animation}
-				resizeMode='cover'
-				source={require('../../assets/lottie/growing.json')}
-				autoPlay
-				loop
-			/>
-			{!!text && <Text style={styles.emptyText}>{String(text)}</Text>}
-		</View>
-	);
+export default function Empty({ animation, text, size, style }: LoadingParams) {
+	return <LottieBase animation={animation} defaultText='Loading...' text={text} size={size} style={style} />;
 }

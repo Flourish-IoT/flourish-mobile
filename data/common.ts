@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { AxiosInstance } from './api';
+import { AxiosInstance, mockEndpoint } from './api';
 
 export interface Plant {
 	id: number;
@@ -19,6 +19,16 @@ export interface Sensor {
 
 export const useTestEndpoint = () => {
 	return useQuery(['testEndpoint'], () => {
-		return AxiosInstance.get<Sensor>('/flourish-test').then(res => res.data);
+		mockEndpoint(500)
+			.onGet('/flourish-test')
+			.reply<Plant[]>(200, [
+				{
+					id: 1,
+					name: 'Fredrick',
+					scientificName: 'Fredrickitios',
+					image: undefined,
+				},
+			]);
+		return AxiosInstance.get<Plant[]>('/flourish-test').then(res => res.data);
 	});
 };
