@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useChangeUsername } from '../../data/user';
+import ScreenContainer from '../../lib/components/ScreenContainer';
 
 interface ChangeDisplayNameScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -32,7 +32,7 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 	};
 
 	return (
-		<View style={{ flex: 1, justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<TextInput
 				label={getNewUsernameError() ?? 'New Username'}
 				error={!!getNewUsernameError()}
@@ -48,6 +48,6 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 			>
 				Update
 			</Button>
-		</View>
+		</ScreenContainer>
 	);
 }

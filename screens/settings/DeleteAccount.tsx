@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Alert, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
 import { AppName } from '../../lib/utils/helper';
 import { Theme } from '../../providers/Theme';
+import ScreenContainer from '../../lib/components/ScreenContainer';
 
 interface DeleteAccountScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -40,7 +41,7 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 	};
 
 	return (
-		<View style={{ flex: 1, justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<View>
 				<TextInput
 					label={'Current password'}
@@ -59,6 +60,6 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 			>
 				Delete Account
 			</Button>
-		</View>
+		</ScreenContainer>
 	);
 }
