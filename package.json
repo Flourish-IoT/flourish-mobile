@@ -46,7 +46,7 @@
 		"react-native-toast-notifications": "^3.2.3",
 		"react-native-web": "0.17.1",
 		"react-query": "^3.33.1",
-		"react-native-modal": "13.0.0"
+		"react-native-modal": "^12.1.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
