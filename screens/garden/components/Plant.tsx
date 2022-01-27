@@ -19,7 +19,7 @@ export default function Plant({ viewMode, plantName, image }: PlantProps) {
 		>
 			<View>
 				<Image
-					source={image ? { url: image } : require('../../../assets/placeholder/plant.png')}
+					source={image ? { url: image } : require('../../../lib/assets/placeholder/plant.png')}
 					style={{ height: '100%', width: '100%' }}
 				/>
 			</View>

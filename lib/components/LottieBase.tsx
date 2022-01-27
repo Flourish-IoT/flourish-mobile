@@ -15,7 +15,7 @@ interface LottieBaseParams {
 type LottieName = 'magnifyingGlass' | 'rings' | 'growing' | 'error' | 'relax';
 
 export const getLottie = (name: LottieName) => {
-	const lottieLocation = '../../assets/lottie';
+	const lottieLocation = '../assets/lottie';
 
 	switch (name) {
 		case 'magnifyingGlass':

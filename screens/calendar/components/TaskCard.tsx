@@ -3,7 +3,7 @@ import React from 'react';
 import { Image } from 'react-native';
 import { List, Text } from 'react-native-paper';
 import { Task } from '../../../data/calendar';
-import { useTestEndpoint } from '../../../data/common';
+import { usePlants } from '../../../data/garden';
 import { Theme } from '../../../providers/Theme';
 
 interface TaskCardProps {
@@ -11,7 +11,7 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants();
 
 	if (plantsIsLoading) return null;
 
@@ -47,7 +47,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 					icon={() => (
 						<Image
 							style={{ height: '100%', width: '100%' }}
-							source={plantImage ? { url: plantImage } : require('../../../assets/placeholder/plant.png')}
+							source={plantImage ? { url: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
 						/>
 					)}
 				/>

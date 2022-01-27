@@ -29,7 +29,7 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 	return (
 		<>
 			<StepContainer navigation={navigation} canGoBack={false}>
-				<Logo />
+				<Logo style={{ height: 250, width: 250 }} />
 				<Button
 					mode='outlined'
 					style={{ width: '100%', maxWidth: 300, marginVertical: 10 }}

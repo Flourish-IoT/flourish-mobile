@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { List } from 'react-native-paper';
-import { useTestEndpoint } from '../../data/common';
+import { usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Chevron from '../../lib/icons/Chevron';
 import { Calendar } from 'react-native-calendars';
@@ -25,7 +25,7 @@ export type CalendarView = 'Month' | 'Week';
 const calendarViews: CalendarView[] = ['Month', 'Week'];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
-	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants();
 	const { data: tasks, isLoading: tasksIsLoading } = useTasks();
 
 	const [selectedInterval, setSelectedInterval] = useState<CalendarView>(calendarViews[0]);

@@ -5,7 +5,7 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { Button } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import { useTestEndpoint } from '../data/common';
+import { usePlants } from '../data/garden';
 import Loading from '../lib/components/Loading';
 import { useToast } from "react-native-toast-notifications";
 
@@ -15,14 +15,14 @@ export default function TestingScreen({ navigation }) {
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const [cameraRef, setCameraRef] = useState();
     const [imageIsProcessing, setImageIsProcessing] = useState(false);
-    const { data: plants, isLoading: testDataIsLoading } = useTestEndpoint();
+    const { data: plants, isLoading: testDataIsLoading } = usePlants();
     const [photosPermission, setPhotosPermission] = useState();
     const [cameraPermission, setCameraPermission] = useState();
 
     useLayoutEffect(() => {
         (async () => {
             setPhotosPermission(await ImagePicker.requestMediaLibraryPermissionsAsync());
-            setCameraPermission(await Camera.requestPermissionsAsync());
+            setCameraPermission(await Camera.requestCameraPermissionsAsync());
         })();
     }, [navigation]);
 
@@ -82,7 +82,7 @@ export default function TestingScreen({ navigation }) {
                 overflow: 'hidden'
             }}>
                 <Image
-                    source={image ? { uri: image } : require('../assets/placeholder-profile.png')}
+                    source={image ? { uri: image } : require('../lib/assets/placeholder/profile.png')}
                     style={{ width: 150, height: 150 }} />
                 <View style={{ padding: 10 }}>
                     <Text>Name: {plants[0].name}</Text>

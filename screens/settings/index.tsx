@@ -25,7 +25,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
 			<View style={styles.section}>
 				<Text>Account</Text>
 				<Divider style={styles.divider} />

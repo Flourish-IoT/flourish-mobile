@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Svg, { Path, Circle, SvgProps } from 'react-native-svg';
 import { ConfidenceRating } from '../../data/user';
 

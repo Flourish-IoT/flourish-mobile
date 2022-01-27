@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import Grid from '../../lib/icons/Grid';
 import Plant from './components/Plant';
-import { useTestEndpoint } from '../../data/common';
+import { usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';
 import ScreenContainer from '../../lib/components/ScreenContainer';
@@ -19,7 +19,7 @@ const viewModes: ViewMode[] = ['Carousel', 'Grid'];
 
 export default function GardenScreenStack({ navigation }: GardenScreenStackProps) {
 	const [viewType, setViewType] = useState<ViewMode>('Carousel');
-	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants();
 
 	return (
 		<ScreenContainer>
