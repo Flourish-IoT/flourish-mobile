@@ -55,6 +55,14 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 				>
 					**Testing Screen**
 				</Button>
+				<Button
+					mode='text'
+					onPress={() => {
+						navigation.navigate('Calendar');
+					}}
+				>
+					**Calendar Screen**
+				</Button>
 			</StepContainer>
 		</>
 	);
@@ -63,7 +71,6 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 export default function WelcomeScreenStack() {
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar style='dark' />
 			<Stack.Navigator>
 				<Stack.Screen
 					name='SignUp'

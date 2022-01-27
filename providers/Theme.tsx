@@ -1,4 +1,5 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { ViewStyle } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -19,6 +20,8 @@ interface LottieSizeObj {
 interface OurThemeProps extends ReactNativePaper.Theme {
 	// Custom theme property types here
 	colors: OurColorsProps;
+	borderRadius: number;
+	padding: number;
 	lottie: {
 		wrapper: ViewStyle;
 		width: LottieSizeObj;
@@ -31,11 +34,14 @@ export const Theme: OurThemeProps = {
 	dark: DefaultTheme.dark, // Whether this is a dark theme or light theme
 	mode: DefaultTheme.mode, // Color mode for dark theme
 	roundness: 2, // Roundness of common elements, such as buttons
+	borderRadius: 10, // Common border radius
+	padding: 10, // Common container padding
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
 	},
 	lottie: {
 		wrapper: {
+			// The container around all the lottie animation elements (lottie itself, text beneath)
 			height: '100%',
 			width: '100%',
 			alignSelf: 'center',
@@ -43,16 +49,19 @@ export const Theme: OurThemeProps = {
 			alignItems: 'center',
 		},
 		width: {
+			// Width of the lottie itself
 			sm: 75,
 			md: 100,
 			lg: 200,
 		},
 		fontSize: {
+			// Font size for the text beneath
 			sm: 10,
 			md: 15,
 			lg: 20,
 		},
 		fontWidth: {
+			// Allowed max-width of the text beneath
 			sm: 100,
 			md: 175,
 			lg: 300,
@@ -67,7 +76,7 @@ export const Theme: OurThemeProps = {
 		disabled: DefaultTheme.colors.disabled, // Color for disabled elements
 		placeholder: DefaultTheme.colors.placeholder, // Color for placeholder text, such as input placeholder
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
-		onSurface: DefaultTheme.colors.onSurface, // Background color for snackbars
+		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications
 		notification: DefaultTheme.colors.notification, // Background color for badges
 		error: DefaultTheme.colors.error, // The color of error text, for example the error message for text inputs
 		border: 'black', // The color of borders
@@ -114,5 +123,10 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-	return <PaperProvider theme={Theme}>{children}</PaperProvider>;
+	return (
+		<PaperProvider theme={Theme}>
+			<StatusBar style='dark' />
+			{children}
+		</PaperProvider>
+	);
 }
