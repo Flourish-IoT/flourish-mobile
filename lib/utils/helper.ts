@@ -17,3 +17,29 @@ export const isValidPassword = (value: string) => {
 	const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 	return regex.test(value);
 };
+
+export const padString = (text: string | number, direction: 'left' | 'right', length: number, char: string) => {
+	// Adds enough of the specified character to make text as long as length
+	text = String(text);
+	while (text.length < length) text = direction === 'left' ? char + text : text + char;
+	return text;
+};
+
+export const getMonthName = (month: number) => {
+	const monthNames = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December',
+	];
+
+	return monthNames[month];
+};

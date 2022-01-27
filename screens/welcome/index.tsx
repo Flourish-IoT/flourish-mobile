@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import StepContainer from './components/StepContainer';
 import { AppName } from '../../lib/utils/helper';
 import Logo from '../../lib/icons/Logo';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getLoggedIn } from '../../data/auth';
 
@@ -47,13 +47,40 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 				>
 					already have an account? log in
 				</Button>
+
+				<Text>Temporary navigation to screens:</Text>
+
 				<Button
 					mode='text'
 					onPress={() => {
 						navigation.navigate('Testing');
 					}}
 				>
-					**Testing Screen**
+					Testing
+				</Button>
+				<Button
+					mode='text'
+					onPress={() => {
+						navigation.navigate('SettingsStack');
+					}}
+				>
+					Settings
+				</Button>
+				<Button
+					mode='text'
+					onPress={() => {
+						navigation.navigate('Calendar');
+					}}
+				>
+					Calendar
+				</Button>
+				<Button
+					mode='text'
+					onPress={() => {
+						navigation.navigate('Garden');
+					}}
+				>
+					Garden
 				</Button>
 			</StepContainer>
 		</>
@@ -63,7 +90,6 @@ const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
 export default function WelcomeScreenStack() {
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar style='dark' />
 			<Stack.Navigator>
 				<Stack.Screen
 					name='SignUp'

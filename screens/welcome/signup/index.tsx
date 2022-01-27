@@ -6,7 +6,7 @@ import StepContainer from '../components/StepContainer';
 import SsoServices from '../../../lib/icons/SsoServices';
 import { AppName, isValidEmail, isValidPassword, isValidUsername } from '../../../lib/utils/helper';
 import { checkEmailVerificationCode, finishAccountSetup, sendEmailVerificationCode, setLoggedIn } from '../../../data/auth';
-import RadioButton from '../../../lib/components/RadioButton';
+import RadioButton from '../../../lib/components/styled/RadioButton';
 import Confidence from '../../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';

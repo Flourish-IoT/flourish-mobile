@@ -12,7 +12,7 @@ interface LottieBaseParams {
 	size?: LottieSize;
 }
 
-type LottieName = 'magnifyingGlass' | 'rings' | 'growing' | 'error';
+type LottieName = 'magnifyingGlass' | 'rings' | 'growing' | 'error' | 'relax';
 
 export const getLottie = (name: LottieName) => {
 	const lottieLocation = '../../assets/lottie';
@@ -26,12 +26,12 @@ export const getLottie = (name: LottieName) => {
 			return require(`${lottieLocation}/growing.json`);
 		case 'error':
 			return require(`${lottieLocation}/error.json`);
+		case 'relax':
+			return require(`${lottieLocation}/relax.json`);
 	}
 };
 
 export default function LottieBase({ animation, defaultText, text, size = 'md', style }: LottieBaseParams) {
-	if (!text && !animation) throw 'You must have either loading text or an animation';
-
 	text = text ?? defaultText;
 
 	return (

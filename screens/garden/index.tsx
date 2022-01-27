@@ -1,37 +1,45 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import Grid from '../../lib/icons/Grid';
 import Plant from './components/Plant';
 import { useTestEndpoint } from '../../data/common';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';
+import ScreenContainer from '../../lib/components/ScreenContainer';
+import Carousel from '../../lib/icons/Carousel';
 
 interface GardenScreenStackProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
 export type ViewMode = 'Carousel' | 'Grid';
+const viewModes: ViewMode[] = ['Carousel', 'Grid'];
 
 export default function GardenScreenStack({ navigation }: GardenScreenStackProps) {
 	const [viewType, setViewType] = useState<ViewMode>('Carousel');
 	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
 
 	return (
-		<>
+		<ScreenContainer>
 			<View
 				style={{
 					display: 'flex',
 					flexDirection: 'row',
+					justifyContent: 'center',
 				}}
 			>
-				<Button mode={viewType === 'Carousel' ? 'contained' : 'outlined'} onPress={() => setViewType('Carousel')}>
-					Carousel
-				</Button>
-				<Button mode={viewType === 'Grid' ? 'contained' : 'outlined'} onPress={() => setViewType('Grid')}>
-					Grid
-				</Button>
+				{viewModes.map((m) => (
+					<Button
+						key={m}
+						style={{ width: 50, opacity: viewType === m ? 1 : 0.5 }}
+						mode='contained'
+						onPress={() => setViewType(m)}
+					>
+						{m === 'Carousel' ? <Carousel /> : <Grid />}
+					</Button>
+				))}
 			</View>
 			<View>
 				{plantsIsLoading ? (
@@ -44,6 +52,6 @@ export default function GardenScreenStack({ navigation }: GardenScreenStackProps
 					plants.map((p, index) => <Plant key={index + p.id} viewMode={viewType} plantName={p.name} />)
 				)}
 			</View>
-		</>
+		</ScreenContainer>
 	);
 }

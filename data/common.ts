@@ -28,6 +28,12 @@ export const useTestEndpoint = () => {
 					scientificName: 'Fredrickitios',
 					image: undefined,
 				},
+				{
+					id: 2,
+					name: 'Richard',
+					scientificName: 'Richardrock',
+					image: undefined,
+				},
 			]);
 		return AxiosInstance.get<Plant[]>('/flourish-test').then(res => res.data);
 	});

@@ -4,7 +4,7 @@ import { LottieSize } from '../../providers/Theme';
 import LottieBase from './LottieBase';
 
 interface EmptyParams {
-	animation: 'error' | 'magnifyingGlass';
+	animation?: 'error' | 'magnifyingGlass' | 'relax';
 	text?: string;
 	style?: ViewStyle;
 	size?: LottieSize;

@@ -15,7 +15,7 @@ export default function TestingScreen({ navigation }) {
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const [cameraRef, setCameraRef] = useState();
     const [imageIsProcessing, setImageIsProcessing] = useState(false);
-    const { data: testData, isLoading: testDataIsLoading } = useTestEndpoint();
+    const { data: plants, isLoading: testDataIsLoading } = useTestEndpoint();
     const [photosPermission, setPhotosPermission] = useState();
     const [cameraPermission, setCameraPermission] = useState();
 
@@ -85,12 +85,12 @@ export default function TestingScreen({ navigation }) {
                     source={image ? { uri: image } : require('../assets/placeholder-profile.png')}
                     style={{ width: 150, height: 150 }} />
                 <View style={{ padding: 10 }}>
-                    <Text>Name: {testData.plant.name}</Text>
-                    <Text>ID: {testData.plant.id}</Text>
-                    <Text>Sensor ID: {testData.sensorId}</Text>
-                    <Text>Light: {testData.lux}</Text>
-                    <Text>Water: {testData.soilMoisture}</Text>
-                    <Text>Temp: {testData.temperature}</Text>
+                    <Text>Name: {plants[0].name}</Text>
+                    <Text>ID: {plants[0].id}</Text>
+                    {/* <Text>Sensor ID: {plants[0].sensorId}</Text>
+                    <Text>Light: {plants[0].lux}</Text>
+                    <Text>Water: {plants[0].soilMoisture}</Text>
+                    <Text>Temp: {plants[0].temperature}</Text> */}
                 </View>
             </View>
             <Button style={styles.button} onPress={openPhotos} raised>Button</Button>

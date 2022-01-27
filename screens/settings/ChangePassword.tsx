@@ -5,6 +5,7 @@ import TextInput from '../../lib/components/styled/TextInput';
 import { useChangePassword } from '../../data/user';
 import { Button } from 'react-native-paper';
 import { isValidPassword } from '../../lib/utils/helper';
+import ScreenContainer from '../../lib/components/ScreenContainer';
 
 interface ChangePasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -44,7 +45,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 	};
 
 	return (
-		<View style={{ flex: 1, justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<View>
 				<TextInput
 					label={'Current password'}
@@ -78,6 +79,6 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 			>
 				Update
 			</Button>
-		</View>
+		</ScreenContainer>
 	);
 }
