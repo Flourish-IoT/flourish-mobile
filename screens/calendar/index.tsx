@@ -94,7 +94,6 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 			<ChipFilter
 				showAllOption={true}
-				canHaveNoneSelected={true}
 				items={plants.map(({ name, id }) => ({ name, id }))}
 				selectedItems={selectedPlants}
 				displayKey='name'

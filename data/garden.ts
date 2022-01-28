@@ -20,7 +20,7 @@ export interface Plant {
 
 export const usePlants = () => {
 	return useQuery(['testEndpoint'], () => {
-		mockEndpoint(500)
+		mockEndpoint(250)
 			.onGet('/flourish-test')
 			.reply<Plant[]>(200, [
 				{

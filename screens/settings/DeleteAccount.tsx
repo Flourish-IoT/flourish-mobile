@@ -32,6 +32,7 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 							index: 0,
 							routes: [{ name: 'Welcome' }],
 						});
+						alert('Your account has been successfully deleted.');
 					} catch (error) {
 						alert(`Error: ${error}`);
 					}
@@ -41,7 +42,7 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
 			<View>
 				<TextInput
 					label={'Current password'}

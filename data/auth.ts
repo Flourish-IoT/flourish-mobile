@@ -1,52 +1,91 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
+import { useMutation, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { ConfidenceRating } from './user';
+import { tempUser, User, useUser } from './user';
 
-interface SignUpParams {
-	confidenceRating: ConfidenceRating;
+export const getUserId = async () => {
+	return await Number(SecureStore.getItemAsync('userId'));
+};
+
+export const setUserId = async (value: number) => {
+	return await SecureStore.setItemAsync('userId', String(value));
+};
+
+interface SendEmailVerificationCodeParams {
+	email: string;
+	username: string;
+	password: string;
 }
 
-export const getAccessToken = async () => {
-	return await SecureStore.getItemAsync('accessToken');
+export const useSendEmailVerificationCode = () => {
+	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
+		const query = '/users';
+		mockEndpoint(0).onPost(query, { params: { email, username, password } }).reply<string>(200, 'OK');
+		return AxiosInstance.post<string>(query, { params: { email, username, password } });
+	});
 };
 
-export const setAccessToken = async (value: string) => {
-	return await SecureStore.setItemAsync('accessToken', value);
+interface CheckEmailVerificationCodeParams {
+	email: string;
+	code: string;
+}
+
+export const useCheckEmailVerificationCode = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		({ email, code }: CheckEmailVerificationCodeParams) => {
+			const query = `/verify`;
+			mockEndpoint(0).onPost(query, { params: { email, code } }).reply<User>(200, tempUser);
+			return AxiosInstance.post<User>(query, { params: { email, code } });
+		},
+		{
+			onSuccess: ({ data: user }, newUsername) => {
+				queryClient.setQueryData<User>(['get', 'users', user.id], () => user);
+			},
+		}
+	);
 };
 
-export const getLoggedIn = async () => {
-	return (await AsyncStorage.getItem('loggedIn')) === 'TRUE';
+type FinishAccountParams = Omit<User, 'id' | 'email' | 'username'>;
+
+export const useFinishAccountSetup = () => {
+	const { data: user } = useUser('me');
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		({ preferences }: FinishAccountParams | undefined) => {
+			const query = `/users${user.id}`;
+			mockEndpoint(0).onPut(query, { params: { preferences } }).reply<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { preferences } });
+		},
+		{
+			onSuccess: (res, { preferences }) => {
+				queryClient.setQueryData<User>(['get', 'users', user.id], (oldData) => ({ ...oldData, preferences }));
+			},
+		}
+	);
 };
 
-export const setLoggedIn = async (value: boolean) => {
-	return await AsyncStorage.setItem('loggedIn', String(value).toUpperCase());
-};
+interface EmailLoginParams {
+	email: string;
+	password: string;
+}
 
-export const sendEmailVerificationCode = (email: string, password: string) => {
-	mockEndpoint(0).onPost('/send_email_verification_code', { params: { email, password } }).reply(200, true);
-	return AxiosInstance.post('/send_email_verification_code', { params: { email, password } });
-};
+export const useLoginWithEmail = () => {
+	const queryClient = useQueryClient();
 
-export const checkEmailVerificationCode = (email: string, code: string) => {
-	mockEndpoint(100).onPost('/users/${user_id}/verify', { params: { code } }).reply(200, true);
-	return AxiosInstance.post('/users/${user_id}/verify', { params: { code } });
-};
-
-export const finishAccountSetup = (signUpParams: SignUpParams) => {
-	mockEndpoint(100).onPost('/finish_account_setup', { params: { signUpParams } }).reply(200, true);
-	return AxiosInstance.post('/finish_account_setup', { params: { signUpParams } });
-};
-
-export const attemptEmailLogin = (email: string, password: string) => {
-	mockEndpoint(100).onPost('/users/login', { params: { email, password } }).reply(200, '123abc');
-	return AxiosInstance.post<string>('/users/login', { params: { email, password } });
-};
-
-export const useUser = () => {
-	return {
-		id: 123,
-		username: 'flourish-user-2000',
-		email: 'user@gmail.com',
-	};
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			mockEndpoint(0).onPost(query, { params: { email, password } }).reply<User>(200, tempUser);
+			return AxiosInstance.post<User>(query, { params: { email, password } });
+		},
+		{
+			onSuccess: ({ data: user }, { email, password }) => {
+				queryClient.setQueryData<User>(['get', 'users', user.id], () => user);
+			},
+		}
+	);
 };

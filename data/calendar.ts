@@ -12,7 +12,7 @@ export interface Task {
 
 export const useTasks = () => {
 	return useQuery(['tasks'], () => {
-		mockEndpoint(500)
+		mockEndpoint(250)
 			.onGet('/tasks')
 			.reply<Task[]>(200, [
 				{ id: 1, plantId: 1, datetime: new Date(), name: 'Water Fredrick', complete: false },

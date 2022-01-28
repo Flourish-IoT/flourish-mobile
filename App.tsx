@@ -8,6 +8,7 @@ import { NavigatorTheme, GlobalNavigatorOptions } from './providers/Theme';
 import GardenScreenStack from './screens/garden';
 import SettingsScreenStack from './screens/settings';
 import CalendarScreen from './screens/calendar';
+import ForgotPasswordScreen from './screens/forgotpassword';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
 					<Stack.Screen name='Garden' component={GardenScreenStack} />
 					<Stack.Screen name='Testing' component={TestingScreen} />
 					<Stack.Screen name='SettingsStack' component={SettingsScreenStack} options={{ headerShown: false }} />
+					<Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} options={{ title: 'Forgot Password' }} />
 					<Stack.Screen name='Calendar' component={CalendarScreen} options={{ headerShown: false }} />
 				</Stack.Navigator>
 			</NavigationContainer>

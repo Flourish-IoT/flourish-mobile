@@ -4,8 +4,14 @@ import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepContainer from '../components/StepContainer';
 import SsoServices from '../../../lib/icons/SsoServices';
-import { AppName, isValidEmail, isValidPassword, isValidUsername } from '../../../lib/utils/helper';
-import { checkEmailVerificationCode, finishAccountSetup, sendEmailVerificationCode, setLoggedIn } from '../../../data/auth';
+import { AppName } from '../../../lib/utils/helper';
+import { isValidEmail, isValidPassword, isValidUsername } from '../../../lib/utils/validation';
+import {
+	useFinishAccountSetup,
+	setUserId,
+	useCheckEmailVerificationCode,
+	useSendEmailVerificationCode,
+} from '../../../data/auth';
 import RadioButton from '../../../lib/components/styled/RadioButton';
 import Confidence from '../../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../../data/user';
@@ -61,9 +67,9 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 };
 
 const SignUpWithEmailStep = ({ navigation }: StepProps) => {
-	const [formIsLoading, setFormIsLoading] = useState(false);
+	const sendEmailVerificationCode = useSendEmailVerificationCode();
 
-	const [username, setUsername] = useState('flourish-user-2000');
+	const [username, setUsername] = useState('Gabby');
 	const [email, setEmail] = useState('user@gmail.com');
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
@@ -73,7 +79,7 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const passwordMatches = password === confirmPassword;
 	const passwordIsSecure = isValidPassword(password);
 
-	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid;
+	const formIsValid = passwordMatches && passwordIsSecure && emailIsValid && usernameIsValid;
 	const disableNextBtn = !formIsValid;
 
 	const getUsernameErrorMsg = () => {
@@ -101,24 +107,21 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	};
 
 	const onSubmit = async () => {
-		setFormIsLoading(true);
-		sendEmailVerificationCode(email, password)
-			.then((res) => {
-				navigation.navigate('EmailVerification', { email, password });
-			})
-			.catch((error) => {
-				alert('There was an error while processing your request');
-			})
-			.finally(() => {
-				setFormIsLoading(false);
-			});
+		try {
+			await sendEmailVerificationCode.mutateAsync({ email, username, password });
+			navigation.navigate('EmailVerification', { email, username, password });
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
 	};
+
+	const formIsLoading = sendEmailVerificationCode.isLoading;
 
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Sign up with your email address</Text>
 			<TextInput
-				label={getUsernameErrorMsg() ?? 'Username'}
+				label={getUsernameErrorMsg() ?? 'Display Name'}
 				onChangeText={setUsername}
 				error={!!getUsernameErrorMsg()}
 				value={username}
@@ -153,13 +156,15 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 
 interface EmailVerificationStepProps {
 	email: string;
+	username: string;
 	password: string;
 }
 
 const EmailVerificationStep = ({ route, navigation }: StepProps) => {
-	const { email, password } = route.params as EmailVerificationStepProps;
+	const sendEmailVerificationCode = useSendEmailVerificationCode();
+	const checkEmailVerificationCode = useCheckEmailVerificationCode();
+	const { email, username, password } = route.params as EmailVerificationStepProps;
 
-	const [formIsLoading, setFormIsLoading] = useState(false);
 	const [code, setCode] = useState<string>('2022');
 	const [attempts, setAttempts] = useState(0);
 
@@ -172,45 +177,35 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	}, [code]);
 
 	const onResend = async () => {
-		setFormIsLoading(true);
-		sendEmailVerificationCode(email, password)
-			.then((res) => {
-				setAttempts(0);
-			})
-			.catch((error) => {
-				alert('There was an error while processing your request');
-			})
-			.finally(() => {
-				setFormIsLoading(false);
-			});
+		try {
+			await sendEmailVerificationCode.mutateAsync({ email, username, password });
+			alert('An email has been sent.');
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
 	};
 
-	const onVerifyPress = () => {
-		setFormIsLoading(true);
-
-		checkEmailVerificationCode(email, code)
-			.then(async (res) => {
-				await setLoggedIn(true);
-				navigation.reset({
-					index: 0,
-					routes: [{ name: 'RateExpertise' }],
-				});
-			})
-			.catch((error) => {
-				alert('There was an error while processing your request');
-				setAttempts(0);
-			})
-			.finally(() => {
-				setFormIsLoading(false);
-				setAttempts(attempts + 1);
+	const onVerifyPress = async () => {
+		try {
+			const { data: user } = await checkEmailVerificationCode.mutateAsync({ email, code });
+			await setUserId(user.id);
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'RateExpertise' }],
 			});
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
+
+		setAttempts(attempts + 1);
 	};
+
+	const formIsLoading = sendEmailVerificationCode.isLoading || checkEmailVerificationCode.isLoading;
 
 	return (
 		<StepContainer navigation={navigation}>
 			<Text>Verification Code</Text>
 			<Text>We have sent a verification code to "{email}"</Text>
-			{/* @ts-ignore */}
 			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
 			<Text>Didn't receive a code?</Text>
 			<Button mode='text' onPress={onResend} disabled={disableResendBtn} loading={disableResendBtn && formIsLoading}>
@@ -230,6 +225,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 };
 
 const RateExpertiseStep = ({ navigation }: StepProps) => {
+	const finishAccountSetup = useFinishAccountSetup();
 	const [formIsLoading, setFormIsLoading] = useState(false);
 	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
 	const [skip, setSkip] = useState(false);
@@ -240,23 +236,25 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 		proceed();
 	};
 
-	const proceed = () => {
-		setFormIsLoading(true);
-
-		finishAccountSetup({ confidenceRating: skip ? null : userRating })
-			.then(async (res) => {
-				await setLoggedIn(true);
-				navigation.reset({
-					index: 0,
-					routes: [{ name: 'Garden' }],
-				});
-			})
-			.catch((error) => {
-				alert('There was an error while processing your request');
-			})
-			.finally(() => {
-				setFormIsLoading(false);
+	const proceed = async () => {
+		try {
+			await finishAccountSetup.mutateAsync(
+				skip
+					? undefined
+					: {
+							preferences: {
+								confidence_rating: userRating,
+								unit_preference: 'Fahrenheit',
+							},
+					  }
+			);
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'Garden' }],
 			});
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
 	};
 
 	return (

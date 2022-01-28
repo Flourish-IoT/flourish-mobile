@@ -1,7 +1,7 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Button, Text } from 'react-native-paper';
-import { attemptEmailLogin, setAccessToken } from '../../data/auth';
+import { useLoginWithEmail, setAccessToken } from '../../data/auth';
 import TextInput from '../../lib/components/styled/TextInput';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
 	const onSubmit = async () => {
 		setFormIsLoading(true);
-		attemptEmailLogin(email, password)
+		useLoginWithEmail(email, password)
 			.then(async ({ data: accessToken }) => {
 				await setAccessToken(accessToken);
 				navigation.reset({

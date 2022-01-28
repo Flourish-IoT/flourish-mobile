@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import WalkthroughScreen from './signup';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StatusBar } from 'expo-status-bar';
 import LoginScreen from './Login';
 import { View } from 'react-native';
 import StepContainer from './components/StepContainer';
@@ -9,7 +8,6 @@ import { AppName } from '../../lib/utils/helper';
 import Logo from '../../lib/icons/Logo';
 import { Button, Text } from 'react-native-paper';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { getLoggedIn } from '../../data/auth';
 
 const Stack = createStackNavigator();
 
@@ -17,15 +15,7 @@ interface WelcomeScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
-const WelcomeScreen = ({ navigation, ...rest }: WelcomeScreenProps) => {
-	const [loggedInState, setLoggedInState] = useState(false);
-
-	useEffect(() => {
-		async () => {
-			setLoggedInState(await getLoggedIn());
-		};
-	}, [navigation]);
-
+const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
 	return (
 		<>
 			<StepContainer navigation={navigation} canGoBack={false}>

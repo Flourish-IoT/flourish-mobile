@@ -32,7 +32,7 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
 			<TextInput
 				label={getNewUsernameError() ?? 'New Username'}
 				error={!!getNewUsernameError()}
