@@ -54,28 +54,9 @@ export default function GardenScreenStack({ navigation }: GardenScreenStackProps
 			</View>
 			<View>
 				<Text>Temporary navigation to screens:</Text>
-				<Button
-					onPress={() => {
-						navigation.navigate('Testing');
-					}}
-				>
-					Testing
-				</Button>
-				<Button
-					onPress={() => {
-						navigation.navigate('SettingsStack');
-					}}
-				>
-					Settings
-				</Button>
-				<Button
-					onPress={() => {
-						navigation.navigate('Calendar');
-					}}
-				>
-					Calendar
-				</Button>
-				<Button onPress={() => navigation.navigate('SettingsStack')}>SETTINGS</Button>
+				<Button onPress={() => navigation.navigate('Testing')}>Testing</Button>
+				<Button onPress={() => navigation.navigate('SettingsStack')}>Settings</Button>
+				<Button onPress={() => navigation.navigate('Calendar')}>Calendar</Button>
 			</View>
 		</ScreenContainer>
 	);

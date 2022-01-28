@@ -35,7 +35,7 @@ export default function ExportDataScreen({ navigation }: ExportDataScreenProps) 
 				disabled={userIsLoading || dataSent}
 				onPress={onExportDataBtnPress}
 			>
-				Update
+				Send
 			</Button>
 		</ScreenContainer>
 	);
