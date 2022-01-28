@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { getUserId } from './auth';
+import { getUserId, useLogOut } from './auth';
 
 export const getConfidenceText = (rating: ConfidenceRating) => {
 	switch (rating) {
@@ -56,18 +56,6 @@ export const useForgotPassword = () => {
 	});
 };
 
-export const useDeleteAccount = () => {
-	const { data: user } = useUser('me');
-
-	return useMutation((currentPassword: string) => {
-		const query = `/users/${user.id}`;
-		mockEndpoint(250)
-			.onDelete(query, { params: { password: currentPassword } })
-			.reply<string>(200, 'OK');
-		return AxiosInstance.delete<string>(query, { params: { password: currentPassword } });
-	});
-};
-
 export const useExportData = () => {
 	const { data: user } = useUser('me');
 
@@ -76,6 +64,26 @@ export const useExportData = () => {
 		mockEndpoint(250).onGet(query).reply<string>(200, 'OK');
 		return AxiosInstance.get<string>(query);
 	});
+};
+
+export const useDeleteAccount = () => {
+	const { data: user } = useUser('me');
+	const logOut = useLogOut();
+
+	return useMutation(
+		(currentPassword: string) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(250)
+				.onDelete(query, { params: { password: currentPassword } })
+				.reply<string>(200, 'OK');
+			return AxiosInstance.delete<string>(query, { params: { password: currentPassword } });
+		},
+		{
+			onSuccess: (res, req) => {
+				logOut.mutate();
+			},
+		}
+	);
 };
 
 export type UnitPreference = 'Fahrenheit' | 'Celsius';
@@ -105,7 +113,10 @@ export interface UserPreferences {
 
 export const useUser = (userId: 'me' | number) => {
 	return useQuery(['get', 'users', userId], async () => {
-		if (userId === 'me') userId = await getUserId();
+		if (userId === 'me') {
+			const potentialUserId = await getUserId();
+			!!potentialUserId && (userId = Number(potentialUserId));
+		}
 
 		mockEndpoint(250).onGet(`/users/${userId}`).reply<User>(200, tempUser);
 		const response = await AxiosInstance.get<User>(`/users/${userId}`);

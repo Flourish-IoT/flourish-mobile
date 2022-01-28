@@ -1,15 +1,32 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
 import { tempUser, User, useUser } from './user';
 
 export const getUserId = async () => {
-	return await Number(SecureStore.getItemAsync('userId'));
+	return await SecureStore.getItemAsync('userId');
 };
 
-export const setUserId = async (value: number) => {
-	return await SecureStore.setItemAsync('userId', String(value));
+export const setUserId = async (value: number | null) => {
+	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
+};
+
+export const useIsLoggedIn = () => {
+	return useQuery(['loggedIn'], async () => {
+		return !!(await getUserId());
+	});
+};
+
+export const useLogOut = () => {
+	const { data: user } = useUser('me');
+	const queryClient = useQueryClient();
+
+	return useMutation(async () => {
+		await queryClient.setQueryData<User>(['get', 'users', user.id], () => null);
+		await queryClient.setQueryData(['loggedIn'], () => false);
+		await setUserId(null);
+	});
 };
 
 interface SendEmailVerificationCodeParams {

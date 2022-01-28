@@ -18,6 +18,7 @@ import { getConfidenceText, ConfidenceRating } from '../../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import StepModal from '../components/StepModal';
 import TextInput from '../../../lib/components/styled/TextInput';
+import { useQueryClient } from 'react-query';
 
 const Stack = createStackNavigator();
 
@@ -225,8 +226,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 };
 
 const RateExpertiseStep = ({ navigation }: StepProps) => {
+	const queryClient = useQueryClient();
 	const finishAccountSetup = useFinishAccountSetup();
-	const [formIsLoading, setFormIsLoading] = useState(false);
 	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
 	const [skip, setSkip] = useState(false);
 	const ratings: ConfidenceRating[] = [1, 2, 3];
@@ -248,14 +249,13 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 							},
 					  }
 			);
-			navigation.reset({
-				index: 0,
-				routes: [{ name: 'Garden' }],
-			});
+			queryClient.setQueryData(['loggedIn'], () => true);
 		} catch (error) {
 			alert(`Error: ${error}`);
 		}
 	};
+
+	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
 		<>

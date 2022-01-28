@@ -2,9 +2,11 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ViewStyle } from 'react-native';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { useFonts } from '@use-expo/font';
 import Loading from '../lib/components/Loading';
+import Chevron from '../lib/icons/Chevron';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
@@ -167,6 +169,12 @@ export const NavigatorTheme = {
 export const GlobalNavigatorOptions: StackNavigationOptions = {
 	headerStyle: { backgroundColor: Theme.colors.primary },
 	headerTitleStyle: { color: 'white' },
+	headerLeft: ({ canGoBack, onPress }) =>
+		canGoBack ? (
+			<TouchableOpacity onPress={onPress} style={{ padding: Theme.padding }}>
+				<Chevron direction='left' fill='white' />
+			</TouchableOpacity>
+		) : null,
 };
 
 interface ThemeProviderProps {
@@ -189,7 +197,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 		'Lato-Thin': require('../lib/assets/fonts/Lato/Thin.ttf'),
 	});
 
-	if (!fontsLoaded) return null; // TODO: Replace with splash screen
+	if (!fontsLoaded) return <Loading text='Loading assets...' />; // TODO: Replace with splash screen
 
 	return (
 		<PaperProvider theme={Theme}>

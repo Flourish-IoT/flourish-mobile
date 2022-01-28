@@ -1,7 +1,8 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Button, Text } from 'react-native-paper';
-import { useLoginWithEmail, setAccessToken } from '../../data/auth';
+import { useQueryClient } from 'react-query';
+import { useLoginWithEmail } from '../../data/auth';
 import TextInput from '../../lib/components/styled/TextInput';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
@@ -14,7 +15,8 @@ interface LoginScreenProps {
 }
 
 export default function LoginScreen({ navigation }: LoginScreenProps) {
-	const [formIsLoading, setFormIsLoading] = useState(false);
+	const queryClient = useQueryClient();
+	const loginWithEmail = useLoginWithEmail();
 
 	const [email, setEmail] = useState('user@gmail.com');
 	const [password, setPassword] = useState('abcdefg123');
@@ -34,21 +36,12 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	};
 
 	const onSubmit = async () => {
-		setFormIsLoading(true);
-		useLoginWithEmail(email, password)
-			.then(async ({ data: accessToken }) => {
-				await setAccessToken(accessToken);
-				navigation.reset({
-					index: 0,
-					routes: [{ name: 'Garden' }],
-				});
-			})
-			.catch(error => {
-				alert('There was an error while processing your request');
-			})
-			.finally(() => {
-				setFormIsLoading(false);
-			});
+		try {
+			await loginWithEmail.mutateAsync({ email, password });
+			queryClient.setQueryData(['loggedIn'], () => true);
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
 	};
 
 	return (
@@ -56,8 +49,8 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 			<StepContainer navigation={navigation}>
 				<Text>Sign in to continue with {AppName}</Text>
 				{services
-					.filter(s => s !== 'Email')
-					.map(name => (
+					.filter((s) => s !== 'Email')
+					.map((name) => (
 						<Button
 							key={name}
 							icon={() => <SsoServices type={name} />}
@@ -71,7 +64,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 				<Text>Sign up with your email address</Text>
 				<TextInput label='Email' value={email} onChangeText={setEmail} />
 				<TextInput label='Password' value={password} onChangeText={setPassword} secureTextEntry />
-				<Button onPress={onSubmit} style={{ width: '100%' }} disabled={formIsLoading}>
+				<Button onPress={onSubmit} style={{ width: '100%' }} disabled={loginWithEmail.isLoading}>
 					Next
 				</Button>
 				<Button mode='text' onPress={() => navigation.navigate('ForgotPassword')} style={{ alignSelf: 'flex-start' }}>

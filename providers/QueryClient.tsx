@@ -12,7 +12,7 @@ export default function QueryProvider({ children }: React.PropsWithChildren<unkn
 				},
 				queryCache: new QueryCache({
 					onError: error => {
-						console.log(`An error occured while fetching data: ${error}`);
+						console.log(`An error occurred while fetching data: ${error}`);
 					},
 				}),
 			}),

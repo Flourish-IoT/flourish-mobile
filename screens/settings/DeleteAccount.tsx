@@ -28,10 +28,6 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 				onPress: async () => {
 					try {
 						await deleteAccount.mutateAsync(currentPassword);
-						navigation.reset({
-							index: 0,
-							routes: [{ name: 'Welcome' }],
-						});
 						alert('Your account has been successfully deleted.');
 					} catch (error) {
 						alert(`Error: ${error}`);

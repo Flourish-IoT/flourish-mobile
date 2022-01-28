@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import Grid from '../../lib/icons/Grid';
 import Plant from './components/Plant';
 import { usePlants } from '../../data/garden';
@@ -51,6 +51,31 @@ export default function GardenScreenStack({ navigation }: GardenScreenStackProps
 				) : (
 					plants.map((p, index) => <Plant key={index + p.id} viewMode={viewType} plantName={p.name} />)
 				)}
+			</View>
+			<View>
+				<Text>Temporary navigation to screens:</Text>
+				<Button
+					onPress={() => {
+						navigation.navigate('Testing');
+					}}
+				>
+					Testing
+				</Button>
+				<Button
+					onPress={() => {
+						navigation.navigate('SettingsStack');
+					}}
+				>
+					Settings
+				</Button>
+				<Button
+					onPress={() => {
+						navigation.navigate('Calendar');
+					}}
+				>
+					Calendar
+				</Button>
+				<Button onPress={() => navigation.navigate('SettingsStack')}>SETTINGS</Button>
 			</View>
 		</ScreenContainer>
 	);
