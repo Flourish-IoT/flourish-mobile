@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Button, Text } from 'react-native-paper';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import { useExportData } from '../../data/user';
-import { useUser } from '../../data/auth';
+import { useExportData, useUser } from '../../data/user';
 
 interface ExportDataScreenProps {
 	navigation: NavigationProp<ParamListBase>;
