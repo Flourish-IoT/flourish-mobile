@@ -32,7 +32,7 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 	};
 
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<TextInput
 				label={getNewUsernameError() ?? 'New Username'}
 				error={!!getNewUsernameError()}
@@ -45,6 +45,7 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 				loading={changeUsername.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
+				style={{ width: '100%' }}
 			>
 				Update
 			</Button>

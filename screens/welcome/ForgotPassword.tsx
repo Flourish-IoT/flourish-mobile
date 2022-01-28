@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { useForgotPassword } from '../../data/user';
 import { isValidEmail } from '../../lib/utils/validation';
+import TextInput from '../../lib/components/styled/TextInput';
 
 interface ForgotPasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -13,12 +13,11 @@ interface ForgotPasswordScreenProps {
 export default function ForgotPasswordScreen({ navigation }: ForgotPasswordScreenProps) {
 	const resetPassword = useForgotPassword();
 	const [emailAddress, setEmailAddress] = useState('');
-	const [emailSent, setEmailSent] = useState(false);
 
 	const onResetPasswordBtnPress = async () => {
 		try {
 			await resetPassword.mutateAsync(emailAddress);
-			setEmailSent(true);
+			navigation.goBack();
 			alert(`We have sent the instructions to ${emailAddress}.`);
 		} catch (error) {
 			alert(`Error: ${error}`);
@@ -27,30 +26,22 @@ export default function ForgotPasswordScreen({ navigation }: ForgotPasswordScree
 
 	const emailIsValid = isValidEmail(emailAddress);
 
-	const getEmailErrorMsg = () => {
-		if (emailAddress.trim().length === 0) return undefined;
-		if (!emailIsValid) return 'Email is invalid';
-		return undefined;
-	};
-
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
-			<View>
-				<TextInput
-					label={getEmailErrorMsg() ?? 'Your Email'}
-					error={!!getEmailErrorMsg()}
-					value={emailAddress}
-					disabled={resetPassword.isLoading}
-					onChangeText={setEmailAddress}
-				/>
-			</View>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+			<TextInput
+				label={'Your Email'}
+				value={emailAddress}
+				disabled={resetPassword.isLoading}
+				onChangeText={setEmailAddress}
+			/>
 			<Button
 				mode='contained'
 				loading={resetPassword.isLoading}
-				disabled={!emailIsValid || emailSent}
+				disabled={!emailIsValid}
 				onPress={onResetPasswordBtnPress}
+				style={{ width: '100%' }}
 			>
-				Update
+				Next
 			</Button>
 		</ScreenContainer>
 	);

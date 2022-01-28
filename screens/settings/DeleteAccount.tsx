@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
@@ -38,22 +38,21 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 	};
 
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
-			<View>
-				<TextInput
-					label={'Current password'}
-					value={currentPassword}
-					disabled={deleteAccount.isLoading}
-					onChangeText={setCurrentPassword}
-					secureTextEntry
-				/>
-			</View>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+			<TextInput
+				label={'Current password'}
+				value={currentPassword}
+				disabled={deleteAccount.isLoading}
+				onChangeText={setCurrentPassword}
+				secureTextEntry
+			/>
 			<Button
 				mode='contained'
 				loading={deleteAccount.isLoading}
 				disabled={disableDeleteBtn}
 				onPress={onChangePasswordPress}
 				color={Theme.colors.error}
+				style={{ width: '100%' }}
 			>
 				Delete Account
 			</Button>

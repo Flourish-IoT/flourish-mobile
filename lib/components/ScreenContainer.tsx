@@ -8,9 +8,10 @@ interface ScreenContainerProps {
 	scrolls?: boolean;
 }
 
-export default function ScreenContainer({ children, scrolls = true, style }: ScreenContainerProps) {
+export default function ScreenContainer({ children, scrolls = false, style }: ScreenContainerProps) {
 	const styles = StyleSheet.create({
 		container: {
+			alignItems: 'center',
 			padding: Theme.padding,
 			...style,
 		},

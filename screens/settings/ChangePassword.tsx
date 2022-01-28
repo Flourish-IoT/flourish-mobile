@@ -45,8 +45,8 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 	};
 
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
-			<View>
+		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+			<View style={{ width: '100%' }}>
 				<TextInput
 					label={'Current password'}
 					value={currentPassword}
@@ -76,6 +76,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 				loading={changePassword.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
+				style={{ width: '100%' }}
 			>
 				Update
 			</Button>

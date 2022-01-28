@@ -1,21 +1,26 @@
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import WelcomeScreenStack from '../screens/welcome/index';
+import WelcomeScreen from '../screens/welcome';
 import TestingScreen from '../screens/Testing';
 import { NavigatorTheme, GlobalNavigatorOptions } from '../providers/Theme';
-import GardenScreenStack from '../screens/garden';
+import GardenScreen from '../screens/garden';
 import SettingsScreenStack from '../screens/settings';
 import CalendarScreen from '../screens/calendar';
-import ForgotPasswordScreen from '../screens/forgotpassword';
-import Loading from '../lib/components/Loading';
+import ForgotPasswordScreen from '../screens/welcome/ForgotPassword';
 import { useIsLoggedIn } from '../data/auth';
+import LoginScreen from '../screens/welcome/Login';
+import SignUpStack from '../screens/welcome/SignUp';
+import SplashScreen from '../screens/welcome/Splash';
 
 const Stack = createStackNavigator();
 
 const AuthStack = () => {
 	return (
 		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
-			<Stack.Screen name='Welcome' component={WelcomeScreenStack} options={{ headerShown: false }} />
+			<Stack.Screen name='Welcome' component={WelcomeScreen} options={{ headerShown: false }} />
+			<Stack.Screen name='SignUp' component={SignUpStack} options={{ headerShown: false }} />
+			<Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
 			<Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} options={{ title: 'Forgot Password' }} />
 		</Stack.Navigator>
 	);
@@ -24,7 +29,7 @@ const AuthStack = () => {
 const HomeStack = () => {
 	return (
 		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
-			<Stack.Screen name='Garden' component={GardenScreenStack} />
+			<Stack.Screen name='Garden' component={GardenScreen} />
 			<Stack.Screen name='Calendar' component={CalendarScreen} options={{ headerShown: false }} />
 			<Stack.Screen name='SettingsStack' component={SettingsScreenStack} options={{ headerShown: false }} />
 			<Stack.Screen name='Testing' component={TestingScreen} />
@@ -35,7 +40,7 @@ const HomeStack = () => {
 export default function Navigation() {
 	const { data: isLoggedIn, isLoading } = useIsLoggedIn();
 
-	if (isLoading) return <Loading text='Loading app...' />; // TODO: Replace with splash screen
+	if (isLoading) return <SplashScreen />;
 
 	return (
 		<NavigationContainer theme={NavigatorTheme}>

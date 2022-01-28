@@ -2,11 +2,11 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ViewStyle } from 'react-native';
-import { Button, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { useFonts } from '@use-expo/font';
-import Loading from '../lib/components/Loading';
 import Chevron from '../lib/icons/Chevron';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SplashScreen from '../screens/welcome/Splash';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
@@ -197,7 +197,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 		'Lato-Thin': require('../lib/assets/fonts/Lato/Thin.ttf'),
 	});
 
-	if (!fontsLoaded) return <Loading text='Loading assets...' />; // TODO: Replace with splash screen
+	if (!fontsLoaded) return <SplashScreen />;
 
 	return (
 		<PaperProvider theme={Theme}>

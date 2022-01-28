@@ -2,29 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { Button, Text } from 'react-native-paper';
 import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import StepContainer from '../components/StepContainer';
-import SsoServices from '../../../lib/icons/SsoServices';
-import { AppName } from '../../../lib/utils/helper';
-import { isValidEmail, isValidPassword, isValidUsername } from '../../../lib/utils/validation';
-import {
-	useFinishAccountSetup,
-	setUserId,
-	useCheckEmailVerificationCode,
-	useSendEmailVerificationCode,
-} from '../../../data/auth';
-import RadioButton from '../../../lib/components/styled/RadioButton';
-import Confidence from '../../../lib/icons/Confidence';
-import { getConfidenceText, ConfidenceRating } from '../../../data/user';
+import SsoServices from '../../lib/icons/SsoServices';
+import { AppName } from '../../lib/utils/helper';
+import { isValidEmail, isValidPassword, isValidUsername } from '../../lib/utils/validation';
+import { useFinishAccountSetup, setUserId, useCheckEmailVerificationCode, useSendEmailVerificationCode } from '../../data/auth';
+import RadioButton from '../../lib/components/styled/RadioButton';
+import Confidence from '../../lib/icons/Confidence';
+import { getConfidenceText, ConfidenceRating } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import StepModal from '../components/StepModal';
-import TextInput from '../../../lib/components/styled/TextInput';
+import TextInput from '../../lib/components/styled/TextInput';
 import { useQueryClient } from 'react-query';
+import ScreenContainer from '../../lib/components/ScreenContainer';
 
 const Stack = createStackNavigator();
 
-export type Service = 'Facebook' | 'Google' | 'Apple' | 'Email';
+export type Service = 'Apple' | 'Facebook' | 'Google' | 'Email';
 
-export const services: Service[] = ['Facebook', 'Google', 'Apple', 'Email'];
+export const services: Service[] = ['Apple', 'Facebook', 'Google', 'Email'];
 
 interface StepProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -32,42 +26,6 @@ interface StepProps {
 }
 
 const ContinueWithServiceStep = ({ navigation }: StepProps) => {
-	const handleSignUpWithService = (service: Service) => {
-		switch (service) {
-			case 'Facebook':
-				alert(service + ' SSO is not setup.');
-				break;
-			case 'Google':
-				alert(service + ' SSO is not setup.');
-				break;
-			case 'Apple':
-				alert(service + ' SSO is not setup.');
-				break;
-			case 'Email':
-				navigation.navigate('SignUpWithEmail');
-				break;
-		}
-	};
-
-	return (
-		<StepContainer navigation={navigation}>
-			<Text>Sign up to begin your journey with {AppName}</Text>
-			{services.map((name) => (
-				<Button
-					key={name}
-					icon={() => <SsoServices type={name} />}
-					mode='outlined'
-					onPress={() => handleSignUpWithService(name)}
-					style={{ width: '100%', marginTop: 10 }}
-				>
-					Continue with {name}
-				</Button>
-			))}
-		</StepContainer>
-	);
-};
-
-const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 	const sendEmailVerificationCode = useSendEmailVerificationCode();
 
 	const [username, setUsername] = useState('Gabby');
@@ -118,9 +76,23 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 
 	const formIsLoading = sendEmailVerificationCode.isLoading;
 
+	const handleSignUpWithService = (service: Service) => {
+		switch (service) {
+			case 'Facebook':
+				alert(service + ' SSO is not set up yet.');
+				break;
+			case 'Google':
+				alert(service + ' SSO is not set up yet.');
+				break;
+			case 'Apple':
+				alert(service + ' SSO is not set up yet.');
+				break;
+		}
+	};
+
 	return (
-		<StepContainer navigation={navigation}>
-			<Text>Sign up with your email address</Text>
+		<ScreenContainer style={{ justifyContent: 'center' }}>
+			<Text>Sign up to begin your journey with {AppName}</Text>
 			<TextInput
 				label={getUsernameErrorMsg() ?? 'Display Name'}
 				onChangeText={setUsername}
@@ -145,13 +117,28 @@ const SignUpWithEmailStep = ({ navigation }: StepProps) => {
 			<Button
 				mode={disableNextBtn ? 'outlined' : 'contained'}
 				onPress={onSubmit}
-				style={{ width: '100%' }}
+				style={{ width: '50%' }}
 				disabled={disableNextBtn}
 				loading={formIsLoading}
 			>
-				Next
+				Continue
 			</Button>
-		</StepContainer>
+			<Text>or sign up with</Text>
+			<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+				{services
+					.filter((s) => s !== 'Email')
+					.map((name, index) => (
+						<Button
+							key={name}
+							mode='contained'
+							onPress={() => handleSignUpWithService(name)}
+							style={{ flex: 1, marginLeft: index === 0 ? 0 : 20 }}
+						>
+							<SsoServices type={name} fill='white' height={30} />
+						</Button>
+					))}
+			</View>
+		</ScreenContainer>
 	);
 };
 
@@ -204,7 +191,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const formIsLoading = sendEmailVerificationCode.isLoading || checkEmailVerificationCode.isLoading;
 
 	return (
-		<StepContainer navigation={navigation}>
+		<ScreenContainer style={{ justifyContent: 'center' }}>
 			<Text>Verification Code</Text>
 			<Text>We have sent a verification code to "{email}"</Text>
 			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
@@ -217,11 +204,10 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 				onPress={onVerifyPress}
 				disabled={disableVerifyBtn}
 				loading={disableVerifyBtn && formIsLoading}
-				style={{ width: '100%' }}
 			>
 				Verify
 			</Button>
-		</StepContainer>
+		</ScreenContainer>
 	);
 };
 
@@ -258,75 +244,39 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<>
-			<StepContainer navigation={navigation} canGoBack={false}>
-				<Text>How would you rate your confidence in caring for your plants?</Text>
-				<Confidence rating={userRating} />
-				<Text>{getConfidenceText(userRating)}</Text>
-				<View
-					style={{
-						height: 50,
-						width: '100%',
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-					}}
-				>
-					{ratings.map((r) => (
-						<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
-					))}
-				</View>
-				<Button mode='contained' onPress={proceed} style={{ width: '100%' }} loading={formIsLoading}>
-					Submit
-				</Button>
-				<Button mode='text' onPress={onSkipPress} loading={formIsLoading}>
-					Skip for now
-				</Button>
-			</StepContainer>
-		</>
+		<ScreenContainer style={{ justifyContent: 'center' }}>
+			<Text>How would you rate your confidence in caring for your plants?</Text>
+			<Confidence rating={userRating} />
+			<Text>{getConfidenceText(userRating)}</Text>
+			<View
+				style={{
+					height: 50,
+					width: '100%',
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+				}}
+			>
+				{ratings.map((r) => (
+					<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
+				))}
+			</View>
+			<Button mode='contained' onPress={proceed} style={{ width: '100%' }} loading={formIsLoading}>
+				Submit
+			</Button>
+			<Button mode='text' onPress={onSkipPress} loading={formIsLoading}>
+				Skip for now
+			</Button>
+		</ScreenContainer>
 	);
 };
 
-interface WalkthroughStep {
-	name: string;
-	component: (props) => JSX.Element;
-}
-
-const steps: WalkthroughStep[] = [
-	{
-		name: 'ContinueWithService',
-		component: ContinueWithServiceStep,
-	},
-	{
-		name: 'SignUpWithEmail',
-		component: SignUpWithEmailStep,
-	},
-	{
-		name: 'EmailVerification',
-		component: EmailVerificationStep,
-	},
-	{
-		name: 'RateExpertise',
-		component: RateExpertiseStep,
-	},
-];
-
-export default function WalkthroughScreen() {
+export default function SignUpStack() {
 	return (
-		<StepModal>
-			<Stack.Navigator>
-				{steps.map((s) => (
-					<Stack.Screen
-						key={s.name}
-						name={s.name}
-						component={s.component}
-						options={{
-							headerShown: false,
-							gestureEnabled: false,
-						}}
-					/>
-				))}
-			</Stack.Navigator>
-		</StepModal>
+		<Stack.Navigator>
+			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} options={{ headerShown: false }} />
+			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} options={{ headerShown: false }} />
+			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} options={{ headerShown: false }} />
+		</Stack.Navigator>
 	);
 }

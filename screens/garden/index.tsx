@@ -17,19 +17,13 @@ interface GardenScreenStackProps {
 export type ViewMode = 'Carousel' | 'Grid';
 const viewModes: ViewMode[] = ['Carousel', 'Grid'];
 
-export default function GardenScreenStack({ navigation }: GardenScreenStackProps) {
+export default function GardenScreen({ navigation }: GardenScreenStackProps) {
 	const [viewType, setViewType] = useState<ViewMode>('Carousel');
 	const { data: plants, isLoading: plantsIsLoading } = usePlants();
 
 	return (
-		<ScreenContainer>
-			<View
-				style={{
-					display: 'flex',
-					flexDirection: 'row',
-					justifyContent: 'center',
-				}}
-			>
+		<ScreenContainer scrolls>
+			<View style={{ display: 'flex', flexDirection: 'row' }}>
 				{viewModes.map((m) => (
 					<Button
 						key={m}

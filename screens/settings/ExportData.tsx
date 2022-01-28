@@ -27,13 +27,14 @@ export default function ExportDataScreen({ navigation }: ExportDataScreenProps) 
 	};
 
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<Text>This will send a spreadsheet of all of your user data.</Text>
 			<Button
 				mode='contained'
 				loading={exportData.isLoading}
 				disabled={userIsLoading || dataSent}
 				onPress={onExportDataBtnPress}
+				style={{ width: '100%' }}
 			>
 				Send
 			</Button>

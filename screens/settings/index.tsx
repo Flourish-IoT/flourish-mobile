@@ -10,6 +10,7 @@ import ExportDataScreen from './ExportData';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { useLogOut } from '../../data/auth';
+import SplashScreen from '../welcome/Splash';
 
 interface SettingsScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -21,7 +22,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 	const logOut = useLogOut();
 
 	return (
-		<ScreenContainer scrolls={false} style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={styles.section}>
 				<Text>Account</Text>
 				<Divider style={styles.divider} />
