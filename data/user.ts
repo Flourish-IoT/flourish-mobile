@@ -22,7 +22,7 @@ export const useChangeUsername = () => {
 			const query = `/users/${user.id}`;
 			mockEndpoint(250)
 				.onPut(query, { params: { username: newUsername } })
-				.reply<string>(200, 'OK');
+				.replyOnce<string>(200, 'OK');
 			return AxiosInstance.put<string>(query, { params: { username: newUsername } });
 		},
 		{
@@ -46,7 +46,7 @@ export const useChangePassword = () => {
 
 	return useMutation(({ password, new_password }: ChangePasswordParams) => {
 		const query = `/users/${user.id}/password`;
-		mockEndpoint(250).onPut(query, { params: { password, new_password } }).reply<string>(200, 'OK');
+		mockEndpoint(250).onPut(query, { params: { password, new_password } }).replyOnce<string>(200, 'OK');
 		return AxiosInstance.put<string>(query, { params: { password, new_password } });
 	});
 };
@@ -58,7 +58,7 @@ interface SendResetPasswordEmailParams {
 export const useSendResetPasswordEmail = () => {
 	return useMutation(({ email }: SendResetPasswordEmailParams) => {
 		const query = `/users/reset_password`;
-		mockEndpoint(250).onPost(query, { params: { email } }).reply<string>(200, 'OK');
+		mockEndpoint(250).onPost(query, { params: { email } }).replyOnce<string>(200, 'OK');
 		return AxiosInstance.post<string>(query, { params: { email } });
 	});
 };
@@ -72,7 +72,7 @@ export const useVerifyResetPasswordEmail = () => {
 	return useMutation(
 		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
 			const query = `/users/verify?code=password_reset`;
-			mockEndpoint(0).onPost(query, { params: { email, reset_code } }).reply<number>(200, tempMyUser.id);
+			mockEndpoint(0).onPost(query, { params: { email, reset_code } }).replyOnce<number>(200, tempMyUser.id);
 			return AxiosInstance.post<number>(query, { params: { email, reset_code } });
 		},
 		{
@@ -93,7 +93,7 @@ export const useResetPassword = () => {
 
 	return useMutation(({ reset_code, new_password }: ResetPasswordParams) => {
 		const query = `/users/${user.id}/password`;
-		mockEndpoint(250).onPut(query, { params: { reset_code, new_password } }).reply<string>(200, 'OK');
+		mockEndpoint(250).onPut(query, { params: { reset_code, new_password } }).replyOnce<string>(200, 'OK');
 		return AxiosInstance.put<string>(query, { params: { reset_code, new_password } });
 	});
 };
@@ -103,7 +103,7 @@ export const useExportData = () => {
 
 	return useMutation(() => {
 		const query = `/users/${user.id}/export`;
-		mockEndpoint(250).onGet(query).reply<string>(200, 'OK');
+		mockEndpoint(250).onGet(query).replyOnce<string>(200, 'OK');
 		return AxiosInstance.get<string>(query);
 	});
 };
@@ -117,7 +117,7 @@ export const useDeleteAccount = () => {
 			const query = `/users/${user.id}`;
 			mockEndpoint(250)
 				.onDelete(query, { params: { password: currentPassword } })
-				.reply<string>(200, 'OK');
+				.replyOnce<string>(200, 'OK');
 			return AxiosInstance.delete<string>(query, { params: { password: currentPassword } });
 		},
 		{
@@ -172,7 +172,7 @@ export const useUser = (userId: 'me' | number) => {
 
 		mockEndpoint(250)
 			.onGet(`/users/${userId}`)
-			.reply<User>(200, userId === 'me' ? tempMyUser : tempOtherUser);
+			.replyOnce<User>(200, userId === 'me' ? tempMyUser : tempOtherUser);
 		const response = await AxiosInstance.get<User>(`/users/${userId}`);
 		return response.data;
 	});

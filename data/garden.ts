@@ -22,7 +22,7 @@ export const usePlants = () => {
 	return useQuery(['testEndpoint'], () => {
 		mockEndpoint(250)
 			.onGet('/flourish-test')
-			.reply<Plant[]>(200, [
+			.replyOnce<Plant[]>(200, [
 				{
 					id: 1,
 					name: 'Edward',

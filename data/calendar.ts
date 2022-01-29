@@ -14,7 +14,7 @@ export const useTasks = () => {
 	return useQuery(['tasks'], () => {
 		mockEndpoint(250)
 			.onGet('/tasks')
-			.reply<Task[]>(200, [
+			.replyOnce<Task[]>(200, [
 				{ id: 1, plantId: 1, datetime: new Date(), name: 'Water Fredrick', complete: false },
 				{ id: 2, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
 				{ id: 3, plantId: 1, datetime: addDays(new Date(), 2), name: 'Fertilize Fredrick', complete: false },

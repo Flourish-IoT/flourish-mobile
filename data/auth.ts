@@ -1,7 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { AxiosInstance, mockEndpoint } from './api';
+import {
+	AxiosInstance,
+	getAccessToken,
+	getRefreshToken,
+	isExpired,
+	mockEndpoint,
+	setAccessToken,
+	setRefreshToken,
+	tempToken,
+	Token,
+} from './api';
 import { tempMyUser, User, useUser } from './user';
 
 export const getUserId = async () => {
@@ -12,17 +21,9 @@ export const setUserId = async (value: number | null) => {
 	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
 };
 
-export const getJWT = async () => {
-	return await SecureStore.getItemAsync('JWT');
-};
-
-export const setJWT = async (value: string | null) => {
-	return !!value ? await SecureStore.setItemAsync('JWT', value) : await SecureStore.deleteItemAsync('JWT');
-};
-
 export const useIsLoggedIn = () => {
 	return useQuery(['loggedIn'], async () => {
-		return !!(await getJWT());
+		return !!(await getAccessToken()) && !!(await getRefreshToken()) && !(await isExpired());
 	});
 };
 
@@ -34,7 +35,8 @@ export const useLogOut = () => {
 		await queryClient.setQueryData<User>(['get', 'users', user.id], () => null);
 		await queryClient.setQueryData(['loggedIn'], () => false);
 		await setUserId(null);
-		await setJWT(null);
+		await SecureStore.deleteItemAsync('accessToken');
+		await SecureStore.deleteItemAsync('refreshToken');
 	});
 };
 
@@ -47,7 +49,7 @@ interface SendEmailVerificationCodeParams {
 export const useSendVerifyEmail = () => {
 	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
 		const query = '/users';
-		mockEndpoint(0).onPost(query, { params: { email, username, password } }).reply<string>(200, 'OK');
+		mockEndpoint(0).onPost(query, { params: { email, username, password } }).replyOnce<string>(200, 'OK');
 		return AxiosInstance.post<string>(query, { params: { email, username, password } });
 	});
 };
@@ -58,7 +60,7 @@ interface CheckEmailVerificationCodeParams {
 }
 
 interface AuthResponse {
-	jwt: string;
+	jwt: Token;
 	userId: number;
 }
 
@@ -66,16 +68,17 @@ export const useVerifyEmail = () => {
 	return useMutation(
 		({ email, code }: CheckEmailVerificationCodeParams) => {
 			const query = `/users/verify?code=verification`;
-			mockEndpoint(0).onPost(query, { params: { email, code } }).reply<AuthResponse>(200, {
-				jwt: 'abcxyz',
-				userId: 1,
+			mockEndpoint(0).onPost(query, { params: { email, code } }).replyOnce<AuthResponse>(200, {
+				jwt: tempToken,
+				userId: tempMyUser.id,
 			});
 			return AxiosInstance.post<AuthResponse>(query, { params: { email, code } });
 		},
 		{
 			onSuccess: async ({ data }, { email, code }) => {
 				await setUserId(data.userId);
-				await setJWT(data.jwt);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
 			},
 		}
 	);
@@ -90,7 +93,7 @@ export const useFinishAccountSetup = () => {
 	return useMutation(
 		({ preferences }: FinishAccountParams | undefined) => {
 			const query = `/users/${user.id}`;
-			mockEndpoint(0).onPut(query, { params: { preferences } }).reply<string>(200, 'OK');
+			mockEndpoint(0).onPut(query, { params: { preferences } }).replyOnce<string>(200, 'OK');
 			return AxiosInstance.put<string>(query, { params: { preferences } });
 		},
 		{
@@ -107,9 +110,21 @@ interface EmailLoginParams {
 }
 
 export const useLoginWithEmail = () => {
-	return useMutation(({ email, password }: EmailLoginParams) => {
-		const query = `/users/login`;
-		mockEndpoint(0).onPost(query, { params: { email, password } }).reply<User>(200, tempMyUser);
-		return AxiosInstance.post<AuthResponse>(query, { params: { email, password } });
-	});
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			mockEndpoint(0).onPost(query, { params: { email, password } }).reply<AuthResponse>(200, {
+				jwt: tempToken,
+				userId: tempMyUser.id,
+			});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, password } });
+		},
+		{
+			onSuccess: async ({ data }, { email, password }) => {
+				await setUserId(data.userId);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
+			},
+		}
+	);
 };
