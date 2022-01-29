@@ -23,7 +23,7 @@ export const setUserId = async (value: number | null) => {
 
 export const useIsLoggedIn = () => {
 	return useQuery(['loggedIn'], async () => {
-		return !!(await getAccessToken()) && !!(await getRefreshToken()) && !(await isExpired());
+		return !!(await getAccessToken()) && !!(await getRefreshToken());
 	});
 };
 

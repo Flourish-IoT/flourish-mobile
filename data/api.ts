@@ -59,10 +59,8 @@ export const tempToken = {
 	tokenType: 'tokenType',
 	accessToken: 'access-abc.xyz',
 	refreshToken: 'refresh-abc.xyz',
-	// accessTokenExpiry: new Date().getTime() + 1000 * 60 * 3, // 3 min from now
-	// refreshTokenExpiry: new Date().getTime() + 1000 * 60 * 5, // 5 min from now
-	accessTokenExpiry: new Date().getTime() + 1000 * 60 * 0.5, // 30 sec from now
-	refreshTokenExpiry: new Date().getTime() + 1000 * 60 * 1, // 1 min from now
+	accessTokenExpiry: new Date().getTime() + 1000 * 60 * 10, // 10 min from now
+	refreshTokenExpiry: new Date().getTime() + 1.577e10, // 6 months from now
 };
 
 export const refresh = async () => {
