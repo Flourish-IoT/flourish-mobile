@@ -5,7 +5,7 @@ export const ApiUrl = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/de
 
 export const AxiosInstance = axios.create({
 	baseURL: ApiUrl,
-	timeout: 1000 * 60 * 1, // 1min
+	timeout: 1000 * 60 * 0.5, // 30s
 	headers: { 'Content-Type': 'foobar' },
 });
 

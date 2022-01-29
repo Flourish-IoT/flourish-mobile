@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { getUserId, useLogOut } from './auth';
+import { getUserId, setUserId, useLogOut } from './auth';
 
 export const getConfidenceText = (rating: ConfidenceRating) => {
 	switch (rating) {
@@ -36,23 +36,65 @@ export const useChangeUsername = () => {
 	);
 };
 
+interface ChangePasswordParams {
+	password: string;
+	new_password: string;
+}
+
 export const useChangePassword = () => {
 	const { data: user } = useUser('me');
 
-	return useMutation((newPassword: string) => {
-		const query = `/users/${user.id}`;
-		mockEndpoint(250)
-			.onPut(query, { params: { password: newPassword } })
-			.reply<string>(200, 'OK');
-		return AxiosInstance.put<string>(query, { params: { password: newPassword } });
+	return useMutation(({ password, new_password }: ChangePasswordParams) => {
+		const query = `/users/${user.id}/password`;
+		mockEndpoint(250).onPut(query, { params: { password, new_password } }).reply<string>(200, 'OK');
+		return AxiosInstance.put<string>(query, { params: { password, new_password } });
 	});
 };
 
-export const useForgotPassword = () => {
-	return useMutation((email: string) => {
+interface SendResetPasswordEmailParams {
+	email: string;
+}
+
+export const useSendResetPasswordEmail = () => {
+	return useMutation(({ email }: SendResetPasswordEmailParams) => {
 		const query = `/users/reset_password`;
 		mockEndpoint(250).onPost(query, { params: { email } }).reply<string>(200, 'OK');
 		return AxiosInstance.post<string>(query, { params: { email } });
+	});
+};
+
+interface CheckPasswordVerificationCodeParams {
+	email: string;
+	reset_code: string;
+}
+
+export const useVerifyResetPasswordEmail = () => {
+	return useMutation(
+		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
+			const query = `/users/verify?code=password_reset`;
+			mockEndpoint(0).onPost(query, { params: { email, reset_code } }).reply<number>(200, tempMyUser.id);
+			return AxiosInstance.post<number>(query, { params: { email, reset_code } });
+		},
+		{
+			onSuccess: async ({ data: userId }, { email, reset_code }) => {
+				await setUserId(userId);
+			},
+		}
+	);
+};
+
+interface ResetPasswordParams {
+	reset_code: string;
+	new_password: string;
+}
+
+export const useResetPassword = () => {
+	const { data: user } = useUser('me');
+
+	return useMutation(({ reset_code, new_password }: ResetPasswordParams) => {
+		const query = `/users/${user.id}/password`;
+		mockEndpoint(250).onPut(query, { params: { reset_code, new_password } }).reply<string>(200, 'OK');
+		return AxiosInstance.put<string>(query, { params: { reset_code, new_password } });
 	});
 };
 
@@ -96,13 +138,23 @@ export interface User {
 	preferences: UserPreferences;
 }
 
-export const tempUser: User = {
+export const tempMyUser: User = {
 	id: 1,
 	email: 'user@flourish.com',
 	username: 'Gabby',
 	preferences: {
 		unit_preference: 'Fahrenheit',
 		confidence_rating: 2,
+	},
+};
+
+export const tempOtherUser: User = {
+	id: 2,
+	email: 'user2@flourish.com',
+	username: 'Dolma',
+	preferences: {
+		unit_preference: 'Fahrenheit',
+		confidence_rating: 3,
 	},
 };
 
@@ -118,7 +170,9 @@ export const useUser = (userId: 'me' | number) => {
 			!!potentialUserId && (userId = Number(potentialUserId));
 		}
 
-		mockEndpoint(250).onGet(`/users/${userId}`).reply<User>(200, tempUser);
+		mockEndpoint(250)
+			.onGet(`/users/${userId}`)
+			.reply<User>(200, userId === 'me' ? tempMyUser : tempOtherUser);
 		const response = await AxiosInstance.get<User>(`/users/${userId}`);
 		return response.data;
 	});

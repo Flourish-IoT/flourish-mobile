@@ -11,8 +11,8 @@ export default function QueryProvider({ children }: React.PropsWithChildren<unkn
 					},
 				},
 				queryCache: new QueryCache({
-					onError: error => {
-						console.log(`An error occurred while fetching data: ${error}`);
+					onError: (error) => {
+						alert(`An error occurred while fetching data: ${error}`);
 					},
 				}),
 			}),

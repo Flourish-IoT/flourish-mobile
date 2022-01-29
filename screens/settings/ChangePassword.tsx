@@ -19,7 +19,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 
 	const onChangePasswordPress = async () => {
 		try {
-			await changePassword.mutateAsync(newPassword);
+			await changePassword.mutateAsync({ password: currentPassword, new_password: newPassword });
 			alert('Updated.');
 		} catch (error) {
 			alert(`Error: ${error}`);

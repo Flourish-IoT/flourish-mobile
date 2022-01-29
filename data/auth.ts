@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { tempUser, User, useUser } from './user';
+import { tempMyUser, User, useUser } from './user';
 
 export const getUserId = async () => {
 	return await SecureStore.getItemAsync('userId');
@@ -12,9 +12,17 @@ export const setUserId = async (value: number | null) => {
 	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
 };
 
+export const getJWT = async () => {
+	return await SecureStore.getItemAsync('JWT');
+};
+
+export const setJWT = async (value: string | null) => {
+	return !!value ? await SecureStore.setItemAsync('JWT', value) : await SecureStore.deleteItemAsync('JWT');
+};
+
 export const useIsLoggedIn = () => {
 	return useQuery(['loggedIn'], async () => {
-		return !!(await getUserId());
+		return !!(await getJWT());
 	});
 };
 
@@ -26,6 +34,7 @@ export const useLogOut = () => {
 		await queryClient.setQueryData<User>(['get', 'users', user.id], () => null);
 		await queryClient.setQueryData(['loggedIn'], () => false);
 		await setUserId(null);
+		await setJWT(null);
 	});
 };
 
@@ -35,7 +44,7 @@ interface SendEmailVerificationCodeParams {
 	password: string;
 }
 
-export const useSendEmailVerificationCode = () => {
+export const useSendVerifyEmail = () => {
 	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
 		const query = '/users';
 		mockEndpoint(0).onPost(query, { params: { email, username, password } }).reply<string>(200, 'OK');
@@ -48,18 +57,25 @@ interface CheckEmailVerificationCodeParams {
 	code: string;
 }
 
-export const useCheckEmailVerificationCode = () => {
-	const queryClient = useQueryClient();
+interface AuthResponse {
+	jwt: string;
+	userId: number;
+}
 
+export const useVerifyEmail = () => {
 	return useMutation(
 		({ email, code }: CheckEmailVerificationCodeParams) => {
-			const query = `/verify`;
-			mockEndpoint(0).onPost(query, { params: { email, code } }).reply<User>(200, tempUser);
-			return AxiosInstance.post<User>(query, { params: { email, code } });
+			const query = `/users/verify?code=verification`;
+			mockEndpoint(0).onPost(query, { params: { email, code } }).reply<AuthResponse>(200, {
+				jwt: 'abcxyz',
+				userId: 1,
+			});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, code } });
 		},
 		{
-			onSuccess: ({ data: user }, newUsername) => {
-				queryClient.setQueryData<User>(['get', 'users', user.id], () => user);
+			onSuccess: async ({ data }, { email, code }) => {
+				await setUserId(data.userId);
+				await setJWT(data.jwt);
 			},
 		}
 	);
@@ -73,7 +89,7 @@ export const useFinishAccountSetup = () => {
 
 	return useMutation(
 		({ preferences }: FinishAccountParams | undefined) => {
-			const query = `/users${user.id}`;
+			const query = `/users/${user.id}`;
 			mockEndpoint(0).onPut(query, { params: { preferences } }).reply<string>(200, 'OK');
 			return AxiosInstance.put<string>(query, { params: { preferences } });
 		},
@@ -91,18 +107,9 @@ interface EmailLoginParams {
 }
 
 export const useLoginWithEmail = () => {
-	const queryClient = useQueryClient();
-
-	return useMutation(
-		({ email, password }: EmailLoginParams) => {
-			const query = `/users/login`;
-			mockEndpoint(0).onPost(query, { params: { email, password } }).reply<User>(200, tempUser);
-			return AxiosInstance.post<User>(query, { params: { email, password } });
-		},
-		{
-			onSuccess: ({ data: user }, { email, password }) => {
-				queryClient.setQueryData<User>(['get', 'users', user.id], () => user);
-			},
-		}
-	);
+	return useMutation(({ email, password }: EmailLoginParams) => {
+		const query = `/users/login`;
+		mockEndpoint(0).onPost(query, { params: { email, password } }).reply<User>(200, tempMyUser);
+		return AxiosInstance.post<AuthResponse>(query, { params: { email, password } });
+	});
 };

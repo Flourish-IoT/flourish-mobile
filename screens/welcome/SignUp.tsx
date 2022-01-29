@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Text } from 'react-native-paper';
-import { View, Keyboard } from 'react-native';
+import { View, Keyboard, SafeAreaView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
 import { isValidEmail, isValidPassword, isValidUsername } from '../../lib/utils/validation';
-import { useFinishAccountSetup, setUserId, useCheckEmailVerificationCode, useSendEmailVerificationCode } from '../../data/auth';
+import { useFinishAccountSetup, useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
 import RadioButton from '../../lib/components/styled/RadioButton';
 import Confidence from '../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../data/user';
@@ -13,6 +13,7 @@ import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/nati
 import TextInput from '../../lib/components/styled/TextInput';
 import { useQueryClient } from 'react-query';
 import ScreenContainer from '../../lib/components/ScreenContainer';
+import { GlobalNavigatorOptions } from '../../providers/Theme';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +27,7 @@ interface StepProps {
 }
 
 const ContinueWithServiceStep = ({ navigation }: StepProps) => {
-	const sendEmailVerificationCode = useSendEmailVerificationCode();
+	const sendVerifyEmail = useSendVerifyEmail();
 
 	const [username, setUsername] = useState('Gabby');
 	const [email, setEmail] = useState('user@gmail.com');
@@ -65,18 +66,9 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 		return undefined;
 	};
 
-	const onSubmit = async () => {
-		try {
-			await sendEmailVerificationCode.mutateAsync({ email, username, password });
-			navigation.navigate('EmailVerification', { email, username, password });
-		} catch (error) {
-			alert(`Error: ${error}`);
-		}
-	};
+	const formIsLoading = sendVerifyEmail.isLoading;
 
-	const formIsLoading = sendEmailVerificationCode.isLoading;
-
-	const handleSignUpWithService = (service: Service) => {
+	const handleSignUp = async (service: Service) => {
 		switch (service) {
 			case 'Facebook':
 				alert(service + ' SSO is not set up yet.');
@@ -86,6 +78,14 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 				break;
 			case 'Apple':
 				alert(service + ' SSO is not set up yet.');
+				break;
+			case 'Email':
+				try {
+					await sendVerifyEmail.mutateAsync({ email, username, password });
+					navigation.navigate('EmailVerification', { email, username, password });
+				} catch (error) {
+					alert(`Error: ${error}`);
+				}
 				break;
 		}
 	};
@@ -116,7 +116,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			/>
 			<Button
 				mode={disableNextBtn ? 'outlined' : 'contained'}
-				onPress={onSubmit}
+				onPress={() => handleSignUp('Email')}
 				style={{ width: '50%' }}
 				disabled={disableNextBtn}
 				loading={formIsLoading}
@@ -131,7 +131,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 						<Button
 							key={name}
 							mode='contained'
-							onPress={() => handleSignUpWithService(name)}
+							onPress={() => handleSignUp(name)}
 							style={{ flex: 1, marginLeft: index === 0 ? 0 : 20 }}
 						>
 							<SsoServices type={name} fill='white' height={30} />
@@ -149,8 +149,8 @@ interface EmailVerificationStepProps {
 }
 
 const EmailVerificationStep = ({ route, navigation }: StepProps) => {
-	const sendEmailVerificationCode = useSendEmailVerificationCode();
-	const checkEmailVerificationCode = useCheckEmailVerificationCode();
+	const sendVerifyEmail = useSendVerifyEmail();
+	const verifyEmail = useVerifyEmail();
 	const { email, username, password } = route.params as EmailVerificationStepProps;
 
 	const [code, setCode] = useState<string>('2022');
@@ -166,7 +166,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 
 	const onResend = async () => {
 		try {
-			await sendEmailVerificationCode.mutateAsync({ email, username, password });
+			await sendVerifyEmail.mutateAsync({ email, username, password });
+			setAttempts(attempts + 1);
 			alert('An email has been sent.');
 		} catch (error) {
 			alert(`Error: ${error}`);
@@ -175,8 +176,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 
 	const onVerifyPress = async () => {
 		try {
-			const { data: user } = await checkEmailVerificationCode.mutateAsync({ email, code });
-			await setUserId(user.id);
+			await verifyEmail.mutateAsync({ email, code });
 			navigation.reset({
 				index: 0,
 				routes: [{ name: 'RateExpertise' }],
@@ -188,7 +188,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 		setAttempts(attempts + 1);
 	};
 
-	const formIsLoading = sendEmailVerificationCode.isLoading || checkEmailVerificationCode.isLoading;
+	const formIsLoading = sendVerifyEmail.isLoading || verifyEmail.isLoading;
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'center' }}>
@@ -273,7 +273,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 export default function SignUpStack() {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
 			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} options={{ headerShown: false }} />
 			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} options={{ headerShown: false }} />
 			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} options={{ headerShown: false }} />
