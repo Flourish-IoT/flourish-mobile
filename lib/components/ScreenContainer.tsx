@@ -13,6 +13,7 @@ export default function ScreenContainer({ children, scrolls = false, style }: Sc
 		container: {
 			alignItems: 'center',
 			padding: Theme.padding,
+			overflow: 'visible',
 			...style,
 		},
 	});

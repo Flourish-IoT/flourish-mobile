@@ -5,6 +5,7 @@ import { List } from 'react-native-paper';
 import { usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Chevron from '../../lib/icons/Chevron';
+import { Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { format, isAfter, isBefore, isFuture, addWeeks, isPast, isToday } from 'date-fns';
 import { getMonthName, padString } from '../../lib/utils/helper';
@@ -78,7 +79,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	const selectedDateTasks = intervalTasks.filter((t) => isToday(t.datetime));
 
 	return (
-		<ScreenContainer>
+		<ScreenContainer scrolls style={{ alignItems: 'center' }}>
 			<StyledAccordion
 				title={selectedInterval}
 				style={{ height: 50, display: 'flex', flexDirection: 'row', alignItems: 'center' }}
@@ -101,47 +102,47 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				onFilterChange={setSelectedPlants}
 			/>
 
-			<View>
-				<Calendar
-					onDayPress={(day) => {
-						setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
-					}}
-					onMonthChange={(month) => {
-						setCalendarYear(String(month.year));
-						setCalendarMonth(padString(month.month, 'left', 2, '0'));
-					}}
-					renderArrow={(direction) => <Chevron direction={direction} />}
-					onPressArrowLeft={(subtractMonth) => subtractMonth()}
-					onPressArrowRight={(addMonth) => addMonth()}
-					enableSwipeMonths={true}
-					markedDates={highlighted}
-				/>
-			</View>
+			<Calendar
+				style={{
+					// TODO: Figure out why '100%' doesn't work
+					width: Dimensions.get('window').width - Theme.padding * 2,
+				}}
+				onDayPress={(day) => {
+					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
+				}}
+				onMonthChange={(month) => {
+					setCalendarYear(String(month.year));
+					setCalendarMonth(padString(month.month, 'left', 2, '0'));
+				}}
+				renderArrow={(direction) => <Chevron direction={direction} />}
+				onPressArrowLeft={(subtractMonth) => subtractMonth()}
+				onPressArrowRight={(addMonth) => addMonth()}
+				enableSwipeMonths={true}
+				markedDates={highlighted}
+			/>
 
-			<View>
-				{lateTasks.length > 0 && (
-					<StyledAccordion
-						title='Late Tasks'
-						titleStyle={{ color: Theme.colors.error }}
-						expanded={intervalTasksExpanded}
-						setExpanded={setIntervalTasksExpanded}
-					>
-						{lateTasks.map((t) => (
-							<TaskCard key={t.id} task={t} />
-						))}
-					</StyledAccordion>
-				)}
-
-				<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
-					{upcomingTasks.length > 0 ? (
-						upcomingTasks.map((t) => <TaskCard key={t.id} task={t} />)
-					) : (
-						<View style={{ height: 100 }}>
-							<Empty animation='relax' text='No upcoming tasks!' />
-						</View>
-					)}
+			{lateTasks.length > 0 && (
+				<StyledAccordion
+					title='Late Tasks'
+					titleStyle={{ color: Theme.colors.error }}
+					expanded={intervalTasksExpanded}
+					setExpanded={setIntervalTasksExpanded}
+				>
+					{lateTasks.map((t) => (
+						<TaskCard key={t.id} task={t} />
+					))}
 				</StyledAccordion>
-			</View>
+			)}
+
+			<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
+				{upcomingTasks.length > 0 ? (
+					upcomingTasks.map((t) => <TaskCard key={t.id} task={t} />)
+				) : (
+					<View style={{ height: 100 }}>
+						<Empty animation='relax' text='No upcoming tasks!' />
+					</View>
+				)}
+			</StyledAccordion>
 
 			<StyledModal
 				height='50%'
