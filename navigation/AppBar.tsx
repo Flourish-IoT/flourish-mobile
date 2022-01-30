@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
 	appBar: {
 		position: 'absolute',
 		backgroundColor: 'white',
-		height: 60,
+		height: Theme.appBarHeight,
 		paddingBottom: 0,
 		borderTopWidth: 0,
 		borderRadius: 15,

@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, SafeAreaView, View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Theme } from '../../providers/Theme';
 
 interface ScreenContainerProps {
@@ -9,11 +10,14 @@ interface ScreenContainerProps {
 }
 
 export default function ScreenContainer({ children, scrolls = false, style }: ScreenContainerProps) {
+	const insets = useSafeAreaInsets();
+
 	const styles = StyleSheet.create({
 		container: {
 			alignItems: 'center',
-			padding: Theme.padding,
 			overflow: 'visible',
+			padding: Theme.padding,
+			paddingBottom: insets.bottom + Theme.appBarHeight,
 			...style,
 		},
 	});

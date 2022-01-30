@@ -89,6 +89,7 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 	fonts: CombinedFonts;
 	borderRadius: number;
 	padding: number;
+	appBarHeight: number;
 	lottie: {
 		wrapper: ViewStyle;
 		width: LottieSizeObj;
@@ -103,6 +104,7 @@ export const Theme: OurThemeProps = {
 	roundness: 2, // Roundness of common elements, such as buttons
 	borderRadius: 10, // Common border radius
 	padding: 10, // Common container padding
+	appBarHeight: 60,
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
 	},

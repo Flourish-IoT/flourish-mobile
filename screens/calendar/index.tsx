@@ -79,7 +79,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	const selectedDateTasks = intervalTasks.filter((t) => isToday(t.datetime));
 
 	return (
-		<ScreenContainer scrolls style={{ alignItems: 'center' }}>
+		<ScreenContainer scrolls>
 			<StyledAccordion
 				title={selectedInterval}
 				style={{ height: 50, display: 'flex', flexDirection: 'row', alignItems: 'center' }}
