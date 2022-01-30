@@ -7,8 +7,6 @@ interface SsoServicesIconProps extends SvgProps {
 }
 
 export default function SsoServices({ type, fill = 'black', ...rest }: SsoServicesIconProps) {
-	// let fill = props.fill ?? 'black';
-
 	switch (type) {
 		case 'Apple':
 			return (

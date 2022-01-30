@@ -1,11 +1,9 @@
 import React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
-export default function Carousel(props: SvgProps) {
-	let fill = props.fill ?? 'black';
-
+export default function Carousel({ fill = 'black', ...rest }: SvgProps) {
 	return (
-		<Svg width='19' height='19' viewBox='0 0 19 19' fill='none' {...props}>
+		<Svg width='19' height='19' viewBox='0 0 19 19' fill='none' {...rest}>
 			<Path
 				fill={fill}
 				fill-rule='evenodd'
