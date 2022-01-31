@@ -1,5 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { createRef, ReactNode } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { NavigationContainerRef, StackActions } from '@react-navigation/core';
+import { tempMyUser, User, useUser } from './user';
 import {
 	AxiosInstance,
 	getAccessToken,
@@ -11,7 +14,6 @@ import {
 	tempToken,
 	Token,
 } from './api';
-import { tempMyUser, User, useUser } from './user';
 
 export const getUserId = async () => {
 	return await SecureStore.getItemAsync('userId');
@@ -21,23 +23,20 @@ export const setUserId = async (value: number | null) => {
 	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
 };
 
-export const useIsLoggedIn = () => {
-	return useQuery(['loggedIn'], async () => {
-		return !!(await getAccessToken()) && !!(await getRefreshToken());
-	});
+export const isLoggedIn = async () => {
+	return !!(await getAccessToken()) && !!((await getRefreshToken()) && !!(await getUserId()));
 };
 
-export const useLogOut = () => {
-	const { data: user } = useUser('me');
-	const queryClient = useQueryClient();
+export const navigationRef = createRef<NavigationContainerRef<ReactNode>>();
 
-	return useMutation(async () => {
-		await queryClient.setQueryData<User>(['get', 'users', user.id], () => null);
-		await queryClient.setQueryData(['loggedIn'], () => false);
-		await setUserId(null);
-		await SecureStore.deleteItemAsync('accessToken');
-		await SecureStore.deleteItemAsync('refreshToken');
-	});
+export const logOut = async () => {
+	await setUserId(null);
+	await SecureStore.deleteItemAsync('accessToken');
+	await SecureStore.deleteItemAsync('refreshToken');
+
+	if (navigationRef.current) {
+		navigationRef.current?.dispatch(StackActions.replace('AuthStack'));
+	}
 };
 
 interface SendEmailVerificationCodeParams {

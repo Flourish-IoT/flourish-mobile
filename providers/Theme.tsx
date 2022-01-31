@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import { ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { useFonts } from '@use-expo/font';
 import Chevron from '../lib/icons/Chevron';
@@ -201,8 +201,10 @@ export default function ThemeProvider({ children }: PropsWithChildren<unknown>) 
 
 	return (
 		<PaperProvider theme={Theme}>
-			<StatusBar style='dark' />
-			{children}
+			<View style={{ flex: 1, backgroundColor: Theme.colors.accent }}>
+				<StatusBar style='dark' />
+				{children}
+			</View>
 		</PaperProvider>
 	);
 }

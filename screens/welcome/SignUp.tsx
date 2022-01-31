@@ -235,7 +235,10 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 							},
 					  }
 			);
-			queryClient.setQueryData(['loggedIn'], () => true);
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'HomeStack' }],
+			});
 		} catch (error) {
 			alert(`Error: ${error}`);
 		}

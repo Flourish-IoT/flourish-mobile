@@ -9,7 +9,7 @@ import DeleteAccountScreen from './DeleteAccount';
 import ExportDataScreen from './ExportData';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import { useLogOut } from '../../data/auth';
+import { logOut } from '../../data/auth';
 
 interface SettingsScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -18,8 +18,6 @@ interface SettingsScreenProps {
 const Stack = createStackNavigator();
 
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
-	const logOut = useLogOut();
-
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={styles.section}>
@@ -32,7 +30,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 				<Button onPress={() => navigation.navigate('ExportData')}>Export Data</Button>
 			</View>
 			<View style={styles.section}>
-				<Button onPress={logOut.mutate}>Log Out</Button>
+				<Button onPress={logOut}>Log Out</Button>
 				<Button onPress={() => navigation.navigate('DeleteAccount')} color={Theme.colors.error}>
 					Delete Account
 				</Button>

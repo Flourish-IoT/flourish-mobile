@@ -39,7 +39,10 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const onSubmit = async () => {
 		try {
 			await loginWithEmail.mutateAsync({ email, password });
-			queryClient.setQueryData(['loggedIn'], () => true);
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'HomeStack' }],
+			});
 		} catch (error) {
 			alert(`Error: ${error}`);
 		}

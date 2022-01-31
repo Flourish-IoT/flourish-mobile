@@ -2,6 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import createAuthResponseInterceptor from 'axios-auth-refresh';
 import * as SecureStore from 'expo-secure-store';
+import { logOut } from './auth';
 
 export const ApiUrl = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
 
@@ -90,8 +91,7 @@ export const refresh = async () => {
 			return Promise.resolve();
 		})
 		.catch(async (error) => {
-			// TODO: Need to figure out how to set logged in to false in query-context not in a hook
-			// await useLogOut();
+			await logOut();
 			return Promise.reject(error.message);
 		});
 };

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { getUserId, setUserId, useLogOut } from './auth';
+import { getUserId, setUserId, logOut } from './auth';
 
 export const getConfidenceText = (rating: ConfidenceRating) => {
 	switch (rating) {
@@ -110,7 +110,6 @@ export const useExportData = () => {
 
 export const useDeleteAccount = () => {
 	const { data: user } = useUser('me');
-	const logOut = useLogOut();
 
 	return useMutation(
 		(currentPassword: string) => {
@@ -122,7 +121,7 @@ export const useDeleteAccount = () => {
 		},
 		{
 			onSuccess: (res, req) => {
-				logOut.mutate();
+				logOut();
 			},
 		}
 	);
