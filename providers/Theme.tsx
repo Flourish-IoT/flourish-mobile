@@ -1,6 +1,6 @@
+import React, { PropsWithChildren } from 'react';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
 import { ViewStyle } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { useFonts } from '@use-expo/font';
@@ -89,6 +89,7 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 	fonts: CombinedFonts;
 	borderRadius: number;
 	padding: number;
+	margin: number;
 	appBarHeight: number;
 	lottie: {
 		wrapper: ViewStyle;
@@ -104,6 +105,7 @@ export const Theme: OurThemeProps = {
 	roundness: 2, // Roundness of common elements, such as buttons
 	borderRadius: 10, // Common border radius
 	padding: 10, // Common container padding
+	margin: 10,
 	appBarHeight: 60,
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
@@ -179,11 +181,7 @@ export const GlobalNavigatorOptions: StackNavigationOptions = {
 		) : null,
 };
 
-interface ThemeProviderProps {
-	children: React.ReactNode;
-}
-
-export default function ThemeProvider({ children }: ThemeProviderProps) {
+export default function ThemeProvider({ children }: PropsWithChildren<unknown>) {
 	const [fontsLoaded] = useFonts({
 		'Filson-Soft-Bold': require('../lib/assets/fonts/Filson/Soft-Bold.ttf'),
 		'Filson-Soft-Regular': require('../lib/assets/fonts/Filson/Soft-Regular.ttf'),

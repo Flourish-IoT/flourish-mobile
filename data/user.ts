@@ -165,15 +165,31 @@ export interface UserPreferences {
 
 export const useUser = (userId: 'me' | number) => {
 	return useQuery(['get', 'users', userId], async () => {
-		if (userId === 'me') {
+		const useMyId = userId === 'me';
+
+		if (useMyId) {
 			const potentialUserId = await getUserId();
 			!!potentialUserId && (userId = Number(potentialUserId));
 		}
 
 		mockEndpoint(250)
 			.onGet(`/users/${userId}`)
-			.replyOnce<User>(200, userId === 'me' ? tempMyUser : tempOtherUser);
+			.replyOnce<User>(200, useMyId ? tempMyUser : tempOtherUser);
 		const response = await AxiosInstance.get<User>(`/users/${userId}`);
 		return response.data;
 	});
+};
+
+export const useShowHumidity = () => {
+	const { data: user } = useUser('me');
+
+	return useQuery(
+		['showHumidity'],
+		async () => {
+			return user.preferences.confidence_rating === 3;
+		},
+		{
+			enabled: !!user,
+		}
+	);
 };

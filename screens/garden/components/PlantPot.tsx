@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ViewMode } from '..';
 import { Plant } from '../../../data/garden';
@@ -9,9 +9,10 @@ interface PlantProps {
 	viewMode: ViewMode;
 	plant: Plant;
 	image?: any;
+	onPress: () => void;
 }
 
-export default function PlantPot({ viewMode, plant, image }: PlantProps) {
+export default function PlantPot({ viewMode, plant, image, onPress }: PlantProps) {
 	const styles = StyleSheet.create({
 		container: {
 			width: viewMode === 'Carousel' ? '100%' : '50%',
@@ -31,9 +32,12 @@ export default function PlantPot({ viewMode, plant, image }: PlantProps) {
 	});
 
 	return (
-		<View style={styles.container}>
-			<Image source={image ? { url: image } : require('../../../lib/assets/placeholder/plant.png')} style={styles.image} />
+		<TouchableOpacity style={styles.container} onPress={onPress}>
+			<Image
+				source={!!image ? { url: image } : require('../../../lib/assets/placeholder/plant.png')}
+				style={styles.image}
+			/>
 			{viewMode === 'Grid' && <Text style={styles.text}>{plant.name}</Text>}
-		</View>
+		</TouchableOpacity>
 	);
 }

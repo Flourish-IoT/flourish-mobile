@@ -1,18 +1,17 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { ToastProvider } from 'react-native-toast-notifications';
+import PreloadProvider from './Preload';
 import QueryProvider from './QueryClient';
 import ThemeProvider from './Theme';
 
-interface AppProvidersProps {
-	children: ReactNode;
-}
-
-export default function AppProviders({ children }: AppProvidersProps) {
+export default function AppProviders({ children }: PropsWithChildren<unknown>) {
 	return (
 		<QueryProvider>
-			<ThemeProvider>
-				<ToastProvider>{children}</ToastProvider>
-			</ThemeProvider>
+			<PreloadProvider>
+				<ThemeProvider>
+					<ToastProvider>{children}</ToastProvider>
+				</ThemeProvider>
+			</PreloadProvider>
 		</QueryProvider>
 	);
 }

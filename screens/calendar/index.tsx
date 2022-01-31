@@ -26,8 +26,8 @@ export type CalendarView = 'Month' | 'Week';
 const calendarViews: CalendarView[] = ['Month', 'Week'];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
-	const { data: plants, isLoading: plantsIsLoading } = usePlants();
-	const { data: tasks, isLoading: tasksIsLoading } = useTasks();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
+	const { data: tasks, isLoading: tasksIsLoading } = useTasks('me');
 
 	const [selectedInterval, setSelectedInterval] = useState<CalendarView>(calendarViews[0]);
 	const [selectedDate, setSelectedDate] = useState<string | -1>(-1); // -1 meaning none
@@ -43,7 +43,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		setViewSelectExpanded(false);
 	};
 
-	if (plantsIsLoading || tasksIsLoading) return <Loading />;
+	if (plantsIsLoading || tasksIsLoading) return <Loading text='Gathering data...' />;
 
 	const plantFilteredTasks = selectedPlants.includes(-1) ? tasks : tasks.filter((t) => selectedPlants.includes(t.plantId));
 	const datesToHighlight = plantFilteredTasks.map((t) => format(t.datetime, 'yyyy-MM-dd'));

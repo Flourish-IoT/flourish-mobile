@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, View } from 'react-native';
 import { Text, Button, Divider } from 'react-native-paper';
-import { GlobalNavigatorOptions } from '../../providers/Theme';
+import { GlobalNavigatorOptions, Theme } from '../../providers/Theme';
 import ChangeUsernameScreen from './ChangeUsername';
 import ChangePasswordScreen from './ChangePassword';
 import DeleteAccountScreen from './DeleteAccount';
@@ -10,7 +10,6 @@ import ExportDataScreen from './ExportData';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { useLogOut } from '../../data/auth';
-import SplashScreen from '../welcome/Splash';
 
 interface SettingsScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -34,7 +33,9 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 			</View>
 			<View style={styles.section}>
 				<Button onPress={logOut.mutate}>Log Out</Button>
-				<Button onPress={() => navigation.navigate('DeleteAccount')}>Delete Account</Button>
+				<Button onPress={() => navigation.navigate('DeleteAccount')} color={Theme.colors.error}>
+					Delete Account
+				</Button>
 			</View>
 		</ScreenContainer>
 	);

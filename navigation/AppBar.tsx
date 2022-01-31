@@ -8,7 +8,7 @@ import Profile from '../lib/icons/Profile';
 import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
 import CalendarScreen from '../screens/calendar';
-import GardenScreen from '../screens/garden';
+import GardenScreenStack from '../screens/garden';
 import SettingsScreenStack from '../screens/settings';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { SvgProps } from 'react-native-svg';
@@ -86,7 +86,7 @@ export default function AppBarStack() {
 			<Tab.Screen name='Profile' component={SettingsScreenStack} />
 			{/* <Tab.Screen name='SettingsStack' component={SettingsScreenStack} /> */}
 			<Tab.Screen name='Courses' component={CoursesScreenStack} />
-			<Tab.Screen name='Garden' component={GardenScreen} />
+			<Tab.Screen name='Garden' component={GardenScreenStack} />
 			<Tab.Screen name='Calendar' component={CalendarScreen} />
 			<Tab.Screen name='Social' component={SocialScreenStack} />
 		</Tab.Navigator>
