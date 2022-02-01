@@ -1,4 +1,4 @@
-import { format, isPast, isToday, isTomorrow, isYesterday } from 'date-fns';
+import { addDays, addWeeks, format, isAfter, isBefore, isPast, isToday, isTomorrow, isYesterday, subDays } from 'date-fns';
 import React from 'react';
 import { Image } from 'react-native';
 import { List, Text } from 'react-native-paper';
@@ -11,7 +11,7 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-	const { data: plants, isLoading: plantsIsLoading } = usePlants();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 
 	if (plantsIsLoading) return null;
 
@@ -21,12 +21,16 @@ export default function TaskCard({ task }: TaskCardProps) {
 	const { image: plantImage } = plants.find((p) => p.id === plantId);
 
 	const getDateText = () => {
-		if (isYesterday(datetime)) {
+		if (isBefore(datetime, subDays(new Date(), 2))) {
+			return format(datetime, 'MM/dd/yy');
+		} else if (isYesterday(datetime)) {
 			return 'Yesterday';
 		} else if (isToday(datetime)) {
 			return 'Today';
 		} else if (isTomorrow(datetime)) {
 			return 'Tomorrow';
+		} else if (isAfter(datetime, addDays(new Date(), 2)) && isBefore(datetime, addWeeks(new Date(), 1))) {
+			return format(datetime, 'MM-dd');
 		} else {
 			return format(datetime, 'EEEE');
 		}

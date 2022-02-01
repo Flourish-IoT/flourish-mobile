@@ -1,6 +1,6 @@
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import React from 'react';
+import React, { createRef, ReactNode, useEffect } from 'react';
 import Calendar from '../lib/icons/Calendar';
 import GradCap from '../lib/icons/GradCap';
 import Plant from '../lib/icons/Plant';
@@ -9,9 +9,12 @@ import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
 import CalendarScreen from '../screens/calendar';
 import GardenScreenStack from '../screens/garden';
-import SettingsScreenStack from '../screens/settings';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { SvgProps } from 'react-native-svg';
+import ProfileScreenStack from '../screens/profile';
+import { navigationRef } from '../data/auth';
+import { NavigationContainerRef } from '@react-navigation/core';
+import { useQuery, useQueryClient } from 'react-query';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,16 +54,18 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 				...styles.appBar,
 			}}
 		>
-			{state.routes.map((route, index) => {
+			{state.routes.map(({ name }, index) => {
 				const isFocused = state.index === index;
 
 				return (
 					<TouchableOpacity
-						key={route.name}
-						onPress={() => navigation.navigate(route.name)}
+						key={name}
+						onPress={() => {
+							navigation.navigate(name);
+						}}
 						style={styles.appBarButton}
 					>
-						<ScreenIcon icon={route.name as AppBarRoute} focused={isFocused} />
+						<ScreenIcon icon={name as AppBarRoute} focused={isFocused} />
 					</TouchableOpacity>
 				);
 			})}
@@ -79,12 +84,11 @@ function CoursesScreenStack() {
 export default function AppBarStack() {
 	return (
 		<Tab.Navigator
+			screenOptions={{ headerShown: false }}
 			initialRouteName='Garden'
 			tabBar={(props) => <OurTabBar {...props} />}
-			screenOptions={{ headerShown: false }}
 		>
-			<Tab.Screen name='Profile' component={SettingsScreenStack} />
-			{/* <Tab.Screen name='SettingsStack' component={SettingsScreenStack} /> */}
+			<Tab.Screen name='Profile' component={ProfileScreenStack} />
 			<Tab.Screen name='Courses' component={CoursesScreenStack} />
 			<Tab.Screen name='Garden' component={GardenScreenStack} />
 			<Tab.Screen name='Calendar' component={CalendarScreen} />
@@ -105,8 +109,8 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 0.25 },
 		shadowOpacity: 0.25,
 		shadowRadius: 2,
-		zIndex: 5, // iOS
-		elevation: 5, // Android
+		// zIndex: 5, // iOS
+		// elevation: 5, // Android
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-around',

@@ -11,8 +11,8 @@ import CarouselIcon from '../../lib/icons/Carousel';
 import CarouselView from './components/CarouselView';
 import GridView from './components/GridView';
 import { createStackNavigator } from '@react-navigation/stack';
-import { GlobalNavigatorOptions } from '../../providers/Theme';
-import SinglePlantScreen from './SinglePlant';
+import { GlobalStackNavOptions } from '../../providers/Theme';
+import SinglePlantStack from './SinglePlant';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -26,7 +26,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 
 	const onPlantSelect = (plant: Plant) => {
-		navigation.navigate('SinglePlant', { plant });
+		navigation.navigate('SinglePlantStack', { plant });
 	};
 
 	return (
@@ -52,7 +52,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 				) : plants.length === 0 ? (
 					<Empty animation='magnifyingGlass' size='lg' text='No plants in your garden, try adding one to begin...' />
 				) : viewMode === 'Carousel' ? (
-					<CarouselView plants={plants} onPress={onPlantSelect} />
+					<CarouselView navigation={navigation} plants={plants} onPress={onPlantSelect} />
 				) : (
 					<GridView plants={plants} onPress={onPlantSelect} />
 				)}
@@ -65,9 +65,13 @@ const Stack = createStackNavigator();
 
 export default function GardenScreenStack() {
 	return (
-		<Stack.Navigator screenOptions={{ ...GlobalNavigatorOptions, headerShown: false }}>
+		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
 			<Stack.Screen name='GardenList' component={GardenList} />
-			<Stack.Screen name='SinglePlant' component={SinglePlantScreen} />
+			<Stack.Screen
+				name='SinglePlantStack'
+				component={SinglePlantStack}
+				options={{ presentation: 'modal', headerLeft: null }}
+			/>
 		</Stack.Navigator>
 	);
 }

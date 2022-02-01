@@ -7,7 +7,6 @@ import {
 	AxiosInstance,
 	getAccessToken,
 	getRefreshToken,
-	isExpired,
 	mockEndpoint,
 	setAccessToken,
 	setRefreshToken,

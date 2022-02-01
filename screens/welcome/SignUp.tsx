@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Text } from 'react-native-paper';
-import { View, Keyboard, SafeAreaView } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
@@ -13,7 +13,7 @@ import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/nati
 import TextInput from '../../lib/components/styled/TextInput';
 import { useQueryClient } from 'react-query';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import { GlobalNavigatorOptions } from '../../providers/Theme';
+import { GlobalStackNavOptions } from '../../providers/Theme';
 
 const Stack = createStackNavigator();
 
@@ -276,10 +276,10 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 export default function SignUpStack() {
 	return (
-		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
-			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} options={{ headerShown: false }} />
-			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} options={{ headerShown: false }} />
-			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} options={{ headerShown: false }} />
+		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
+			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} />
+			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} />
+			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} />
 		</Stack.Navigator>
 	);
 }

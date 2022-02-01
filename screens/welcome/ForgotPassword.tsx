@@ -7,7 +7,7 @@ import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import TextInput from '../../lib/components/styled/TextInput';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Keyboard, View } from 'react-native';
-import { GlobalNavigatorOptions } from '../../providers/Theme';
+import { GlobalStackNavOptions } from '../../providers/Theme';
 
 interface ForgotPasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -186,10 +186,10 @@ const ChangePasswordScreen = ({ navigation, route }: ForgotPasswordScreenProps) 
 
 export default function ForgotPasswordScreen() {
 	return (
-		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
+		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
 			<Stack.Screen name={'EnterEmail'} component={EnterEmailStep} options={{ title: 'Forgot Password' }} />
-			<Stack.Screen name={'Verify'} component={VerifyStep} options={{ headerShown: false }} />
-			<Stack.Screen name={'ChangePassword'} component={ChangePasswordScreen} options={{ headerShown: false }} />
+			<Stack.Screen name={'Verify'} component={VerifyStep} />
+			<Stack.Screen name={'ChangePassword'} component={ChangePasswordScreen} />
 		</Stack.Navigator>
 	);
 }

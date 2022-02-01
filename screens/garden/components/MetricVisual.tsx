@@ -2,13 +2,13 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Text } from 'react-native-paper';
 import { SvgProps } from 'react-native-svg';
-import { MetricRange } from '../../../data/garden';
+import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
+import { useShowHumidity } from '../../../data/user';
 import Chevron from '../../../lib/icons/Chevron';
 import Sunlight from '../../../lib/icons/Sunlight';
 import Temperature from '../../../lib/icons/Temperature';
 import WaterDrop from '../../../lib/icons/WaterDrop';
 import { Theme } from '../../../providers/Theme';
-import { PlantMetric } from './CarouselView';
 
 interface MetricIconProps extends SvgProps {
 	type: PlantMetric;
@@ -30,13 +30,39 @@ function MetricIcon({ type, ...rest }: MetricIconProps) {
 
 interface MetricVisualProps {
 	mode: 'block' | 'listItem';
-	type: PlantMetric;
-	range: MetricRange | undefined;
-	rawValue: number;
-	onPress: () => void;
+	metricType: PlantMetric;
+	plantId: number;
+	onPress?: () => void;
 }
 
-export default function MetricVisual({ mode, type, range, rawValue, onPress }: MetricVisualProps) {
+export default function MetricVisual({ mode, metricType, plantId, onPress }: MetricVisualProps) {
+	const { data: showHumidity, isLoading: showHumidityIsLoading } = useShowHumidity();
+	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
+
+	if (metricType === 'Humidity' && (showHumidityIsLoading || !showHumidity)) return null;
+
+	let raw: number;
+	let range: MetricRange;
+
+	switch (metricType) {
+		case 'Water':
+			raw = plantData?.soilMoisture?.raw;
+			range = plantData?.soilMoisture?.range;
+			break;
+		case 'Sunlight':
+			raw = plantData?.light?.raw;
+			range = plantData?.light?.range;
+			break;
+		case 'Temperature':
+			raw = plantData?.temperature?.raw;
+			range = plantData?.temperature?.range;
+			break;
+		case 'Humidity':
+			raw = plantData?.humidity?.raw;
+			range = plantData?.humidity?.range;
+			break;
+	}
+
 	const blocks = [
 		{ range: 1, color: '#DADADA' },
 		{ range: 2, color: '#B0B0B0' },
@@ -78,9 +104,9 @@ export default function MetricVisual({ mode, type, range, rawValue, onPress }: M
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
 			<View style={styles.iconContainer}>
-				<MetricIcon type={type} height={mode === 'block' ? 50 : 40} />
+				<MetricIcon type={metricType} height={mode === 'block' ? 50 : 40} />
 			</View>
-			{mode === 'listItem' && <Text>{rawValue}</Text>}
+			{mode === 'listItem' && <Text>{raw}</Text>}
 			<View style={styles.materBar}>
 				{blocks.map((b) => (
 					<View

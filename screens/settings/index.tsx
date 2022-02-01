@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, View } from 'react-native';
 import { Text, Button, Divider } from 'react-native-paper';
-import { GlobalNavigatorOptions, Theme } from '../../providers/Theme';
+import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import ChangeUsernameScreen from './ChangeUsername';
 import ChangePasswordScreen from './ChangePassword';
 import DeleteAccountScreen from './DeleteAccount';
@@ -41,8 +41,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 
 export default function SettingsScreenStack() {
 	return (
-		<Stack.Navigator screenOptions={GlobalNavigatorOptions}>
-			<Stack.Screen name='Settings' component={SettingsScreen} />
+		<Stack.Navigator screenOptions={{ ...GlobalStackNavOptions, headerShown: true }}>
+			<Stack.Screen name='SettingsIndex' component={SettingsScreen} options={{ title: 'Settings', headerLeft: null }} />
 			<Stack.Screen name='ChangeUsername' options={{ title: 'Change Username' }} component={ChangeUsernameScreen} />
 			<Stack.Screen name='ChangePassword' options={{ title: 'Change Password' }} component={ChangePasswordScreen} />
 			<Stack.Screen name='ExportData' options={{ title: 'Export Data' }} component={ExportDataScreen} />

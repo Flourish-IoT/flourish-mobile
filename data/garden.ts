@@ -74,19 +74,17 @@ export interface PlantMetricObj {
 	range: MetricRange;
 }
 
+export type PlantMetric = 'Water' | 'Sunlight' | 'Temperature' | 'Humidity';
+export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 'Humidity'];
+
 export type MetricRange = 1 | 2 | 3 | 4 | 5;
 
 export function tempMyPlantData(): PlantMetrics {
 	return {
 		deviceId: 1,
 		time: new Date(),
-		temperature: {
-			raw: 70,
-			// @ts-ignore
-			range: Math.floor(Math.random() * 5) + 1,
-		},
-		humidity: {
-			raw: 20,
+		soilMoisture: {
+			raw: 600,
 			// @ts-ignore
 			range: Math.floor(Math.random() * 5) + 1,
 		},
@@ -95,8 +93,13 @@ export function tempMyPlantData(): PlantMetrics {
 			// @ts-ignore
 			range: Math.floor(Math.random() * 5) + 1,
 		},
-		soilMoisture: {
-			raw: 600,
+		temperature: {
+			raw: 70,
+			// @ts-ignore
+			range: Math.floor(Math.random() * 5) + 1,
+		},
+		humidity: {
+			raw: 20,
 			// @ts-ignore
 			range: Math.floor(Math.random() * 5) + 1,
 		},

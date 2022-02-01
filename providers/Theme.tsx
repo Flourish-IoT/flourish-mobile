@@ -170,7 +170,8 @@ export const NavigatorTheme = {
 	},
 };
 
-export const GlobalNavigatorOptions: StackNavigationOptions = {
+export const GlobalStackNavOptions: StackNavigationOptions = {
+	headerShown: false,
 	headerStyle: { backgroundColor: Theme.colors.primary },
 	headerTitleStyle: { color: 'white' },
 	headerLeft: ({ canGoBack, onPress }) =>
@@ -179,6 +180,16 @@ export const GlobalNavigatorOptions: StackNavigationOptions = {
 				<Chevron direction='left' fill='white' />
 			</TouchableOpacity>
 		) : null,
+};
+
+export const GlobalModalNavOptions: StackNavigationOptions = {
+	presentation: 'modal',
+	headerShown: true,
+	headerLeft: (props) => (
+		<TouchableOpacity onPress={props.onPress}>
+			<Chevron direction='left' {...props} />
+		</TouchableOpacity>
+	),
 };
 
 export default function ThemeProvider({ children }: PropsWithChildren<unknown>) {
