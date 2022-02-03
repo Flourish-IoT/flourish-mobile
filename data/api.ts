@@ -34,7 +34,12 @@ export type RefreshToken = string;
 
 export const getAccessToken = async () => {
 	const token = await SecureStore.getItemAsync('accessToken');
-	return token ? (JSON.parse(token) as AccessToken) : undefined;
+
+	try {
+		return JSON.parse(token) as AccessToken;
+	} catch {
+		return undefined;
+	}
 };
 
 export const setAccessToken = async (tokenType: string, accessToken: string, expiresIn: number) => {
