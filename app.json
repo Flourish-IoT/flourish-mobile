@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Flourish",
 		"slug": "Flourish",
-		"version": "1.3",
+		"version": "1.4",
 		"orientation": "portrait",
 		"icon": "./lib/assets/icon.png",
 		"platforms": ["ios", "android"],
