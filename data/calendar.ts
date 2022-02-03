@@ -16,15 +16,12 @@ export const useTasks = (userId: number | 'me') => {
 		mockEndpoint(250)
 			.onGet(query)
 			.replyOnce<Task[]>(200, [
-				{ id: 1, plantId: 1, datetime: new Date(), name: 'Water Fredrick', complete: false },
-				{ id: 2, plantId: 2, datetime: subDays(new Date(), 64), name: 'Water Richard', complete: false },
-				{ id: 21, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
-				{ id: 22, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
-				{ id: 23, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
-				{ id: 24, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
-				{ id: 25, plantId: 2, datetime: subDays(new Date(), 1), name: 'Water Richard', complete: false },
-				{ id: 3, plantId: 1, datetime: addDays(new Date(), 2), name: 'Fertilize Fredrick', complete: false },
-				{ id: 4, plantId: 2, datetime: addDays(new Date(), 3), name: 'Prune Richard', complete: false },
+				{ id: 1, plantId: 1, datetime: new Date(), name: 'Water Edward', complete: false },
+				{ id: 2, plantId: 2, datetime: subDays(new Date(), 2), name: 'Water RichLucifernard', complete: false },
+				{ id: 3, plantId: 1, datetime: addDays(new Date(), 2), name: 'Fertilize Edward', complete: false },
+				{ id: 4, plantId: 2, datetime: addDays(new Date(), 3), name: 'Prune Lucifern', complete: false },
+				{ id: 5, plantId: 3, datetime: addDays(new Date(), 4), name: 'Prune Momo', complete: false },
+				{ id: 6, plantId: 4, datetime: addDays(new Date(), 4), name: 'Prune Boo', complete: false },
 			]);
 		return AxiosInstance.get<Task[]>(query).then((res) =>
 			res.data
