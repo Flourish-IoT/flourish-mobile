@@ -1,11 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
-export default function Plus(props: SvgProps) {
-	let fill = props.fill ?? 'black';
-
+export default function Plus({ fill = 'black', ...rest }: SvgProps) {
 	return (
-		<Svg width='12' height='12' viewBox='0 0 12 12' fill='none' {...props}>
+		<Svg width='12' height='12' viewBox='0 0 12 12' fill='none' {...rest}>
 			<Path
 				d='M5 1C5 0.447715 5.44772 0 6 0C6.55228 0 7 0.447715 7 1V11C7 11.5523 6.55228 12 6 12C5.44772 12 5 11.5523 5 11V1Z'
 				fill={fill}

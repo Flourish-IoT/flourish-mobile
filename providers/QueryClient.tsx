@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { PropsWithChildren, useMemo } from 'react';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 
-export default function QueryProvider({ children }: React.PropsWithChildren<unknown>) {
+export default function QueryProvider({ children }: PropsWithChildren<unknown>) {
 	const queryClient = useMemo(
 		() =>
 			new QueryClient({
@@ -11,8 +11,8 @@ export default function QueryProvider({ children }: React.PropsWithChildren<unkn
 					},
 				},
 				queryCache: new QueryCache({
-					onError: error => {
-						console.log(`An error occured while fetching data: ${error}`);
+					onError: (error) => {
+						alert(`An error occurred while fetching data: ${error}`);
 					},
 				}),
 			}),

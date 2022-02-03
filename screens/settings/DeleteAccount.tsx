@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
@@ -28,10 +28,7 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 				onPress: async () => {
 					try {
 						await deleteAccount.mutateAsync(currentPassword);
-						navigation.reset({
-							index: 0,
-							routes: [{ name: 'Welcome' }],
-						});
+						alert('Your account has been successfully deleted.');
 					} catch (error) {
 						alert(`Error: ${error}`);
 					}
@@ -42,21 +39,20 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between' }}>
-			<View>
-				<TextInput
-					label={'Current password'}
-					value={currentPassword}
-					disabled={deleteAccount.isLoading}
-					onChangeText={setCurrentPassword}
-					secureTextEntry
-				/>
-			</View>
+			<TextInput
+				label={'Current password'}
+				value={currentPassword}
+				disabled={deleteAccount.isLoading}
+				onChangeText={setCurrentPassword}
+				secureTextEntry
+			/>
 			<Button
 				mode='contained'
 				loading={deleteAccount.isLoading}
 				disabled={disableDeleteBtn}
 				onPress={onChangePasswordPress}
 				color={Theme.colors.error}
+				style={{ width: '100%' }}
 			>
 				Delete Account
 			</Button>

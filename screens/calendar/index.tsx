@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { List } from 'react-native-paper';
-import { useTestEndpoint } from '../../data/common';
+import { usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Chevron from '../../lib/icons/Chevron';
+import { Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { format, isAfter, isBefore, isFuture, addWeeks, isPast, isToday } from 'date-fns';
+import {
+	format,
+	isAfter,
+	isBefore,
+	isFuture,
+	addWeeks,
+	isPast,
+	isToday,
+	addDays,
+	subDays,
+	isSameMonth,
+	isSameWeek,
+	endOfWeek,
+	startOfWeek,
+} from 'date-fns';
 import { getMonthName, padString } from '../../lib/utils/helper';
 import { Task, useTasks } from '../../data/calendar';
 import TaskCard from './components/TaskCard';
@@ -25,13 +40,14 @@ export type CalendarView = 'Month' | 'Week';
 const calendarViews: CalendarView[] = ['Month', 'Week'];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
-	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
-	const { data: tasks, isLoading: tasksIsLoading } = useTasks();
+	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
+	const { data: tasks, isLoading: tasksIsLoading } = useTasks('me');
 
 	const [selectedInterval, setSelectedInterval] = useState<CalendarView>(calendarViews[0]);
 	const [selectedDate, setSelectedDate] = useState<string | -1>(-1); // -1 meaning none
 	const [calendarYear, setCalendarYear] = useState(format(new Date(), 'yyyy'));
 	const [calendarMonth, setCalendarMonth] = useState(format(new Date(), 'MM'));
+	const [firstInCalendarWeek, setFirstInCalendarWeek] = useState(startOfWeek(new Date()));
 	const [selectedPlants, setSelectedPlants] = useState([-1]); // -1 meaning ALL
 	const [viewSelectExpanded, setViewSelectExpanded] = useState(false);
 	const [intervalTasksExpanded, setIntervalTasksExpanded] = useState(true);
@@ -42,7 +58,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		setViewSelectExpanded(false);
 	};
 
-	if (plantsIsLoading || tasksIsLoading) return <Loading />;
+	if (plantsIsLoading || tasksIsLoading) return <Loading text='Gathering data...' />;
 
 	const plantFilteredTasks = selectedPlants.includes(-1) ? tasks : tasks.filter((t) => selectedPlants.includes(t.plantId));
 	const datesToHighlight = plantFilteredTasks.map((t) => format(t.datetime, 'yyyy-MM-dd'));
@@ -59,26 +75,30 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 			selectedColor: 'red',
 		});
 
-	const upcomingTasks = plantFilteredTasks.filter((t) => isFuture(t.datetime) && isBefore(t.datetime, addWeeks(new Date(), 1)));
+	const upcomingTasks = plantFilteredTasks
+		.filter((t) => !t.complete && isFuture(t.datetime) && isBefore(t.datetime, addDays(new Date(), 30)))
+		// First 5 in the next 30 days
+		.slice(0, 5);
 
 	let intervalTasks: Task[] = [];
-	let intervalCategoryTitle = '';
 
 	if (selectedInterval === 'Month') {
-		intervalTasks = plantFilteredTasks.filter((t) => format(t.datetime, 'yyyy-MM') === calendarYear + '-' + calendarMonth);
-		intervalCategoryTitle = getMonthName(Number(calendarMonth) - 1) + ' Tasks';
-	} else if (selectedInterval === 'Week') {
-		intervalTasks = intervalTasks.filter(
-			(t) => isAfter(t.datetime, new Date('2022-01-20')) && isBefore(t.datetime, new Date('2022-01-26'))
+		intervalTasks = plantFilteredTasks.filter((t) =>
+			isSameMonth(t.datetime, new Date(`${calendarYear}-${calendarMonth}-01`))
 		);
-		intervalCategoryTitle = "This Week's Tasks";
+	} else if (selectedInterval === 'Week') {
+		intervalTasks = intervalTasks.filter((t) => isSameWeek(t.datetime, firstInCalendarWeek));
 	}
 
-	const lateTasks = plantFilteredTasks.filter((t) => isPast(t.datetime) && !t.complete);
-	const selectedDateTasks = intervalTasks.filter((t) => isToday(t.datetime));
+	const lateTasks = plantFilteredTasks
+		.filter((t) => isPast(t.datetime) && !t.complete && isAfter(t.datetime, subDays(new Date(), 30)))
+		// Last 5 in the passed 30 days
+		.slice(1)
+		.slice(-5);
+	const selectedDateTasks = plantFilteredTasks.filter((t) => isToday(t.datetime));
 
 	return (
-		<ScreenContainer>
+		<ScreenContainer scrolls>
 			<StyledAccordion
 				title={selectedInterval}
 				style={{ height: 50, display: 'flex', flexDirection: 'row', alignItems: 'center' }}
@@ -94,7 +114,6 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 			<ChipFilter
 				showAllOption={true}
-				canHaveNoneSelected={true}
 				items={plants.map(({ name, id }) => ({ name, id }))}
 				selectedItems={selectedPlants}
 				displayKey='name'
@@ -102,47 +121,47 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				onFilterChange={setSelectedPlants}
 			/>
 
-			<View>
-				<Calendar
-					onDayPress={(day) => {
-						setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
-					}}
-					onMonthChange={(month) => {
-						setCalendarYear(String(month.year));
-						setCalendarMonth(padString(month.month, 'left', 2, '0'));
-					}}
-					renderArrow={(direction) => <Chevron direction={direction} />}
-					onPressArrowLeft={(subtractMonth) => subtractMonth()}
-					onPressArrowRight={(addMonth) => addMonth()}
-					enableSwipeMonths={true}
-					markedDates={highlighted}
-				/>
-			</View>
+			<Calendar
+				style={{
+					// TODO: Figure out why '100%' doesn't work
+					width: Dimensions.get('window').width - Theme.padding * 2,
+				}}
+				onDayPress={(day) => {
+					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
+				}}
+				onMonthChange={(month) => {
+					setCalendarYear(String(month.year));
+					setCalendarMonth(padString(month.month, 'left', 2, '0'));
+				}}
+				renderArrow={(direction) => <Chevron direction={direction} />}
+				onPressArrowLeft={(subtractMonth) => subtractMonth()}
+				onPressArrowRight={(addMonth) => addMonth()}
+				enableSwipeMonths={true}
+				markedDates={highlighted}
+			/>
 
-			<View>
-				{lateTasks.length > 0 && (
-					<StyledAccordion
-						title='Late Tasks'
-						titleStyle={{ color: Theme.colors.error }}
-						expanded={intervalTasksExpanded}
-						setExpanded={setIntervalTasksExpanded}
-					>
-						{lateTasks.map((t) => (
-							<TaskCard key={t.id} task={t} />
-						))}
-					</StyledAccordion>
-				)}
-
-				<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
-					{upcomingTasks.length > 0 ? (
-						upcomingTasks.map((t) => <TaskCard key={t.id} task={t} />)
-					) : (
-						<View style={{ height: 100 }}>
-							<Empty animation='relax' text='No upcoming tasks!' />
-						</View>
-					)}
+			{lateTasks.length > 0 && (
+				<StyledAccordion
+					title='Late Tasks'
+					titleStyle={{ color: Theme.colors.error }}
+					expanded={intervalTasksExpanded}
+					setExpanded={setIntervalTasksExpanded}
+				>
+					{lateTasks.map((t) => (
+						<TaskCard key={t.id} task={t} />
+					))}
 				</StyledAccordion>
-			</View>
+			)}
+
+			<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
+				{upcomingTasks.length > 0 ? (
+					upcomingTasks.map((t) => <TaskCard key={t.id} task={t} />)
+				) : (
+					<View style={{ height: 100 }}>
+						<Empty animation='relax' text='No upcoming tasks!' />
+					</View>
+				)}
+			</StyledAccordion>
 
 			<StyledModal
 				height='50%'

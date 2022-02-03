@@ -3,55 +3,75 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import Grid from '../../lib/icons/Grid';
-import Plant from './components/Plant';
-import { useTestEndpoint } from '../../data/common';
+import { Plant, usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import Carousel from '../../lib/icons/Carousel';
+import CarouselIcon from '../../lib/icons/Carousel';
+import CarouselView from './components/CarouselView';
+import GridView from './components/GridView';
+import { createStackNavigator } from '@react-navigation/stack';
+import { GlobalStackNavOptions } from '../../providers/Theme';
+import SinglePlantStack from './SinglePlant';
 
-interface GardenScreenStackProps {
+interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
 export type ViewMode = 'Carousel' | 'Grid';
 const viewModes: ViewMode[] = ['Carousel', 'Grid'];
 
-export default function GardenScreenStack({ navigation }: GardenScreenStackProps) {
-	const [viewType, setViewType] = useState<ViewMode>('Carousel');
-	const { data: plants, isLoading: plantsIsLoading } = useTestEndpoint();
+export function GardenList({ navigation }: GardenScreenProps) {
+	const [viewMode, setViewType] = useState<ViewMode>('Carousel');
+	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
+
+	const onPlantSelect = (plant: Plant) => {
+		navigation.navigate('SinglePlantStack', { plant });
+	};
 
 	return (
-		<ScreenContainer>
-			<View
-				style={{
-					display: 'flex',
-					flexDirection: 'row',
-					justifyContent: 'center',
-				}}
-			>
+		<ScreenContainer scrolls>
+			<View style={{ display: 'flex', flexDirection: 'row' }}>
 				{viewModes.map((m) => (
 					<Button
 						key={m}
-						style={{ width: 50, opacity: viewType === m ? 1 : 0.5 }}
+						style={{ width: 50, opacity: viewMode === m ? 1 : 0.5 }}
 						mode='contained'
 						onPress={() => setViewType(m)}
 					>
-						{m === 'Carousel' ? <Carousel /> : <Grid />}
+						{m === 'Carousel' ? <CarouselIcon /> : <Grid />}
 					</Button>
 				))}
 			</View>
-			<View>
+
+			<View style={{ width: '100%', overflow: 'visible' }}>
 				{plantsIsLoading ? (
 					<Loading animation='rings' text='Loading plants...' />
 				) : !plants ? (
 					<Empty animation='error' text='There was an error getting your plants...' />
 				) : plants.length === 0 ? (
-					<Empty animation='magnifyingGlass' text='No plants in your garden, try adding one to begin...' />
+					<Empty animation='magnifyingGlass' size='lg' text='No plants in your garden, try adding one to begin...' />
+				) : viewMode === 'Carousel' ? (
+					<CarouselView navigation={navigation} plants={plants} onPress={onPlantSelect} />
 				) : (
-					plants.map((p, index) => <Plant key={index + p.id} viewMode={viewType} plantName={p.name} />)
+					<GridView plants={plants} onPress={onPlantSelect} />
 				)}
 			</View>
 		</ScreenContainer>
+	);
+}
+
+const Stack = createStackNavigator();
+
+export default function GardenScreenStack() {
+	return (
+		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
+			<Stack.Screen name='GardenList' component={GardenList} />
+			<Stack.Screen
+				name='SinglePlantStack'
+				component={SinglePlantStack}
+				options={{ presentation: 'modal', headerLeft: null }}
+			/>
+		</Stack.Navigator>
 	);
 }

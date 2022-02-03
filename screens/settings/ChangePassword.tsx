@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useChangePassword } from '../../data/user';
 import { Button } from 'react-native-paper';
-import { isValidPassword } from '../../lib/utils/helper';
+import { isValidPassword } from '../../lib/utils/validation';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 
 interface ChangePasswordScreenProps {
@@ -19,7 +19,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 
 	const onChangePasswordPress = async () => {
 		try {
-			await changePassword.mutateAsync(newPassword);
+			await changePassword.mutateAsync({ password: currentPassword, new_password: newPassword });
 			alert('Updated.');
 		} catch (error) {
 			alert(`Error: ${error}`);
@@ -45,8 +45,8 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
-			<View>
+		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+			<View style={{ width: '100%' }}>
 				<TextInput
 					label={'Current password'}
 					value={currentPassword}
@@ -76,6 +76,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 				loading={changePassword.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
+				style={{ width: '100%' }}
 			>
 				Update
 			</Button>

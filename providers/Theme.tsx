@@ -1,8 +1,12 @@
+import React, { PropsWithChildren } from 'react';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
-import { ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { useFonts } from '@use-expo/font';
+import Chevron from '../lib/icons/Chevron';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import SplashScreen from '../screens/welcome/Splash';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
@@ -17,11 +21,76 @@ interface LottieSizeObj {
 	lg: number;
 }
 
+interface OurFontsProps {
+	// Custom font types here
+	heading1: ReactNativePaper.ThemeFont;
+	heading2: ReactNativePaper.ThemeFont;
+	heading3Bold: ReactNativePaper.ThemeFont;
+	headingRegular: ReactNativePaper.ThemeFont;
+	body: ReactNativePaper.ThemeFont;
+	subHeader: ReactNativePaper.ThemeFont;
+	paragraph: ReactNativePaper.ThemeFont;
+	placeholder: ReactNativePaper.ThemeFont;
+}
+
+const OurFonts: OurFontsProps = {
+	heading1: {
+		fontFamily: 'Filson-Soft-Bold',
+		fontWeight: 'normal',
+	},
+	heading2: {
+		fontFamily: 'Filson-Soft-Bold',
+		fontWeight: 'normal',
+	},
+	heading3Bold: {
+		fontFamily: 'Filson-Soft-Bold',
+		fontWeight: 'normal',
+	},
+	headingRegular: {
+		fontFamily: 'Filson-Soft-Regular',
+		fontWeight: 'normal',
+	},
+	body: {
+		fontFamily: 'Lato-Bold',
+		fontWeight: 'normal',
+	},
+	subHeader: {
+		fontFamily: 'Filson-Soft-Regular',
+		fontWeight: 'normal',
+	},
+	paragraph: {
+		fontFamily: 'Lato-Regular',
+		fontWeight: 'normal',
+	},
+	placeholder: {
+		fontFamily: 'Lato-Regular',
+		fontWeight: 'normal',
+	},
+};
+
+const ReactNativePaperFonts: ReactNativePaper.ThemeFonts = {
+	regular: OurFonts.paragraph,
+	medium: OurFonts.body,
+	light: {
+		fontFamily: 'Lato-Light',
+		fontWeight: 'normal',
+	},
+	thin: {
+		fontFamily: 'Lato-Thin',
+		fontWeight: 'normal',
+	},
+};
+
+interface CombinedFonts extends OurFontsProps, ReactNativePaper.ThemeFonts {}
+
 interface OurThemeProps extends ReactNativePaper.Theme {
 	// Custom theme property types here
 	colors: OurColorsProps;
+	fonts: CombinedFonts;
 	borderRadius: number;
 	padding: number;
+	margin: number;
+	appBarHeight: number;
 	lottie: {
 		wrapper: ViewStyle;
 		width: LottieSizeObj;
@@ -36,6 +105,8 @@ export const Theme: OurThemeProps = {
 	roundness: 2, // Roundness of common elements, such as buttons
 	borderRadius: 10, // Common border radius
 	padding: 10, // Common container padding
+	margin: 10,
+	appBarHeight: 60,
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
 	},
@@ -68,8 +139,8 @@ export const Theme: OurThemeProps = {
 		},
 	},
 	colors: {
-		primary: '#5ABB98', // Primary color for your app, usually your brand color
-		accent: '#f1c40f', // Secondary color for your app which complements the primary color
+		primary: '#10B295', // Primary color for your app, usually your brand color
+		accent: '#6A2B0B', // Secondary color for your app which complements the primary color
 		background: 'white', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards
 		text: DefaultTheme.colors.text, // Text color for content
@@ -82,22 +153,8 @@ export const Theme: OurThemeProps = {
 		border: 'black', // The color of borders
 	},
 	fonts: {
-		regular: {
-			fontFamily: DefaultTheme.fonts.regular.fontFamily,
-			fontWeight: DefaultTheme.fonts.regular.fontWeight,
-		},
-		medium: {
-			fontFamily: DefaultTheme.fonts.medium.fontFamily,
-			fontWeight: DefaultTheme.fonts.regular.fontWeight,
-		},
-		light: {
-			fontFamily: DefaultTheme.fonts.light.fontFamily,
-			fontWeight: DefaultTheme.fonts.regular.fontWeight,
-		},
-		thin: {
-			fontFamily: DefaultTheme.fonts.thin.fontFamily,
-			fontWeight: DefaultTheme.fonts.regular.fontWeight,
-		},
+		...OurFonts,
+		...ReactNativePaperFonts,
 	},
 };
 
@@ -113,20 +170,52 @@ export const NavigatorTheme = {
 	},
 };
 
-export const GlobalNavigatorOptions: StackNavigationOptions = {
+export const GlobalStackNavOptions: StackNavigationOptions = {
+	headerShown: false,
 	headerStyle: { backgroundColor: Theme.colors.primary },
 	headerTitleStyle: { color: 'white' },
+	headerLeft: ({ canGoBack, onPress }) =>
+		canGoBack ? (
+			<TouchableOpacity onPress={onPress} style={{ padding: Theme.padding }}>
+				<Chevron direction='left' fill='white' />
+			</TouchableOpacity>
+		) : null,
 };
 
-interface ThemeProviderProps {
-	children: React.ReactNode;
-}
+export const GlobalModalNavOptions: StackNavigationOptions = {
+	presentation: 'modal',
+	headerShown: true,
+	headerLeft: (props) => (
+		<TouchableOpacity onPress={props.onPress}>
+			<Chevron direction='left' {...props} />
+		</TouchableOpacity>
+	),
+};
 
-export default function ThemeProvider({ children }: ThemeProviderProps) {
+export default function ThemeProvider({ children }: PropsWithChildren<unknown>) {
+	const [fontsLoaded] = useFonts({
+		'Filson-Soft-Bold': require('../lib/assets/fonts/Filson/Soft-Bold.ttf'),
+		'Filson-Soft-Regular': require('../lib/assets/fonts/Filson/Soft-Regular.ttf'),
+		'Lato-Black-Italic': require('../lib/assets/fonts/Lato/Black-Italic.ttf'),
+		'Lato-Black': require('../lib/assets/fonts/Lato/Black.ttf'),
+		'Lato-Bold-Italic': require('../lib/assets/fonts/Lato/Bold-Italic.ttf'),
+		'Lato-Bold': require('../lib/assets/fonts/Lato/Bold.ttf'),
+		'Lato-Italic': require('../lib/assets/fonts/Lato/Italic.ttf'),
+		'Lato-Light-Italic': require('../lib/assets/fonts/Lato/Light-Italic.ttf'),
+		'Lato-Light': require('../lib/assets/fonts/Lato/Light.ttf'),
+		'Lato-Regular': require('../lib/assets/fonts/Lato/Regular.ttf'),
+		'Lato-Thin-Italic': require('../lib/assets/fonts/Lato/Thin-Italic.ttf'),
+		'Lato-Thin': require('../lib/assets/fonts/Lato/Thin.ttf'),
+	});
+
+	if (!fontsLoaded) return <SplashScreen />;
+
 	return (
 		<PaperProvider theme={Theme}>
-			<StatusBar style='dark' />
-			{children}
+			<View style={{ flex: 1, backgroundColor: Theme.colors.accent }}>
+				<StatusBar style='dark' />
+				{children}
+			</View>
 		</PaperProvider>
 	);
 }

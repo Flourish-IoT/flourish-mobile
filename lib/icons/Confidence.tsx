@@ -1,15 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 import Svg, { Path, Circle, SvgProps } from 'react-native-svg';
 import { ConfidenceRating } from '../../data/user';
 
 interface ConfidenceProps extends SvgProps {
 	rating?: ConfidenceRating;
-	fill?: string;
 }
 
-export default function Confidence({ rating, ...rest }: ConfidenceProps) {
-	let fill = rest.fill ?? 'black';
-
+export default function Confidence({ fill = 'black', rating, ...rest }: ConfidenceProps) {
 	return (
 		<Svg width='231' height='231' viewBox='0 0 231 231' fill='none' {...rest}>
 			{rating === 1 && (

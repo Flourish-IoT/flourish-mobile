@@ -1,52 +1,128 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { AxiosInstance, mockEndpoint } from './api';
-import { ConfidenceRating } from './user';
+import { createRef, ReactNode } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { NavigationContainerRef, StackActions } from '@react-navigation/core';
+import { tempMyUser, User, useUser } from './user';
+import {
+	AxiosInstance,
+	getAccessToken,
+	getRefreshToken,
+	mockEndpoint,
+	setAccessToken,
+	setRefreshToken,
+	tempToken,
+	Token,
+} from './api';
 
-interface SignUpParams {
-	confidenceRating: ConfidenceRating;
+export const getUserId = async () => {
+	return await SecureStore.getItemAsync('userId');
+};
+
+export const setUserId = async (value: number | null) => {
+	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
+};
+
+export const isLoggedIn = async () => {
+	return !!(await getAccessToken()) && !!((await getRefreshToken()) && !!(await getUserId()));
+};
+
+export const navigationRef = createRef<NavigationContainerRef<ReactNode>>();
+
+export const logOut = async () => {
+	await setUserId(null);
+	await SecureStore.deleteItemAsync('accessToken');
+	await SecureStore.deleteItemAsync('refreshToken');
+
+	if (navigationRef.current) {
+		navigationRef.current?.dispatch(StackActions.replace('AuthStack'));
+	}
+};
+
+interface SendEmailVerificationCodeParams {
+	email: string;
+	username: string;
+	password: string;
 }
 
-export const getAccessToken = async () => {
-	return await SecureStore.getItemAsync('accessToken');
+export const useSendVerifyEmail = () => {
+	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
+		const query = '/users';
+		mockEndpoint(0).onPost(query, { params: { email, username, password } }).replyOnce<string>(200, 'OK');
+		return AxiosInstance.post<string>(query, { params: { email, username, password } });
+	});
 };
 
-export const setAccessToken = async (value: string) => {
-	return await SecureStore.setItemAsync('accessToken', value);
+interface CheckEmailVerificationCodeParams {
+	email: string;
+	code: string;
+}
+
+interface AuthResponse {
+	jwt: Token;
+	userId: number;
+}
+
+export const useVerifyEmail = () => {
+	return useMutation(
+		({ email, code }: CheckEmailVerificationCodeParams) => {
+			const query = `/users/verify?code=verification`;
+			mockEndpoint(0).onPost(query, { params: { email, code } }).replyOnce<AuthResponse>(200, {
+				jwt: tempToken,
+				userId: tempMyUser.id,
+			});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, code } });
+		},
+		{
+			onSuccess: async ({ data }, { email, code }) => {
+				await setUserId(data.userId);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
+			},
+		}
+	);
 };
 
-export const getLoggedIn = async () => {
-	return (await AsyncStorage.getItem('loggedIn')) === 'TRUE';
+type FinishAccountParams = Omit<User, 'id' | 'email' | 'username'>;
+
+export const useFinishAccountSetup = () => {
+	const { data: user } = useUser('me');
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		({ preferences }: FinishAccountParams | undefined) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(0).onPut(query, { params: { preferences } }).replyOnce<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { preferences } });
+		},
+		{
+			onSuccess: (res, { preferences }) => {
+				queryClient.setQueryData<User>(['get', 'users', user.id], (oldData) => ({ ...oldData, preferences }));
+			},
+		}
+	);
 };
 
-export const setLoggedIn = async (value: boolean) => {
-	return await AsyncStorage.setItem('loggedIn', String(value).toUpperCase());
-};
+interface EmailLoginParams {
+	email: string;
+	password: string;
+}
 
-export const sendEmailVerificationCode = (email: string, password: string) => {
-	mockEndpoint(0).onPost('/send_email_verification_code', { params: { email, password } }).reply(200, true);
-	return AxiosInstance.post('/send_email_verification_code', { params: { email, password } });
-};
-
-export const checkEmailVerificationCode = (email: string, code: string) => {
-	mockEndpoint(100).onPost('/users/${user_id}/verify', { params: { code } }).reply(200, true);
-	return AxiosInstance.post('/users/${user_id}/verify', { params: { code } });
-};
-
-export const finishAccountSetup = (signUpParams: SignUpParams) => {
-	mockEndpoint(100).onPost('/finish_account_setup', { params: { signUpParams } }).reply(200, true);
-	return AxiosInstance.post('/finish_account_setup', { params: { signUpParams } });
-};
-
-export const attemptEmailLogin = (email: string, password: string) => {
-	mockEndpoint(100).onPost('/users/login', { params: { email, password } }).reply(200, '123abc');
-	return AxiosInstance.post<string>('/users/login', { params: { email, password } });
-};
-
-export const useUser = () => {
-	return {
-		id: 123,
-		username: 'flourish-user-2000',
-		email: 'user@gmail.com',
-	};
+export const useLoginWithEmail = () => {
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			mockEndpoint(0).onPost(query, { params: { email, password } }).reply<AuthResponse>(200, {
+				jwt: tempToken,
+				userId: tempMyUser.id,
+			});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, password } });
+		},
+		{
+			onSuccess: async ({ data }, { email, password }) => {
+				await setUserId(data.userId);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
+			},
+		}
+	);
 };

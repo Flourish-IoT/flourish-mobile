@@ -45,6 +45,7 @@ export default function ChangeUsernameScreen({ navigation }: ChangeDisplayNameSc
 				loading={changeUsername.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
+				style={{ width: '100%' }}
 			>
 				Update
 			</Button>
