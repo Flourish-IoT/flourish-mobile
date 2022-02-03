@@ -34,7 +34,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
 
-	const usernameIsValid = email.trim().length !== 0;
+	const usernameIsValid = username.trim().length !== 0;
 	const emailIsValid = isValidEmail(email);
 	const passwordMatches = password === confirmPassword;
 	const passwordIsSecure = isValidPassword(password);
