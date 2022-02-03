@@ -4,7 +4,7 @@ import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
-import { isValidEmail, isValidPassword, isValidUsername } from '../../lib/utils/validation';
+import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import { useFinishAccountSetup, useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
 import RadioButton from '../../lib/components/styled/RadioButton';
 import Confidence from '../../lib/icons/Confidence';
@@ -34,7 +34,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
 
-	const usernameIsValid = isValidUsername(username);
+	const usernameIsValid = email.trim().length !== 0;
 	const emailIsValid = isValidEmail(email);
 	const passwordMatches = password === confirmPassword;
 	const passwordIsSecure = isValidPassword(password);
@@ -43,8 +43,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const disableNextBtn = !formIsValid;
 
 	const getUsernameErrorMsg = () => {
-		if (email.trim().length === 0) return undefined;
-		if (!emailIsValid) return 'Username is invalid';
+		if (!usernameIsValid) return 'Username is required';
 		return undefined;
 	};
 
@@ -62,7 +61,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 
 	const getPasswordConfirmErrorMsg = () => {
 		if (confirmPassword.trim().length === 0) return undefined;
-		if (!passwordMatches) return 'Passwords do no match';
+		if (!passwordMatches) return 'Passwords do not match';
 		return undefined;
 	};
 

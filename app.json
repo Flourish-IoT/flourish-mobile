@@ -3,7 +3,7 @@
 		"name": "Flourish",
 		"slug": "Flourish",
 		"owner": "hmh84",
-		"version": "1.4.1",
+		"version": "1.4.2",
 		"orientation": "portrait",
 		"icon": "./lib/assets/icon.png",
 		"platforms": ["ios", "android"],
