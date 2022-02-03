@@ -1,6 +1,6 @@
+import React from 'react';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import React, { createRef, ReactNode, useEffect } from 'react';
 import Calendar from '../lib/icons/Calendar';
 import GradCap from '../lib/icons/GradCap';
 import Plant from '../lib/icons/Plant';
@@ -12,9 +12,6 @@ import GardenScreenStack from '../screens/garden';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import ProfileScreenStack from '../screens/profile';
-import { navigationRef } from '../data/auth';
-import { NavigationContainerRef } from '@react-navigation/core';
-import { useQuery, useQueryClient } from 'react-query';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,15 +42,38 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	const insets = useSafeAreaInsets();
 
+	const styles = StyleSheet.create({
+		appBar: {
+			position: 'absolute',
+			bottom: insets.bottom,
+			left: insets.left + Theme.padding,
+			right: insets.right + Theme.padding,
+			backgroundColor: 'white',
+			height: Theme.appBarHeight,
+			paddingBottom: 0,
+			borderTopWidth: 0,
+			borderRadius: 15,
+			shadowColor: '#000',
+			shadowOffset: { width: 0, height: 0.25 },
+			shadowOpacity: 0.25,
+			shadowRadius: 2,
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-around',
+			alignItems: 'center',
+		},
+		appBarButton: {
+			flex: 1,
+			height: '100%',
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-around',
+			alignItems: 'center',
+		},
+	});
+
 	return (
-		<View
-			style={{
-				bottom: insets.bottom,
-				left: insets.left + Theme.padding,
-				right: insets.right + Theme.padding,
-				...styles.appBar,
-			}}
-		>
+		<View style={styles.appBar}>
 			{state.routes.map(({ name }, index) => {
 				const isFocused = state.index === index;
 
@@ -96,32 +116,3 @@ export default function AppBarStack() {
 		</Tab.Navigator>
 	);
 }
-
-const styles = StyleSheet.create({
-	appBar: {
-		position: 'absolute',
-		backgroundColor: 'white',
-		height: Theme.appBarHeight,
-		paddingBottom: 0,
-		borderTopWidth: 0,
-		borderRadius: 15,
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 0.25 },
-		shadowOpacity: 0.25,
-		shadowRadius: 2,
-		// zIndex: 5, // iOS
-		// elevation: 5, // Android
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		alignItems: 'center',
-	},
-	appBarButton: {
-		flex: 1,
-		height: '100%',
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		alignItems: 'center',
-	},
-});

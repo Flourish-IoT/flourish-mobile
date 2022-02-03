@@ -106,7 +106,7 @@ export const Theme: OurThemeProps = {
 	borderRadius: 10, // Common border radius
 	padding: 10, // Common container padding
 	margin: 10,
-	appBarHeight: 60,
+	appBarHeight: 70,
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
 	},
