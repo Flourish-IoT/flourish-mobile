@@ -9,7 +9,7 @@ import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
 import CalendarScreen from '../screens/calendar';
 import GardenScreenStack from '../screens/garden';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import ProfileScreenStack from '../screens/profile';
 
@@ -31,7 +31,7 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 		case 'Courses':
 			return <GradCap fill={focusColor(focused)} />;
 		case 'Garden':
-			return <Plant fill={focusColor(focused)} />;
+			return <Plant fill={focused ? 'white' : Theme.colors.text} width={35} />;
 		case 'Calendar':
 			return <Calendar fill={focusColor(focused)} />;
 		case 'Social':
@@ -45,22 +45,19 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	const styles = StyleSheet.create({
 		appBar: {
 			position: 'absolute',
-			bottom: insets.bottom,
-			left: insets.left + Theme.padding,
-			right: insets.right + Theme.padding,
+			bottom: 0,
+			left: 0,
+			right: 0,
+			height: Theme.appBarHeight + insets.bottom,
+			paddingHorizontal: Theme.spacing.md,
+			paddingBottom: insets.bottom,
 			backgroundColor: 'white',
-			height: Theme.appBarHeight,
-			paddingBottom: 0,
 			borderTopWidth: 0,
-			borderRadius: 15,
-			shadowColor: '#000',
-			shadowOffset: { width: 0, height: 0.25 },
-			shadowOpacity: 0.25,
-			shadowRadius: 2,
 			display: 'flex',
 			flexDirection: 'row',
-			justifyContent: 'space-around',
+			justifyContent: 'space-between',
 			alignItems: 'center',
+			...Theme.shadow,
 		},
 		appBarButton: {
 			flex: 1,
@@ -76,14 +73,23 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 		<View style={styles.appBar}>
 			{state.routes.map(({ name }, index) => {
 				const isFocused = state.index === index;
+				const isCenterBtn = name === 'Garden';
+
+				const centerBtnStyle: ViewStyle = {
+					borderRadius: 100,
+					width: 70,
+					height: 70,
+					transform: [{ translateY: -Theme.appBarHeight / 2 }],
+					backgroundColor: isFocused ? Theme.colors.primary : 'white',
+					...Theme.shadow,
+				};
 
 				return (
 					<TouchableOpacity
+						activeOpacity={1}
 						key={name}
-						onPress={() => {
-							navigation.navigate(name);
-						}}
-						style={styles.appBarButton}
+						onPress={() => navigation.navigate(name)}
+						style={isCenterBtn ? { ...styles.appBarButton, ...centerBtnStyle } : styles.appBarButton}
 					>
 						<ScreenIcon icon={name as AppBarRoute} focused={isFocused} />
 					</TouchableOpacity>
@@ -93,11 +99,11 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	);
 }
 
-function SocialScreenStack() {
+function RewardsScreenStack() {
 	return null;
 }
 
-function CoursesScreenStack() {
+function EducationScreenStack() {
 	return null;
 }
 
@@ -109,10 +115,10 @@ export default function AppBarStack() {
 			tabBar={(props) => <OurTabBar {...props} />}
 		>
 			<Tab.Screen name='Profile' component={ProfileScreenStack} />
-			<Tab.Screen name='Courses' component={CoursesScreenStack} />
+			<Tab.Screen name='Courses' component={EducationScreenStack} />
 			<Tab.Screen name='Garden' component={GardenScreenStack} />
 			<Tab.Screen name='Calendar' component={CalendarScreen} />
-			<Tab.Screen name='Social' component={SocialScreenStack} />
+			<Tab.Screen name='Social' component={RewardsScreenStack} />
 		</Tab.Navigator>
 	);
 }

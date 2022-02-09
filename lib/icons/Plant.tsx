@@ -3,27 +3,27 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 
 export default function Plant({ fill = 'black', ...rest }: SvgProps) {
 	return (
-		<Svg width='38' height='41' viewBox='0 0 38 41' fill='none' {...rest}>
+		<Svg width='50' height='53' viewBox='0 0 38 41' fill='none' {...rest}>
 			<Path
 				d='M1.81775 38.9437C1.81775 38.9437 7.99959 34.5273 18.4222 34.5273C28.8448 34.5273 34.7623 38.9437 34.7623 38.9437'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-miterlimit='10'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeMiterlimit='10'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M18.4223 34.5273C18.4223 34.5273 19.3059 28.3621 15.6844 19.4757'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-miterlimit='10'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeMiterlimit='10'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M18.2928 29.1941C18.2928 29.1941 19.7514 26.1364 26.1107 22.8699'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-miterlimit='10'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeMiterlimit='10'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M16.4183 21.4113C19.5 19.4758 23.0734 13.8319 16.4183 6.26355C11.7894 0.996787 3.33184 -0.227011 2.26702 0.941328C1.2022 2.10967 4.07869 2.34629 4.3948 7.32652C4.71092 12.3068 3.72375 15.7286 7.2528 19.2022C10.7818 22.6758 15.3702 22.0694 16.4183 21.4113Z'

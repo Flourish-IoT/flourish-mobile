@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
-import { Text } from 'react-native-paper';
 import Modal from 'react-native-modal';
 import { Theme } from '../../../providers/Theme';
+import Typography from './Typography';
 
 interface ModalProps {
 	visible: boolean;
@@ -29,13 +29,15 @@ export default function StyledModal({ visible, onClose, title, content, actionIt
 					justifyContent: 'space-between',
 					alignItems: 'center',
 					backgroundColor: 'white',
-					padding: Theme.padding,
+					padding: Theme.spacing.md,
 					borderTopLeftRadius: Theme.borderRadius,
 					borderTopRightRadius: Theme.borderRadius,
 					height: height,
 				}}
 			>
-				<Text style={{ textAlign: 'center' }}>{title}</Text>
+				<Typography variant='heading3Bold' style={{ textAlign: 'center' }}>
+					{title}
+				</Typography>
 				<View style={{ width: '100%' }}>{content}</View>
 				<View style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>{actionItems}</View>
 			</View>

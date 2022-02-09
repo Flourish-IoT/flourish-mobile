@@ -3,15 +3,15 @@ import Svg, { Path, SvgProps } from 'react-native-svg';
 
 export default function Calendar({ fill = 'black', ...rest }: SvgProps) {
 	return (
-		<Svg width='26' height='24' viewBox='0 0 26 25' fill='none' {...rest}>
+		<Svg width='30' height='28' viewBox='0 0 26 25' fill='none' {...rest}>
 			<Path
 				d='M22.1008 2.35156H4.44226C2.95213 2.35156 1.74414 3.55955 1.74414 5.04968V21.2675C1.74414 22.7577 2.95213 23.9657 4.44226 23.9657H22.1008C23.5909 23.9657 24.7989 22.7577 24.7989 21.2675V5.04968C24.7989 3.55955 23.5909 2.35156 22.1008 2.35156Z'
 				stroke={fill}
-				stroke-width='2'
-				stroke-linecap='round'
-				stroke-linejoin='round'
+				strokeWidth={2}
+				strokeLinecap='round'
+				strokeLinejoin='round'
 			/>
-			<Path d='M1.53516 8.35938H25.0146' stroke={fill} stroke-width='2' stroke-linejoin='round' />
+			<Path d='M1.53516 8.35938H25.0146' stroke={fill} strokeWidth={2} strokeLinejoin='round' />
 			<Path
 				d='M8.5545 11.5H6.73633C6.18404 11.5 5.73633 11.9477 5.73633 12.5V14.3182C5.73633 14.8705 6.18404 15.3182 6.73633 15.3182H8.5545C9.10678 15.3182 9.5545 14.8705 9.5545 14.3182V12.5C9.5545 11.9477 9.10678 11.5 8.5545 11.5Z'
 				fill={fill}

@@ -11,26 +11,26 @@ export default function WaterDrop({ fill = 'black', ...rest }: SvgProps) {
 			<Path
 				d='M42.8812 25.4002C45.3232 24.9552 50.1705 22.5169 50.0239 16.3245'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M41.0566 44.071C43.2885 45.4463 44.0759 47.8085 44.3383 50.6956'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M12.6954 44.0726C10.4208 45.4742 9.61838 47.8816 9.35089 50.8239'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M9.24774 27.0291C6.80574 26.5841 1.95837 24.1458 2.10497 17.9534'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 		</Svg>
 	);

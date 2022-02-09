@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SvgProps } from 'react-native-svg';
 import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
 import { useShowHumidity } from '../../../data/user';
+import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
 import Sunlight from '../../../lib/icons/Sunlight';
 import Temperature from '../../../lib/icons/Temperature';
 import WaterDrop from '../../../lib/icons/WaterDrop';
+import { getFullMetricName, getMetricRangeDescription } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface MetricIconProps extends SvgProps {
@@ -78,7 +79,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
-			padding: Theme.padding,
+			padding: Theme.spacing.md,
 		},
 		iconContainer: {
 			height: 50,
@@ -87,7 +88,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginBottom: mode === 'block' ? Theme.margin : 0,
+			marginBottom: mode === 'block' ? Theme.spacing.md : 0,
 		},
 		materBar: {
 			width: mode === 'block' ? '100%' : 100,
@@ -106,15 +107,24 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			<View style={styles.iconContainer}>
 				<MetricIcon type={metricType} height={mode === 'block' ? 50 : 40} />
 			</View>
-			{mode === 'listItem' && <Text>{raw}</Text>}
-			<View style={styles.materBar}>
-				{blocks.map((b) => (
-					<View
-						key={b.range}
-						style={{ ...styles.meterBarBlock, backgroundColor: b.color, borderWidth: b.range === range ? 2 : 0 }}
-					/>
-				))}
-			</View>
+			{mode === 'listItem' && (
+				<View style={{ flex: 1, paddingLeft: Theme.spacing.lg }}>
+					<Typography variant='body'>
+						{getFullMetricName(metricType)}: {getMetricRangeDescription(range)}
+					</Typography>
+					<Typography variant='placeholder'>{raw}</Typography>
+				</View>
+			)}
+			{mode === 'block' && (
+				<View style={styles.materBar}>
+					{blocks.map((b) => (
+						<View
+							key={b.range}
+							style={{ ...styles.meterBarBlock, backgroundColor: b.color, borderWidth: b.range === range ? 2 : 0 }}
+						/>
+					))}
+				</View>
+			)}
 			{mode === 'listItem' && <Chevron direction='right' />}
 		</TouchableOpacity>
 	);

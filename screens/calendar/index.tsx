@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { List } from 'react-native-paper';
 import { usePlants } from '../../data/garden';
@@ -21,6 +21,7 @@ import {
 	isSameWeek,
 	endOfWeek,
 	startOfWeek,
+	isSameDay,
 } from 'date-fns';
 import { getMonthName, padString } from '../../lib/utils/helper';
 import { Task, useTasks } from '../../data/calendar';
@@ -31,6 +32,7 @@ import StyledModal from '../../lib/components/styled/Modal';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { Theme } from '../../providers/Theme';
 import StyledAccordion from '../../lib/components/styled/Accordion';
+import DropDown from '../../lib/components/DropDown';
 
 interface CalendarScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -52,11 +54,6 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	const [viewSelectExpanded, setViewSelectExpanded] = useState(false);
 	const [intervalTasksExpanded, setIntervalTasksExpanded] = useState(true);
 	const [upcomingTasksExpanded, setUpcomingTasksExpanded] = useState(true);
-
-	const handleSetSelectedView = (view: CalendarView) => {
-		setSelectedInterval(view);
-		setViewSelectExpanded(false);
-	};
 
 	if (plantsIsLoading || tasksIsLoading) return <Loading text='Gathering data...' />;
 
@@ -95,37 +92,36 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		// Last 5 in the passed 30 days
 		.slice(1)
 		.slice(-5);
-	const selectedDateTasks = plantFilteredTasks.filter((t) => isToday(t.datetime));
+	const selectedDateTasks = plantFilteredTasks.filter((t) => isSameDay(new Date(selectedDate), t.datetime));
 
 	return (
-		<ScreenContainer scrolls>
-			<StyledAccordion
+		<ScreenContainer scrolls style={{ alignItems: 'flex-start' }}>
+			<DropDown
 				title={selectedInterval}
-				style={{ height: 50, display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+				showAllOption={false}
+				items={calendarViews.map((v, vIndex) => ({ display: v, value: vIndex }))}
+				selectedItems={[calendarViews.indexOf(selectedInterval)]}
+				onFilterChange={(views) => setSelectedInterval(calendarViews[views[0]])}
+				displayKey='display'
+				valueKey='value'
 				expanded={viewSelectExpanded}
 				setExpanded={setViewSelectExpanded}
-			>
-				{calendarViews
-					.filter((v) => v !== selectedInterval) // Hide the selected value
-					.map((v) => (
-						<List.Item key={v} title={v} onPress={() => handleSetSelectedView(v)} />
-					))}
-			</StyledAccordion>
+				style={{ marginBottom: Theme.spacing.md }}
+			/>
 
 			<ChipFilter
-				showAllOption={true}
+				showAllOption
 				items={plants.map(({ name, id }) => ({ name, id }))}
 				selectedItems={selectedPlants}
 				displayKey='name'
 				valueKey='id'
 				onFilterChange={setSelectedPlants}
+				style={{ marginBottom: Theme.spacing.md }}
 			/>
 
 			<Calendar
-				style={{
-					// TODO: Figure out why '100%' doesn't work
-					width: Dimensions.get('window').width - Theme.padding * 2,
-				}}
+				style={styles.calendarStyle}
+				theme={styles.calendarTheme}
 				onDayPress={(day) => {
 					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
 				}}
@@ -183,3 +179,15 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		</ScreenContainer>
 	);
 }
+
+const styles = StyleSheet.create({
+	calendarStyle: {
+		// TODO: Figure out why '100%' doesn't work
+		width: Dimensions.get('window').width - Theme.spacing.md * 2,
+		backgroundColor: 'transparent',
+		marginBottom: Theme.spacing.md,
+	},
+	calendarTheme: {
+		backgroundColor: 'transparent',
+	},
+});

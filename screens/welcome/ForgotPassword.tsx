@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Text } from 'react-native-paper';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { useResetPassword, useSendResetPasswordEmail, useVerifyResetPasswordEmail } from '../../data/user';
@@ -7,7 +6,10 @@ import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import TextInput from '../../lib/components/styled/TextInput';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Keyboard, View } from 'react-native';
-import { GlobalStackNavOptions } from '../../providers/Theme';
+import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
+import Typography from '../../lib/components/styled/Typography';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
+import Button from '../../lib/components/styled/Button';
 
 interface ForgotPasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -33,16 +35,21 @@ const EnterEmailStep = ({ navigation }: ForgotPasswordScreenProps) => {
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between' }}>
-			<TextInput label={'Your Email'} value={email} disabled={sendResetPasswordEmail.isLoading} onChangeText={setEmail} />
+			<SegmentedList>
+				<TextInput
+					label={'Your Email'}
+					value={email}
+					disabled={sendResetPasswordEmail.isLoading}
+					onChangeText={setEmail}
+				/>
+			</SegmentedList>
 			<Button
-				mode='contained'
+				variant='primary'
+				title='Next'
 				loading={sendResetPasswordEmail.isLoading}
 				disabled={!emailIsValid}
 				onPress={onResetPasswordBtnPress}
-				style={{ width: '100%' }}
-			>
-				Next
-			</Button>
+			/>
 		</ScreenContainer>
 	);
 };
@@ -97,21 +104,39 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'center' }}>
-			<Text>Verification Code</Text>
-			<Text>We have sent a password reset code to "{email}"</Text>
-			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setResetCode} value={resetCode} />
-			<Text>Didn't receive a code?</Text>
-			<Button mode='text' onPress={onResend} disabled={disableResendBtn} loading={disableResendBtn && formIsLoading}>
-				Resend Code
-			</Button>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				Verification Code
+			</Typography>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				We have sent a password reset code to "{email}"
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<TextInput
+					label='Security Code'
+					keyboardType='numeric'
+					maxLength={4}
+					onChangeText={setResetCode}
+					value={resetCode}
+				/>
+			</SegmentedList>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				Didn't receive a code?
+			</Typography>
 			<Button
-				mode={disableVerifyBtn ? 'outlined' : 'contained'}
+				variant='text'
+				title='Resend Code'
+				onPress={onResend}
+				disabled={disableResendBtn}
+				loading={disableResendBtn && formIsLoading}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Button
+				variant='primary'
+				title='Verify'
 				onPress={onVerifyPress}
 				disabled={disableVerifyBtn}
 				loading={disableVerifyBtn && formIsLoading}
-			>
-				Verify
-			</Button>
+			/>
 		</ScreenContainer>
 	);
 };
@@ -152,34 +177,34 @@ const ChangePasswordScreen = ({ navigation, route }: ForgotPasswordScreenProps) 
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<View style={{ width: '100%' }}>
-				<TextInput
-					label={getNewPasswordError() ?? 'New password'}
-					error={!!getNewPasswordError()}
-					value={newPassword}
-					disabled={resetPassword.isLoading}
-					onChangeText={setNewPassword}
-					secureTextEntry
-				/>
-				<TextInput
-					label={getNewPasswordConfirmError() ?? 'Confirm new password'}
-					error={!!getNewPasswordConfirmError()}
-					value={newPasswordConfirm}
-					disabled={resetPassword.isLoading}
-					onChangeText={setNewPasswordConfirm}
-					secureTextEntry
-				/>
+				<SegmentedList>
+					<TextInput
+						label={getNewPasswordError() ?? 'New password'}
+						error={!!getNewPasswordError()}
+						value={newPassword}
+						disabled={resetPassword.isLoading}
+						onChangeText={setNewPassword}
+						secureTextEntry
+					/>
+					<TextInput
+						label={getNewPasswordConfirmError() ?? 'Confirm new password'}
+						error={!!getNewPasswordConfirmError()}
+						value={newPasswordConfirm}
+						disabled={resetPassword.isLoading}
+						onChangeText={setNewPasswordConfirm}
+						secureTextEntry
+					/>
+				</SegmentedList>
 			</View>
 			<Button
-				mode='contained'
+				variant='primary'
 				loading={resetPassword.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
-				style={{ width: '100%' }}
-			>
-				Update
-			</Button>
+				title='Update'
+			/>
 		</ScreenContainer>
 	);
 };

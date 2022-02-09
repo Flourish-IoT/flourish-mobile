@@ -11,5 +11,5 @@ interface LoadingParams {
 }
 
 export default function Loading({ animation, text, size, style }: LoadingParams) {
-	return <LottieBase animation={animation} defaultText='Loading...' text={text} size={size} style={style} />;
+	return <LottieBase animation={animation} text={text} size={size} style={style} />;
 }

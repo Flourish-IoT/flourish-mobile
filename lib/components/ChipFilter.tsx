@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, ViewStyle } from 'react-native';
 import { Chip } from 'react-native-paper';
+import { Theme } from '../../providers/Theme';
 
 interface ChipFilterProps {
 	showAllOption: boolean;
@@ -10,6 +11,7 @@ interface ChipFilterProps {
 	displayKey: string;
 	valueKey: string;
 	onFilterChange: (items: number[]) => void;
+	style?: ViewStyle;
 }
 
 export default function ChipFilter({
@@ -20,6 +22,7 @@ export default function ChipFilter({
 	displayKey,
 	valueKey,
 	onFilterChange,
+	style,
 }: ChipFilterProps) {
 	const toggleSelected = (newSelection: number, isSelected: boolean) => {
 		// If selecting an already selected record
@@ -48,7 +51,7 @@ export default function ChipFilter({
 	showAllOption && (items = [{ [displayKey]: 'All', [valueKey]: -1 }, ...items]);
 
 	return (
-		<View style={{ display: 'flex', flexDirection: 'row', overflow: 'visible' }}>
+		<View style={{ display: 'flex', flexDirection: 'row', overflow: 'visible', ...style }}>
 			<ScrollView horizontal style={{ overflow: 'visible' }}>
 				{items.map((item, index) => {
 					const isSelected = selectedItems.some((sItem) => sItem === item[valueKey]);
@@ -57,7 +60,12 @@ export default function ChipFilter({
 							key={index + String(item[valueKey])}
 							selected={isSelected}
 							onPress={() => toggleSelected(item[valueKey], isSelected)}
-							style={{ marginHorizontal: 3 }}
+							style={{
+								marginHorizontal: Theme.spacing.xs,
+								backgroundColor: isSelected ? Theme.colors.primary : 'white',
+							}}
+							selectedColor='white'
+							textStyle={{ color: isSelected ? 'white' : Theme.colors.text }}
 						>
 							{item[displayKey]}
 						</Chip>

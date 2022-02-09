@@ -15,26 +15,26 @@ export default function Temperature({ fill = 'black', ...rest }: SvgProps) {
 			<Path
 				d='M30.0198 36.6704C32.2915 36.2564 36.8009 33.9882 36.6645 28.2276'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M33.4161 54.0438C35.4923 55.3233 36.2248 57.5207 36.469 60.2065'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M7.0335 54.044C4.91755 55.3479 4.17106 57.5874 3.92222 60.3245'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 			<Path
 				d='M8.60321 38.19C6.3315 37.776 1.82218 35.5078 1.95855 29.7472'
 				stroke={fill}
-				stroke-width='2.5'
-				stroke-linecap='round'
+				strokeWidth='2.5'
+				strokeLinecap='round'
 			/>
 		</Svg>
 	);

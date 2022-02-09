@@ -36,6 +36,29 @@ export const useChangeUsername = () => {
 	);
 };
 
+export const useChangeEmail = () => {
+	const queryClient = useQueryClient();
+	const { data: user } = useUser('me');
+
+	return useMutation(
+		(newEmail: string) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(250)
+				.onPut(query, { params: { email: newEmail } })
+				.replyOnce<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { email: newEmail } });
+		},
+		{
+			onSuccess: (res, newEmail) => {
+				queryClient.setQueryData<User>(['get', 'users', user.id], (oldData) => ({
+					...oldData,
+					email: newEmail,
+				}));
+			},
+		}
+	);
+};
+
 interface ChangePasswordParams {
 	password: string;
 	new_password: string;

@@ -6,6 +6,7 @@ import { useChangePassword } from '../../data/user';
 import { Button } from 'react-native-paper';
 import { isValidPassword } from '../../lib/utils/validation';
 import ScreenContainer from '../../lib/components/ScreenContainer';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
 
 interface ChangePasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -46,7 +47,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-			<View style={{ width: '100%' }}>
+			<SegmentedList>
 				<TextInput
 					label={'Current password'}
 					value={currentPassword}
@@ -70,7 +71,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 					onChangeText={setNewPasswordConfirm}
 					secureTextEntry
 				/>
-			</View>
+			</SegmentedList>
 			<Button
 				mode='contained'
 				loading={changePassword.isLoading}

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Alert } from 'react-native';
-import { Button } from 'react-native-paper';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
 import { AppName } from '../../lib/utils/helper';
 import { Theme } from '../../providers/Theme';
 import ScreenContainer from '../../lib/components/ScreenContainer';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
+import Button from '../../lib/components/styled/Button';
 
 interface DeleteAccountScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -39,23 +40,23 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between' }}>
-			<TextInput
-				label={'Current password'}
-				value={currentPassword}
-				disabled={deleteAccount.isLoading}
-				onChangeText={setCurrentPassword}
-				secureTextEntry
-			/>
+			<SegmentedList>
+				<TextInput
+					label={'Current password'}
+					value={currentPassword}
+					disabled={deleteAccount.isLoading}
+					onChangeText={setCurrentPassword}
+					secureTextEntry
+				/>
+			</SegmentedList>
 			<Button
-				mode='contained'
-				loading={deleteAccount.isLoading}
-				disabled={disableDeleteBtn}
+				variant='primary'
 				onPress={onChangePasswordPress}
-				color={Theme.colors.error}
-				style={{ width: '100%' }}
-			>
-				Delete Account
-			</Button>
+				title='Delete Account'
+				disabled={disableDeleteBtn}
+				loading={deleteAccount.isLoading}
+				buttonStyle={{ backgroundColor: Theme.colors.error }}
+			/>
 		</ScreenContainer>
 	);
 }

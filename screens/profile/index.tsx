@@ -1,38 +1,144 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { ParamListBase } from '@react-navigation/routers';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import { Button, Divider, Text } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { Theme, GlobalStackNavOptions } from '../../providers/Theme';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { logOut } from '../../data/auth';
 import ChangePasswordScreen from './ChangePassword';
-import ChangeUsernameScreen from './ChangeUsername';
 import DeleteAccountScreen from './DeleteAccount';
-import ExportDataScreen from './ExportData';
+import StyledTextInput from '../../lib/components/styled/TextInput';
+import { useChangeEmail, useChangeUsername, useExportData, useUser } from '../../data/user';
+import Loading from '../../lib/components/Loading';
+import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
+import Button from '../../lib/components/styled/Button';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
+import Typography from '../../lib/components/styled/Typography';
 
 interface ProfileScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
 const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
+	const { data: user, isLoading: userIsLoading } = useUser('me');
+
+	useEffect(() => {
+		setUsername(user.username);
+		setEmail(user.email);
+	}, [user]);
+
+	// Username
+	const [username, setUsername] = useState(user.username);
+	const changeUsername = useChangeUsername();
+	const usernameChanged = username !== user.username;
+	const updateUsername = () => {
+		try {
+			changeUsername.mutateAsync(username);
+			alert('Updated.');
+		} catch (error) {
+			alert(`Failed to update username: ${error}`);
+		}
+	};
+
+	// Email
+	const [email, setEmail] = useState(user.email);
+	const changeEmail = useChangeEmail();
+	const emailChanged = email !== user.email;
+	const updateEmail = () => {
+		try {
+			changeEmail.mutateAsync(username);
+			alert('Updated.');
+		} catch (error) {
+			alert(`Failed to update email: ${error}`);
+		}
+	};
+
+	// Export Data
+	const exportData = useExportData();
+	const onExportDataBtnPress = async () => {
+		try {
+			await exportData.mutateAsync();
+			alert(
+				`We have sent your data to ${user.email} please wait a few minutes and be sure to check your spam or junk folders.`
+			);
+		} catch (error) {
+			alert(`Error: ${error}`);
+		}
+	};
+
+	// Logout
+	const onLogOutBtnPress = () => {
+		Alert.alert('Are your sure?', 'You are about to log out.', [
+			{
+				text: 'No',
+			},
+			{
+				text: 'Yes',
+				onPress: logOut,
+			},
+		]);
+	};
+
+	if (userIsLoading) return <Loading animation='rings' />;
+
 	return (
 		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={styles.section}>
-				<Text>General</Text>
-				<Divider style={styles.divider} />
-				<Button onPress={() => navigation.navigate('ChangeUsername')}>Username</Button>
-				<Button onPress={() => navigation.navigate('ChangePassword')}>Change Password</Button>
-				<Button>FAQ</Button>
-				<Text>Data</Text>
-				<Divider style={styles.divider} />
-				<Button onPress={() => navigation.navigate('ExportData')}>Export Data</Button>
-				<Text>Account</Text>
-				<Button onPress={logOut}>Log Out</Button>
-				<Button onPress={() => navigation.navigate('DeleteAccount')} color={Theme.colors.error}>
-					Delete Account
-				</Button>
+				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+					General
+				</Typography>
+				{
+					<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+						<StyledTextInput
+							label={'Username'}
+							value={username}
+							error={!isValidUsername(username)}
+							onChangeText={setUsername}
+							right={
+								usernameChanged ? (
+									<TextInput.Icon name='content-save' onPress={updateUsername} />
+								) : (
+									<TextInput.Icon name='pencil' />
+								)
+							}
+						/>
+						<StyledTextInput
+							label={'Email'}
+							value={email}
+							error={!isValidEmail(email)}
+							onChangeText={setEmail}
+							right={
+								emailChanged ? (
+									<TextInput.Icon name='content-save' onPress={updateEmail} />
+								) : (
+									<TextInput.Icon name='pencil' />
+								)
+							}
+						/>
+						<Button variant='in-list' title='FAQ' />
+					</SegmentedList>
+				}
+				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+					Data
+				</Typography>
+				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+					<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
+				</SegmentedList>
+				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+					Account
+				</Typography>
+				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+					<Button variant='in-list' onPress={() => navigation.navigate('ChangePassword')} title='Change Password' />
+					<Button variant='in-list' onPress={onLogOutBtnPress} title='Log Out' />
+					<Button
+						onPress={() => navigation.navigate('DeleteAccount')}
+						variant='in-list'
+						textStyle={{ color: Theme.colors.error }}
+						title='Delete Account'
+					/>
+				</SegmentedList>
 			</View>
 		</ScreenContainer>
 	);
@@ -47,9 +153,7 @@ export default function ProfileScreenStack() {
 			initialRouteName='ProfileIndex'
 		>
 			<Stack.Screen name='ProfileIndex' component={ProfileIndex} options={{ headerShown: false }} />
-			<Stack.Screen name='ChangeUsername' options={{ title: 'Change Username' }} component={ChangeUsernameScreen} />
 			<Stack.Screen name='ChangePassword' options={{ title: 'Change Password' }} component={ChangePasswordScreen} />
-			<Stack.Screen name='ExportData' options={{ title: 'Export Data' }} component={ExportDataScreen} />
 			<Stack.Screen name='DeleteAccount' options={{ title: 'Delete Account' }} component={DeleteAccountScreen} />
 		</Stack.Navigator>
 	);
@@ -59,9 +163,6 @@ const styles = StyleSheet.create({
 	section: {
 		display: 'flex',
 		alignItems: 'flex-start',
-	},
-	divider: {
 		width: '100%',
-		height: 3,
 	},
 });

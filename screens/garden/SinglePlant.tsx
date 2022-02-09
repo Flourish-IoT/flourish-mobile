@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 1 / 1,
 	},
 	content: {
-		padding: Theme.padding,
+		padding: Theme.spacing.md,
 	},
 	contentTitle: {
 		display: 'flex',
