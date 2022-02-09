@@ -33,7 +33,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 
 	return (
 		<ScreenContainer scrolls>
-			<View style={{ display: 'flex', flexDirection: 'row', marginBottom: Theme.spacing.md }}>
+			<View style={{ display: 'flex', flexDirection: 'row' }}>
 				<Button
 					mode='contained'
 					onPress={() => setViewType('Carousel')}

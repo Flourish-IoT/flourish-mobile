@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { View } from 'react-native';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useChangePassword } from '../../data/user';
-import { Button } from 'react-native-paper';
 import { isValidPassword } from '../../lib/utils/validation';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
+import Button from '../../lib/components/styled/Button';
 
 interface ChangePasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -46,7 +45,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+		<ScreenContainer style={{ justifyContent: 'space-between' }}>
 			<SegmentedList>
 				<TextInput
 					label={'Current password'}
@@ -73,14 +72,12 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 				/>
 			</SegmentedList>
 			<Button
-				mode='contained'
+				variant='primary'
+				title='Update'
 				loading={changePassword.isLoading}
 				disabled={disableUpdateBtn}
 				onPress={onChangePasswordPress}
-				style={{ width: '100%' }}
-			>
-				Update
-			</Button>
+			/>
 		</ScreenContainer>
 	);
 }
