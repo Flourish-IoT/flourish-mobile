@@ -106,7 +106,6 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				valueKey='value'
 				expanded={viewSelectExpanded}
 				setExpanded={setViewSelectExpanded}
-				style={{ marginBottom: Theme.spacing.md }}
 			/>
 
 			<ChipFilter
@@ -116,7 +115,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				displayKey='name'
 				valueKey='id'
 				onFilterChange={setSelectedPlants}
-				style={{ marginBottom: Theme.spacing.md }}
+				style={{ marginVertical: Theme.spacing.md }}
 			/>
 
 			<Calendar
