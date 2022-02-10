@@ -34,7 +34,7 @@ const EnterEmailStep = ({ navigation }: ForgotPasswordScreenProps) => {
 	const emailIsValid = isValidEmail(email);
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between' }}>
 			<SegmentedList>
 				<TextInput
 					label={'Your Email'}
@@ -103,7 +103,7 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 	const formIsLoading = sendResetPasswordEmail.isLoading || verifyResetPasswordEmail.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				Verification Code
 			</Typography>
@@ -177,7 +177,7 @@ const ChangePasswordScreen = ({ navigation, route }: ForgotPasswordScreenProps) 
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between' }}>
 			<View style={{ width: '100%' }}>
 				<SegmentedList>
 					<TextInput

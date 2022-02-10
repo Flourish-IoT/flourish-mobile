@@ -11,7 +11,7 @@ interface WelcomeScreenProps {
 
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Logo style={{ height: 250, width: 250 }} />
 			<Button
 				variant='primary'

@@ -5,24 +5,25 @@ import ScreenContainer from '../../lib/components/ScreenContainer';
 import { TextInput } from 'react-native-paper';
 import { Theme, GlobalStackNavOptions } from '../../providers/Theme';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, Keyboard } from 'react-native';
 import { logOut } from '../../data/auth';
 import ChangePasswordScreen from './ChangePassword';
 import DeleteAccountScreen from './DeleteAccount';
 import StyledTextInput from '../../lib/components/styled/TextInput';
-import { useChangeEmail, useChangeUsername, useExportData, useUser } from '../../data/user';
+import { useChangeEmail, useChangeUsername, useExportData, useMe } from '../../data/user';
 import Loading from '../../lib/components/Loading';
 import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
 import Button from '../../lib/components/styled/Button';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
 import Typography from '../../lib/components/styled/Typography';
+import StyledAvatar from '../../lib/components/styled/Avatar';
 
 interface ProfileScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
 const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
-	const { data: user, isLoading: userIsLoading } = useUser('me');
+	const { data: user, isLoading: userIsLoading } = useMe();
 
 	useEffect(() => {
 		setUsername(user.username);
@@ -36,6 +37,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	const updateUsername = () => {
 		try {
 			changeUsername.mutateAsync(username);
+			Keyboard.dismiss();
 			alert('Updated.');
 		} catch (error) {
 			alert(`Failed to update username: ${error}`);
@@ -48,7 +50,8 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	const emailChanged = email !== user.email;
 	const updateEmail = () => {
 		try {
-			changeEmail.mutateAsync(username);
+			changeEmail.mutateAsync(email);
+			Keyboard.dismiss();
 			alert('Updated.');
 		} catch (error) {
 			alert(`Failed to update email: ${error}`);
@@ -84,62 +87,64 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	if (userIsLoading) return <Loading animation='rings' />;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-			<View style={styles.section}>
-				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
-					General
-				</Typography>
-				{
-					<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
-						<StyledTextInput
-							label={'Username'}
-							value={username}
-							error={!isValidUsername(username)}
-							onChangeText={setUsername}
-							right={
-								usernameChanged ? (
-									<TextInput.Icon name='content-save' onPress={updateUsername} />
-								) : (
-									<TextInput.Icon name='pencil' />
-								)
-							}
-						/>
-						<StyledTextInput
-							label={'Email'}
-							value={email}
-							error={!isValidEmail(email)}
-							onChangeText={setEmail}
-							right={
-								emailChanged ? (
-									<TextInput.Icon name='content-save' onPress={updateEmail} />
-								) : (
-									<TextInput.Icon name='pencil' />
-								)
-							}
-						/>
-						<Button variant='in-list' title='FAQ' />
-					</SegmentedList>
-				}
-				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
-					Data
-				</Typography>
-				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
-					<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
-				</SegmentedList>
-				<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
-					Account
-				</Typography>
-				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
-					<Button variant='in-list' onPress={() => navigation.navigate('ChangePassword')} title='Change Password' />
-					<Button variant='in-list' onPress={onLogOutBtnPress} title='Log Out' />
-					<Button
-						onPress={() => navigation.navigate('DeleteAccount')}
-						variant='in-list'
-						textStyle={{ color: Theme.colors.error }}
-						title='Delete Account'
-					/>
-				</SegmentedList>
+		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
+				<StyledAvatar user={user} style={{ marginBottom: Theme.spacing.md }} />
+				<Typography variant='heading3Bold'>{user.username}</Typography>
 			</View>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				General
+			</Typography>
+			{
+				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+					<StyledTextInput
+						label='Username'
+						value={username}
+						error={!isValidUsername(username)}
+						onChangeText={setUsername}
+						right={
+							usernameChanged ? (
+								<TextInput.Icon name='content-save' onPress={updateUsername} />
+							) : (
+								<TextInput.Icon name='pencil' />
+							)
+						}
+					/>
+					<StyledTextInput
+						label='Email'
+						value={email}
+						error={!isValidEmail(email)}
+						onChangeText={setEmail}
+						right={
+							emailChanged ? (
+								<TextInput.Icon name='content-save' onPress={updateEmail} />
+							) : (
+								<TextInput.Icon name='pencil' />
+							)
+						}
+					/>
+					<Button variant='in-list' title='FAQ' />
+				</SegmentedList>
+			}
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				Data
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
+			</SegmentedList>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				Account
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<Button variant='in-list' onPress={() => navigation.navigate('ChangePassword')} title='Change Password' />
+				<Button variant='in-list' onPress={onLogOutBtnPress} title='Log Out' />
+				<Button
+					onPress={() => navigation.navigate('DeleteAccount')}
+					variant='in-list'
+					textStyle={{ color: Theme.colors.error }}
+					title='Delete Account'
+				/>
+			</SegmentedList>
 		</ScreenContainer>
 	);
 };

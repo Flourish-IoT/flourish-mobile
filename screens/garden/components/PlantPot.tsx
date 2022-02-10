@@ -9,12 +9,11 @@ import PotBaseSvg from './PotBaseSvg';
 interface PlantProps {
 	viewMode: ViewMode;
 	plant: Plant;
-	image?: any;
 	onPress: () => void;
 	containerStyle?: ViewStyle;
 }
 
-export default function PlantPot({ viewMode, plant, image, onPress, containerStyle }: PlantProps) {
+export default function PlantPot({ viewMode, plant, onPress, containerStyle }: PlantProps) {
 	const styles = StyleSheet.create({
 		touchContainer: {
 			width: viewMode === 'Carousel' ? '100%' : '50%',
@@ -51,7 +50,7 @@ export default function PlantPot({ viewMode, plant, image, onPress, containerSty
 			<View style={styles.container}>
 				<Image
 					style={styles.image}
-					source={!!image ? { url: image } : require('../../../lib/assets/placeholder/plant.png')}
+					source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
 				/>
 				<PotBaseSvg width='100%' style={styles.potBaseGraphic} />
 				<View style={styles.potBase}>

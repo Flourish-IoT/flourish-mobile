@@ -32,8 +32,8 @@ interface StepProps {
 const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const sendVerifyEmail = useSendVerifyEmail();
 
-	const [username, setUsername] = useState('Gabby');
-	const [email, setEmail] = useState('user@gmail.com');
+	const [username, setUsername] = useState('Jane Doe');
+	const [email, setEmail] = useState('janedoe123@gmail.com');
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
 
@@ -93,7 +93,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
@@ -103,6 +103,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 					onChangeText={setUsername}
 					error={!!getUsernameErrorMsg()}
 					value={username}
+					left={<TextInput.Icon name='account' />}
 				/>
 				<StyledTextInput
 					label={getEmailErrorMsg() ?? 'Email'}
@@ -205,7 +206,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const formIsLoading = sendVerifyEmail.isLoading || verifyEmail.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				Verification Code
 			</Typography>
@@ -255,6 +256,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 				skip
 					? undefined
 					: {
+							image: undefined,
 							preferences: {
 								confidence_rating: userRating,
 								unit_preference: 'Fahrenheit',
@@ -273,7 +275,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				How would you rate your confidence in caring for your plants?
 			</Typography>

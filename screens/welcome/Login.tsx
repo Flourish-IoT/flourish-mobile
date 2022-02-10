@@ -21,8 +21,8 @@ interface LoginScreenProps {
 export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const loginWithEmail = useLoginWithEmail();
 
-	const [email, setEmail] = useState('user@gmail.com');
-	const [password, setPassword] = useState('abcdefg123');
+	const [email, setEmail] = useState('janedoe123@gmail.com');
+	const [password, setPassword] = useState('abcdJaneefg123');
 
 	const handleSignInWithService = (service: Service) => {
 		switch (service) {
@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const formIsLoading = loginWithEmail.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
 			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign in to continue your journey with {AppName}
 			</Typography>

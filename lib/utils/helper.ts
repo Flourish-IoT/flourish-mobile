@@ -73,3 +73,16 @@ export function getMetricRangeDescription(metric: MetricRange) {
 			return 'Very High';
 	}
 }
+
+export function getMetricGaugeColor(metric: MetricRange) {
+	switch (metric) {
+		case 1:
+		case 5:
+			return '#FF614A';
+		case 2:
+		case 4:
+			return '#FFDB3F';
+		case 3:
+			return '#10B295';
+	}
+}

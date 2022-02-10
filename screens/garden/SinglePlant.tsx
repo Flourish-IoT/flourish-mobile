@@ -2,9 +2,9 @@ import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/nati
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useLayoutEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { Caption, Headline } from 'react-native-paper';
 import { Plant, plantMetrics } from '../../data/garden';
 import ScreenContainer from '../../lib/components/ScreenContainer';
+import Typography from '../../lib/components/styled/Typography';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import MetricVisual from './components/MetricVisual';
 import SingleMetricScreen from './SingleMetric';
@@ -28,13 +28,17 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 	return (
 		<ScreenContainer scrolls style={styles.screen}>
 			<Image
-				source={plant.image ? { url: plant.image } : require('../../lib/assets/placeholder/plant.png')}
+				source={plant.image ? { uri: plant.image } : require('../../lib/assets/placeholder/plant.png')}
 				style={styles.image}
 			/>
 			<View style={styles.content}>
 				<View style={styles.contentTitle}>
-					<Headline style={{ textAlign: 'center' }}>{plant.name}</Headline>
-					<Caption style={{ textAlign: 'center' }}>{plant.commonName}</Caption>
+					<Typography variant='heading2' style={{ textAlign: 'center' }}>
+						{plant.name}
+					</Typography>
+					<Typography variant='placeholder' style={{ textAlign: 'center' }}>
+						{plant.commonName}
+					</Typography>
 				</View>
 				{plantMetrics.map((m) => (
 					<MetricVisual

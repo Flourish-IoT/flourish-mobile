@@ -1,32 +1,25 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, SafeAreaView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { isLoggedIn } from '../../data/auth';
+import { appBarCenterBtnSize } from '../../navigation/AppBar';
 import { Theme } from '../../providers/Theme';
 
 interface ScreenContainerProps {
-	style?: ViewStyle;
 	children?: ReactNode;
 	scrolls?: boolean;
+	appBarPadding?: boolean;
+	style?: ViewStyle;
 }
 
-export default function ScreenContainer({ children, scrolls = false, style }: ScreenContainerProps) {
+export default function ScreenContainer({ children, scrolls = false, appBarPadding = true, style }: ScreenContainerProps) {
 	const insets = useSafeAreaInsets();
-	const [isAuth, setIsAuth] = useState(false);
-
-	useEffect(() => {
-		const check = async () => {
-			setIsAuth(await isLoggedIn());
-		};
-		check();
-	}, [setIsAuth]);
 
 	const styles = StyleSheet.create({
 		container: {
 			alignItems: 'center',
 			overflow: 'visible',
 			padding: Theme.spacing.md,
-			paddingBottom: insets.bottom + (isAuth ? Theme.appBarHeight : 0),
+			paddingBottom: insets.bottom + (appBarPadding ? Theme.appBarHeight + appBarCenterBtnSize / 2 : 0),
 			...style,
 		},
 	});

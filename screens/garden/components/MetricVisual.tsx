@@ -5,10 +5,12 @@ import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
 import { useShowHumidity } from '../../../data/user';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
+import MeasurementGauge from '../../../lib/icons/MeasurementGauge';
+import MeasurementGraphic from '../../../lib/icons/MeasurementGraphic';
 import Sunlight from '../../../lib/icons/Sunlight';
 import Temperature from '../../../lib/icons/Temperature';
 import WaterDrop from '../../../lib/icons/WaterDrop';
-import { getFullMetricName, getMetricRangeDescription } from '../../../lib/utils/helper';
+import { getFullMetricName, getMetricGaugeColor, getMetricRangeDescription } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface MetricIconProps extends SvgProps {
@@ -79,50 +81,45 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
-			padding: Theme.spacing.md,
 		},
 		iconContainer: {
-			height: 50,
-			width: undefined,
-			aspectRatio: 1 / 1,
+			height: 80,
+			width: 70,
 			display: 'flex',
-			justifyContent: 'center',
 			alignItems: 'center',
-			marginBottom: mode === 'block' ? Theme.spacing.md : 0,
+			justifyContent: 'space-between',
+			...Theme.util.flexCenter,
 		},
-		materBar: {
+		textContainer: { flex: 1, paddingLeft: Theme.spacing.md },
+		graphic: {
+			...(mode === 'block' && {
+				position: 'absolute',
+				bottom: 0,
+				left: '50%',
+				transform: [{ translateX: -35 }],
+			}),
+		},
+		gauge: {
 			width: mode === 'block' ? '100%' : 100,
-			display: 'flex',
-			flexDirection: 'row',
-		},
-		meterBarBlock: {
-			width: 100 / blocks.length + '%',
-			height: undefined,
-			aspectRatio: 1 / 1,
+			...Theme.util.flexCenter,
 		},
 	});
 
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
 			<View style={styles.iconContainer}>
-				<MetricIcon type={metricType} height={mode === 'block' ? 50 : 40} />
+				{mode === 'block' && <MeasurementGauge range={range} style={styles.gauge} />}
+				<MeasurementGraphic type={metricType} range={range} width='100%' style={styles.graphic} />
 			</View>
 			{mode === 'listItem' && (
-				<View style={{ flex: 1, paddingLeft: Theme.spacing.lg }}>
-					<Typography variant='body'>
-						{getFullMetricName(metricType)}: {getMetricRangeDescription(range)}
+				<View style={styles.textContainer}>
+					<Typography variant='body' style={{ fontWeight: 'bold' }}>
+						{getFullMetricName(metricType)}:{' '}
+						<Typography variant='body' style={{ color: getMetricGaugeColor(range) }}>
+							{getMetricRangeDescription(range)}
+						</Typography>
 					</Typography>
 					<Typography variant='placeholder'>{raw}</Typography>
-				</View>
-			)}
-			{mode === 'block' && (
-				<View style={styles.materBar}>
-					{blocks.map((b) => (
-						<View
-							key={b.range}
-							style={{ ...styles.meterBarBlock, backgroundColor: b.color, borderWidth: b.range === range ? 2 : 0 }}
-						/>
-					))}
 				</View>
 			)}
 			{mode === 'listItem' && <Chevron direction='right' />}

@@ -51,7 +51,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 					icon={() => (
 						<Image
 							style={{ height: '100%', width: '100%' }}
-							source={plantImage ? { url: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
+							source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
 						/>
 					)}
 				/>

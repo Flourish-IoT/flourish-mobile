@@ -39,6 +39,8 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 	}
 };
 
+export const appBarCenterBtnSize = 70;
+
 function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	const insets = useSafeAreaInsets();
 
@@ -77,8 +79,8 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 
 				const centerBtnStyle: ViewStyle = {
 					borderRadius: 100,
-					width: 70,
-					height: 70,
+					width: appBarCenterBtnSize,
+					height: appBarCenterBtnSize,
 					transform: [{ translateY: -Theme.appBarHeight / 2 }],
 					backgroundColor: isFocused ? Theme.colors.primary : 'white',
 					...Theme.shadow,
