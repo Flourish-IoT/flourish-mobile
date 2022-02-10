@@ -3,7 +3,7 @@
 		"name": "Flourish",
 		"slug": "Flourish",
 		"owner": "hmh84",
-		"version": "1.4.2",
+		"version": "1.5",
 		"orientation": "portrait",
 		"icon": "./lib/assets/icon.png",
 		"platforms": ["ios", "android"],
@@ -14,7 +14,7 @@
 		"splash": {
 			"image": "./lib/assets/splash.png",
 			"resizeMode": "contain",
-			"backgroundColor": "#6A2B0B"
+			"backgroundColor": "#9A532F"
 		},
 		"plugins": [
 			[
@@ -39,7 +39,7 @@
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./lib/assets/adaptive-icon.png",
-				"backgroundColor": "#6A2B0B"
+				"backgroundColor": "#9A532F"
 			}
 		}
 	}

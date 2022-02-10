@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { createRef, ReactNode } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { NavigationContainerRef, StackActions } from '@react-navigation/core';
-import { tempMyUser, User, useUser } from './user';
+import { tempMyUser, User, useMe } from './user';
 import {
 	AxiosInstance,
 	getAccessToken,
@@ -85,7 +85,7 @@ export const useVerifyEmail = () => {
 type FinishAccountParams = Omit<User, 'id' | 'email' | 'username'>;
 
 export const useFinishAccountSetup = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 	const queryClient = useQueryClient();
 
 	return useMutation(
@@ -96,7 +96,7 @@ export const useFinishAccountSetup = () => {
 		},
 		{
 			onSuccess: (res, { preferences }) => {
-				queryClient.setQueryData<User>(['get', 'users', user.id], (oldData) => ({ ...oldData, preferences }));
+				queryClient.setQueryData<User>(['me'], (oldData) => ({ ...oldData, preferences }));
 			},
 		}
 	);

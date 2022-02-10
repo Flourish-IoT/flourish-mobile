@@ -15,7 +15,7 @@ export const getConfidenceText = (rating: ConfidenceRating) => {
 
 export const useChangeUsername = () => {
 	const queryClient = useQueryClient();
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useMutation(
 		(newUsername: string) => {
@@ -27,9 +27,32 @@ export const useChangeUsername = () => {
 		},
 		{
 			onSuccess: (res, newUsername) => {
-				queryClient.setQueryData<User>(['get', 'users', user.id], (oldData) => ({
+				queryClient.setQueryData<User>(['me'], (oldData) => ({
 					...oldData,
 					username: newUsername,
+				}));
+			},
+		}
+	);
+};
+
+export const useChangeEmail = () => {
+	const queryClient = useQueryClient();
+	const { data: user } = useMe();
+
+	return useMutation(
+		(newEmail: string) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(250)
+				.onPut(query, { params: { email: newEmail } })
+				.replyOnce<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { email: newEmail } });
+		},
+		{
+			onSuccess: (res, newEmail) => {
+				queryClient.setQueryData<User>(['me'], (oldData) => ({
+					...oldData,
+					email: newEmail,
 				}));
 			},
 		}
@@ -42,7 +65,7 @@ interface ChangePasswordParams {
 }
 
 export const useChangePassword = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useMutation(({ password, new_password }: ChangePasswordParams) => {
 		const query = `/users/${user.id}/password`;
@@ -89,7 +112,7 @@ interface ResetPasswordParams {
 }
 
 export const useResetPassword = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useMutation(({ reset_code, new_password }: ResetPasswordParams) => {
 		const query = `/users/${user.id}/password`;
@@ -99,7 +122,7 @@ export const useResetPassword = () => {
 };
 
 export const useExportData = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useMutation(() => {
 		const query = `/users/${user.id}/export`;
@@ -109,7 +132,7 @@ export const useExportData = () => {
 };
 
 export const useDeleteAccount = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useMutation(
 		(currentPassword: string) => {
@@ -135,12 +158,14 @@ export interface User {
 	email: string;
 	username: string;
 	preferences: UserPreferences;
+	image: string | undefined;
 }
 
 export const tempMyUser: User = {
 	id: 1,
-	email: 'user@flourish.com',
-	username: 'Gabby',
+	email: 'janedoe123@gmail.com',
+	username: 'Jane Doe',
+	image: undefined,
 	preferences: {
 		unit_preference: 'Fahrenheit',
 		confidence_rating: 2,
@@ -149,8 +174,9 @@ export const tempMyUser: User = {
 
 export const tempOtherUser: User = {
 	id: 2,
-	email: 'user2@flourish.com',
-	username: 'Dolma',
+	email: 'johnsmith321@gmail.com',
+	username: 'John Smith',
+	image: undefined,
 	preferences: {
 		unit_preference: 'Fahrenheit',
 		confidence_rating: 3,
@@ -162,25 +188,26 @@ export interface UserPreferences {
 	confidence_rating?: ConfidenceRating;
 }
 
-export const useUser = (userId: 'me' | number) => {
+export const useMe = () => {
+	return useQuery(['me'], async () => {
+		const userId = await getUserId();
+
+		mockEndpoint(250).onGet(`/users/${userId}`).replyOnce<User>(200, tempMyUser);
+		const response = await AxiosInstance.get<User>(`/users/${userId}`);
+		return response.data;
+	});
+};
+
+export const useUser = (userId: number) => {
 	return useQuery(['get', 'users', userId], async () => {
-		const useMyId = userId === 'me';
-
-		if (useMyId) {
-			const potentialUserId = await getUserId();
-			!!potentialUserId && (userId = Number(potentialUserId));
-		}
-
-		mockEndpoint(250)
-			.onGet(`/users/${userId}`)
-			.replyOnce<User>(200, useMyId ? tempMyUser : tempOtherUser);
+		mockEndpoint(250).onGet(`/users/${userId}`).replyOnce<User>(200, tempOtherUser);
 		const response = await AxiosInstance.get<User>(`/users/${userId}`);
 		return response.data;
 	});
 };
 
 export const useShowHumidity = () => {
-	const { data: user } = useUser('me');
+	const { data: user } = useMe();
 
 	return useQuery(
 		['showHumidity'],

@@ -1,30 +1,44 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Image, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ViewMode } from '..';
 import { Plant } from '../../../data/garden';
+import Typography from '../../../lib/components/styled/Typography';
 import { Theme } from '../../../providers/Theme';
+import PotBaseSvg from './PotBaseSvg';
 
 interface PlantProps {
 	viewMode: ViewMode;
 	plant: Plant;
-	image?: any;
 	onPress: () => void;
+	containerStyle?: ViewStyle;
 }
 
-export default function PlantPot({ viewMode, plant, image, onPress }: PlantProps) {
+export default function PlantPot({ viewMode, plant, onPress, containerStyle }: PlantProps) {
 	const styles = StyleSheet.create({
-		container: {
+		touchContainer: {
 			width: viewMode === 'Carousel' ? '100%' : '50%',
-			padding: viewMode === 'Carousel' ? 0 : Theme.padding,
+			...containerStyle,
+		},
+		container: {
+			width: '100%',
+			display: 'flex',
+			alignItems: 'center',
 		},
 		image: {
-			width: '100%',
+			width: '80%',
 			height: undefined,
 			aspectRatio: 1 / 1,
+			borderTopLeftRadius: Theme.borderRadius,
+			borderTopRightRadius: Theme.borderRadius,
+		},
+		potBaseGraphic: {},
+		potBase: {
+			position: 'absolute',
+			bottom: 0,
+			width: '80%',
+			height: 70,
 		},
 		text: {
-			backgroundColor: 'gray',
 			width: '100%',
 			color: 'white',
 			textAlign: 'center',
@@ -32,12 +46,22 @@ export default function PlantPot({ viewMode, plant, image, onPress }: PlantProps
 	});
 
 	return (
-		<TouchableOpacity style={styles.container} onPress={onPress}>
-			<Image
-				source={!!image ? { url: image } : require('../../../lib/assets/placeholder/plant.png')}
-				style={styles.image}
-			/>
-			{viewMode === 'Grid' && <Text style={styles.text}>{plant.name}</Text>}
+		<TouchableOpacity style={styles.touchContainer} onPress={onPress}>
+			<View style={styles.container}>
+				<Image
+					style={styles.image}
+					source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
+				/>
+				<PotBaseSvg width='100%' style={styles.potBaseGraphic} />
+				<View style={styles.potBase}>
+					<Typography variant='heading3Bold' style={styles.text}>
+						{plant.name}
+					</Typography>
+					<Typography variant='body' style={styles.text}>
+						{plant.commonName}
+					</Typography>
+				</View>
+			</View>
 		</TouchableOpacity>
 	);
 }

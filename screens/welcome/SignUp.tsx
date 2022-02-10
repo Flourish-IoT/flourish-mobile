@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Text } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { View, Keyboard } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
@@ -10,10 +10,13 @@ import RadioButton from '../../lib/components/styled/RadioButton';
 import Confidence from '../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import TextInput from '../../lib/components/styled/TextInput';
+import StyledTextInput from '../../lib/components/styled/TextInput';
 import { useQueryClient } from 'react-query';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import { GlobalStackNavOptions } from '../../providers/Theme';
+import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
+import Button from '../../lib/components/styled/Button';
+import Typography from '../../lib/components/styled/Typography';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
 
 const Stack = createStackNavigator();
 
@@ -29,8 +32,8 @@ interface StepProps {
 const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const sendVerifyEmail = useSendVerifyEmail();
 
-	const [username, setUsername] = useState('Gabby');
-	const [email, setEmail] = useState('user@gmail.com');
+	const [username, setUsername] = useState('Jane Doe');
+	const [email, setEmail] = useState('janedoe123@gmail.com');
 	const [password, setPassword] = useState('abcdefg123');
 	const [confirmPassword, setConfirmPassword] = useState('abcdefg123');
 
@@ -90,51 +93,64 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
-			<Text>Sign up to begin your journey with {AppName}</Text>
-			<TextInput
-				label={getUsernameErrorMsg() ?? 'Display Name'}
-				onChangeText={setUsername}
-				error={!!getUsernameErrorMsg()}
-				value={username}
-			/>
-			<TextInput label={getEmailErrorMsg() ?? 'Email'} onChangeText={setEmail} error={!!getEmailErrorMsg()} value={email} />
-			<TextInput
-				label={getPasswordErrorMsg() ?? 'Password'}
-				secureTextEntry
-				onChangeText={setPassword}
-				error={!!getPasswordErrorMsg()}
-				value={password}
-			/>
-			<TextInput
-				label={getPasswordConfirmErrorMsg() ?? 'Confirm Password'}
-				secureTextEntry
-				onChangeText={setConfirmPassword}
-				error={!!getPasswordConfirmErrorMsg()}
-				value={confirmPassword}
-			/>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
+				Sign up to begin your journey with {AppName}
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<StyledTextInput
+					label={getUsernameErrorMsg() ?? 'Display Name'}
+					onChangeText={setUsername}
+					error={!!getUsernameErrorMsg()}
+					value={username}
+					left={<TextInput.Icon name='account' />}
+				/>
+				<StyledTextInput
+					label={getEmailErrorMsg() ?? 'Email'}
+					onChangeText={setEmail}
+					error={!!getEmailErrorMsg()}
+					value={email}
+					left={<TextInput.Icon name='email' />}
+				/>
+				<StyledTextInput
+					label={getPasswordErrorMsg() ?? 'Password'}
+					secureTextEntry
+					onChangeText={setPassword}
+					error={!!getPasswordErrorMsg()}
+					value={password}
+					left={<TextInput.Icon name='lock' />}
+				/>
+				<StyledTextInput
+					label={getPasswordConfirmErrorMsg() ?? 'Confirm Password'}
+					secureTextEntry
+					onChangeText={setConfirmPassword}
+					error={!!getPasswordConfirmErrorMsg()}
+					value={confirmPassword}
+					left={<TextInput.Icon name='lock' />}
+				/>
+			</SegmentedList>
 			<Button
-				mode={disableNextBtn ? 'outlined' : 'contained'}
+				variant='primary'
+				title='Continue'
 				onPress={() => handleSignUp('Email')}
-				style={{ width: '50%' }}
 				disabled={disableNextBtn}
 				loading={formIsLoading}
-			>
-				Continue
-			</Button>
-			<Text>or sign up with</Text>
-			<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				or sign up with
+			</Typography>
+			<View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 				{services
 					.filter((s) => s !== 'Email')
-					.map((name, index) => (
+					.map((name) => (
 						<Button
 							key={name}
-							mode='contained'
+							variant='primary'
 							onPress={() => handleSignUp(name)}
-							style={{ flex: 1, marginLeft: index === 0 ? 0 : 20 }}
-						>
-							<SsoServices type={name} fill='white' height={30} />
-						</Button>
+							icon={<SsoServices type={name} fill='white' height={30} />}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius }}
+						/>
 					))}
 			</View>
 		</ScreenContainer>
@@ -190,22 +206,34 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const formIsLoading = sendVerifyEmail.isLoading || verifyEmail.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
-			<Text>Verification Code</Text>
-			<Text>We have sent a verification code to "{email}"</Text>
-			<TextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
-			<Text>Didn't receive a code?</Text>
-			<Button mode='text' onPress={onResend} disabled={disableResendBtn} loading={disableResendBtn && formIsLoading}>
-				Resend Code
-			</Button>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				Verification Code
+			</Typography>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				We have sent a verification code to "{email}"
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<StyledTextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
+			</SegmentedList>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				Didn't receive a code?
+			</Typography>
 			<Button
-				mode={disableVerifyBtn ? 'outlined' : 'contained'}
+				variant='text'
+				onPress={onResend}
+				title='Resend Code'
+				disabled={disableResendBtn}
+				loading={formIsLoading}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Button
+				variant='primary'
+				title='Verify'
 				onPress={onVerifyPress}
 				disabled={disableVerifyBtn}
 				loading={disableVerifyBtn && formIsLoading}
-			>
-				Verify
-			</Button>
+			/>
 		</ScreenContainer>
 	);
 };
@@ -228,6 +256,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 				skip
 					? undefined
 					: {
+							image: undefined,
 							preferences: {
 								confidence_rating: userRating,
 								unit_preference: 'Fahrenheit',
@@ -246,10 +275,14 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
-			<Text>How would you rate your confidence in caring for your plants?</Text>
-			<Confidence rating={userRating} />
-			<Text>{getConfidenceText(userRating)}</Text>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				How would you rate your confidence in caring for your plants?
+			</Typography>
+			<Confidence rating={userRating} style={{ marginBottom: Theme.spacing.md }} />
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+				{getConfidenceText(userRating)}
+			</Typography>
 			<View
 				style={{
 					height: 50,
@@ -257,18 +290,27 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 					display: 'flex',
 					flexDirection: 'row',
 					justifyContent: 'space-between',
+					marginBottom: Theme.spacing.md,
 				}}
 			>
 				{ratings.map((r) => (
 					<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
 				))}
 			</View>
-			<Button mode='contained' onPress={proceed} style={{ width: '100%' }} loading={formIsLoading}>
-				Submit
-			</Button>
-			<Button mode='text' onPress={onSkipPress} loading={formIsLoading}>
-				Skip for now
-			</Button>
+			<Button
+				variant='primary'
+				title='Submit'
+				onPress={proceed}
+				loading={formIsLoading}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Button
+				variant='text'
+				title='Skip for now'
+				onPress={onSkipPress}
+				loading={formIsLoading}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
 		</ScreenContainer>
 	);
 };

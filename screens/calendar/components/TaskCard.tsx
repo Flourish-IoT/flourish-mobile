@@ -1,9 +1,10 @@
 import { addDays, addWeeks, format, isAfter, isBefore, isPast, isToday, isTomorrow, isYesterday, subDays } from 'date-fns';
 import React from 'react';
 import { Image } from 'react-native';
-import { List, Text } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { Task } from '../../../data/calendar';
 import { usePlants } from '../../../data/garden';
+import Typography from '../../../lib/components/styled/Typography';
 import { Theme } from '../../../providers/Theme';
 
 interface TaskCardProps {
@@ -38,12 +39,11 @@ export default function TaskCard({ task }: TaskCardProps) {
 
 	return (
 		<List.Item
-			title={<Text style={{ textDecorationLine: complete ? 'line-through' : 'none' }}>{name}</Text>}
-			style={{ opacity: complete ? 0.5 : 1 }}
+			title={<Typography variant='body'>{name}</Typography>}
 			description={
-				<Text style={{ color: isLate ? Theme.colors.error : undefined }}>
+				<Typography variant='placeholder' style={isLate ? { color: Theme.colors.error } : {}}>
 					{getDateText()} {format(datetime, "'at' p")}
-				</Text>
+				</Typography>
 			}
 			left={(props) => (
 				<List.Icon
@@ -51,7 +51,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 					icon={() => (
 						<Image
 							style={{ height: '100%', width: '100%' }}
-							source={plantImage ? { url: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
+							source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
 						/>
 					)}
 				/>

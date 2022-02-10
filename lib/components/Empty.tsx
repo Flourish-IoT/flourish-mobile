@@ -11,5 +11,5 @@ interface EmptyParams {
 }
 
 export default function Empty({ animation, text, size, style }: EmptyParams) {
-	return <LottieBase animation={animation} defaultText='No results' text={text} size={size} style={style} />;
+	return <LottieBase animation={animation} text={text} size={size} style={style} />;
 }

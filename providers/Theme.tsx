@@ -11,60 +11,86 @@ import SplashScreen from '../screens/welcome/Splash';
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
 	border: string;
+	cta: string;
 }
 
-export type LottieSize = 'sm' | 'md' | 'lg';
+export type LottieSize = 'icon' | 'sm' | 'md' | 'lg';
 
 interface LottieSizeObj {
+	icon: number;
 	sm: number;
 	md: number;
 	lg: number;
 }
 
+interface OurFontObjProps extends ReactNativePaper.ThemeFont {
+	fontSize: number;
+	color?: string;
+}
+
+export type OurFontName =
+	| 'heading1'
+	| 'heading2'
+	| 'heading3Bold'
+	| 'heading3Regular'
+	| 'body'
+	| 'subHeader'
+	| 'paragraph'
+	| 'placeholder';
+
 interface OurFontsProps {
 	// Custom font types here
-	heading1: ReactNativePaper.ThemeFont;
-	heading2: ReactNativePaper.ThemeFont;
-	heading3Bold: ReactNativePaper.ThemeFont;
-	headingRegular: ReactNativePaper.ThemeFont;
-	body: ReactNativePaper.ThemeFont;
-	subHeader: ReactNativePaper.ThemeFont;
-	paragraph: ReactNativePaper.ThemeFont;
-	placeholder: ReactNativePaper.ThemeFont;
+	heading1: OurFontObjProps;
+	heading2: OurFontObjProps;
+	heading3Bold: OurFontObjProps;
+	heading3Regular: OurFontObjProps;
+	body: OurFontObjProps;
+	subHeader: OurFontObjProps;
+	paragraph: OurFontObjProps;
+	placeholder: OurFontObjProps;
 }
 
 const OurFonts: OurFontsProps = {
 	heading1: {
 		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
+		fontSize: 28,
 	},
 	heading2: {
 		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
+		fontSize: 20,
 	},
 	heading3Bold: {
 		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
+		fontSize: 16,
 	},
-	headingRegular: {
+	heading3Regular: {
 		fontFamily: 'Filson-Soft-Regular',
 		fontWeight: 'normal',
+		fontSize: 16,
 	},
 	body: {
-		fontFamily: 'Lato-Bold',
+		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
+		fontSize: 16,
 	},
 	subHeader: {
 		fontFamily: 'Filson-Soft-Regular',
 		fontWeight: 'normal',
+		fontSize: 14,
 	},
 	paragraph: {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
+		fontSize: 14,
 	},
 	placeholder: {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
+		fontSize: 14,
+		color: '#143F4970',
 	},
 };
 
@@ -87,15 +113,34 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 	// Custom theme property types here
 	colors: OurColorsProps;
 	fonts: CombinedFonts;
+	borderWidth: number;
 	borderRadius: number;
-	padding: number;
-	margin: number;
+	spacing: {
+		xs: number;
+		sm: number;
+		md: number;
+		lg: number;
+		xl: number;
+	};
 	appBarHeight: number;
+	shadow: {
+		shadowColor: string;
+		shadowOffset: { width: number; height: number };
+		shadowOpacity: number;
+		shadowRadius: number;
+	};
 	lottie: {
 		wrapper: ViewStyle;
 		width: LottieSizeObj;
 		fontSize: LottieSizeObj;
 		fontWidth: LottieSizeObj;
+	};
+	util: {
+		flexCenter: {
+			display: 'flex';
+			justifyContent: 'center';
+			alignItems: 'center';
+		};
 	};
 }
 
@@ -103,10 +148,22 @@ export const Theme: OurThemeProps = {
 	dark: DefaultTheme.dark, // Whether this is a dark theme or light theme
 	mode: DefaultTheme.mode, // Color mode for dark theme
 	roundness: 2, // Roundness of common elements, such as buttons
+	borderWidth: 2,
 	borderRadius: 10, // Common border radius
-	padding: 10, // Common container padding
-	margin: 10,
-	appBarHeight: 70,
+	spacing: {
+		xs: 4,
+		sm: 8,
+		md: 12,
+		lg: 16,
+		xl: 32,
+	},
+	appBarHeight: 60,
+	shadow: {
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 0.25 },
+		shadowOpacity: 0.1,
+		shadowRadius: 5,
+	},
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
 	},
@@ -121,36 +178,47 @@ export const Theme: OurThemeProps = {
 		},
 		width: {
 			// Width of the lottie itself
+			icon: 35,
 			sm: 75,
 			md: 100,
 			lg: 200,
 		},
 		fontSize: {
 			// Font size for the text beneath
+			icon: 0,
 			sm: 10,
 			md: 15,
 			lg: 20,
 		},
 		fontWidth: {
 			// Allowed max-width of the text beneath
+			icon: 0,
 			sm: 100,
 			md: 175,
 			lg: 300,
 		},
 	},
+	util: {
+		flexCenter: {
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
+	},
 	colors: {
-		primary: '#10B295', // Primary color for your app, usually your brand color
-		accent: '#6A2B0B', // Secondary color for your app which complements the primary color
-		background: 'white', // Background color for pages, such as lists
+		primary: '#5BBEA0', // Primary color for your app, usually your brand color
+		accent: '#9A532F', // Secondary color for your app which complements the primary color
+		background: '#EEF8F6', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards
-		text: DefaultTheme.colors.text, // Text color for content
-		disabled: DefaultTheme.colors.disabled, // Color for disabled elements
-		placeholder: DefaultTheme.colors.placeholder, // Color for placeholder text, such as input placeholder
+		text: '#143F49', // Text color for content
+		disabled: '#C2D9D2', // Color for disabled elements
+		placeholder: '#143F4970', // Color for placeholder text, such as input placeholder
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications
 		notification: DefaultTheme.colors.notification, // Background color for badges
 		error: DefaultTheme.colors.error, // The color of error text, for example the error message for text inputs
 		border: 'black', // The color of borders
+		cta: '#FF7C1D',
 	},
 	fonts: {
 		...OurFonts,
@@ -176,7 +244,7 @@ export const GlobalStackNavOptions: StackNavigationOptions = {
 	headerTitleStyle: { color: 'white' },
 	headerLeft: ({ canGoBack, onPress }) =>
 		canGoBack ? (
-			<TouchableOpacity onPress={onPress} style={{ padding: Theme.padding }}>
+			<TouchableOpacity onPress={onPress} style={{ padding: Theme.spacing.md }}>
 				<Chevron direction='left' fill='white' />
 			</TouchableOpacity>
 		) : null,

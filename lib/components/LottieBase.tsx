@@ -5,7 +5,6 @@ import LottieView from 'lottie-react-native';
 import { LottieSize, Theme } from '../../providers/Theme';
 
 interface LottieBaseParams {
-	defaultText: string;
 	animation?: LottieName;
 	text?: string;
 	style?: ViewStyle;
@@ -31,9 +30,7 @@ export const getLottie = (name: LottieName) => {
 	}
 };
 
-export default function LottieBase({ animation, defaultText, text, size = 'md', style }: LottieBaseParams) {
-	text = text ?? defaultText;
-
+export default function LottieBase({ animation, text, size = 'md', style }: LottieBaseParams) {
 	return (
 		<View style={[Theme.lottie.wrapper, style]}>
 			{!!animation && (
@@ -46,7 +43,13 @@ export default function LottieBase({ animation, defaultText, text, size = 'md', 
 				/>
 			)}
 			{!!text && (
-				<Text style={{ fontSize: Theme.lottie.fontSize[size], maxWidth: Theme.lottie.fontWidth[size], marginTop: 20 }}>
+				<Text
+					style={{
+						fontSize: Theme.lottie.fontSize[size],
+						maxWidth: Theme.lottie.fontWidth[size],
+						marginTop: Theme.spacing.lg,
+					}}
+				>
 					{String(text)}
 				</Text>
 			)}

@@ -1,14 +1,17 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { useQueryClient } from 'react-query';
+import { TextInput } from 'react-native-paper';
 import { useLoginWithEmail } from '../../data/auth';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import TextInput from '../../lib/components/styled/TextInput';
+import Button from '../../lib/components/styled/Button';
+import SegmentedList from '../../lib/components/styled/SegmentedList';
+import StyledTextInput from '../../lib/components/styled/TextInput';
+import Typography from '../../lib/components/styled/Typography';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
 import { isValidEmail } from '../../lib/utils/validation';
+import { Theme } from '../../providers/Theme';
 import { Service, services } from './SignUp';
 
 interface LoginScreenProps {
@@ -16,11 +19,10 @@ interface LoginScreenProps {
 }
 
 export default function LoginScreen({ navigation }: LoginScreenProps) {
-	const queryClient = useQueryClient();
 	const loginWithEmail = useLoginWithEmail();
 
-	const [email, setEmail] = useState('user@gmail.com');
-	const [password, setPassword] = useState('abcdefg123');
+	const [email, setEmail] = useState('janedoe123@gmail.com');
+	const [password, setPassword] = useState('abcdJaneefg123');
 
 	const handleSignInWithService = (service: Service) => {
 		switch (service) {
@@ -52,36 +54,58 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const formIsLoading = loginWithEmail.isLoading;
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'center' }}>
-			<Text>Sign in to continue your journey with {AppName}</Text>
-			<TextInput label={'Email'} onChangeText={setEmail} value={email} />
-			<TextInput label={'Password'} secureTextEntry onChangeText={setPassword} value={password} />
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
+				Sign in to continue your journey with {AppName}
+			</Typography>
+			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<StyledTextInput label={'Email'} onChangeText={setEmail} value={email} left={<TextInput.Icon name='email' />} />
+				<StyledTextInput
+					label={'Password'}
+					secureTextEntry
+					onChangeText={setPassword}
+					value={password}
+					left={<TextInput.Icon name='lock' />}
+				/>
+			</SegmentedList>
 			<Button
-				mode={!emailIsValid ? 'outlined' : 'contained'}
+				variant='primary'
 				onPress={onSubmit}
+				title='Sign in'
 				disabled={!emailIsValid}
 				loading={formIsLoading}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+				or sign in with
+			</Typography>
+			<View
+				style={{
+					width: '100%',
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					marginBottom: Theme.spacing.md,
+				}}
 			>
-				Sign in
-			</Button>
-			<Text>or sign in with</Text>
-			<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
 				{services
 					.filter((s) => s !== 'Email')
-					.map((name, index) => (
+					.map((name) => (
 						<Button
 							key={name}
-							mode='contained'
+							variant='primary'
 							onPress={() => handleSignInWithService(name)}
-							style={{ flex: 1, marginLeft: index === 0 ? 0 : 20 }}
-						>
-							<SsoServices type={name} fill='white' height={30} />
-						</Button>
+							icon={<SsoServices type={name} fill='white' height={30} />}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius }}
+						/>
 					))}
 			</View>
-			<Button mode='text' onPress={() => navigation.navigate('ForgotPassword')} style={{ alignSelf: 'flex-start' }}>
-				Forgot Password
-			</Button>
+			<Button
+				variant='text'
+				title='Forgot Password'
+				onPress={() => navigation.navigate('ForgotPassword')}
+				buttonStyle={{ alignSelf: 'flex-start' }}
+			/>
 		</ScreenContainer>
 	);
 }
