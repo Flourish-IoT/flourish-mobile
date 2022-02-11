@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const formIsLoading = loginWithEmail.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }} onBack={navigation.goBack}>
 			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign in to continue your journey with {AppName}
 			</Typography>
@@ -96,16 +96,11 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 							variant='primary'
 							onPress={() => handleSignInWithService(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius }}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: Theme.colors.primary }}
 						/>
 					))}
 			</View>
-			<Button
-				variant='text'
-				title='Forgot Password'
-				onPress={() => navigation.navigate('ForgotPassword')}
-				buttonStyle={{ alignSelf: 'flex-start' }}
-			/>
+			<Button variant='text' title='Forgot Password' onPress={() => navigation.navigate('ForgotPassword')} />
 		</ScreenContainer>
 	);
 }

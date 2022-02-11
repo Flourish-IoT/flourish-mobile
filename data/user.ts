@@ -59,6 +59,29 @@ export const useChangeEmail = () => {
 	);
 };
 
+export const useChangeProfilePicture = () => {
+	const queryClient = useQueryClient();
+	const { data: user } = useMe();
+
+	return useMutation(
+		(newImageUri: string) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(250)
+				.onPut(query, { params: { email: newImageUri } })
+				.replyOnce<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { email: newImageUri } });
+		},
+		{
+			onSuccess: (res, newImageUri) => {
+				queryClient.setQueryData<User>(['me'], (oldData) => ({
+					...oldData,
+					image: newImageUri,
+				}));
+			},
+		}
+	);
+};
+
 interface ChangePasswordParams {
 	password: string;
 	new_password: string;

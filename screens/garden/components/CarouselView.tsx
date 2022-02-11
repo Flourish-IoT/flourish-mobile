@@ -24,7 +24,7 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 	const [selectedPlant, setSelectedPlant] = useState(plants[firstItemIndex]);
 
 	return (
-		<View style={{ width: '100%', overflow: 'visible', ...style }}>
+		<View style={{ width: '100%', overflow: 'visible', marginVertical: Theme.spacing.xl, ...style }}>
 			<View style={{ width: '100%', overflow: 'visible', marginLeft: -Theme.spacing.md, marginBottom: Theme.spacing.md }}>
 				<Carousel
 					data={plants}
@@ -37,7 +37,14 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 					firstItem={firstItemIndex}
 				/>
 			</View>
-			<View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+			<View
+				style={{
+					width: '100%',
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'center',
+				}}
+			>
 				{plantMetrics.map((m) => (
 					<MetricVisual
 						key={m}

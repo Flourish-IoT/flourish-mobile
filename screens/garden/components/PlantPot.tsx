@@ -25,17 +25,17 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 			alignItems: 'center',
 		},
 		image: {
-			width: '80%',
+			width: 150,
 			height: undefined,
 			aspectRatio: 1 / 1,
 			borderTopLeftRadius: Theme.borderRadius,
 			borderTopRightRadius: Theme.borderRadius,
 		},
 		potBaseGraphic: {},
-		potBase: {
+		potBaseText: {
 			position: 'absolute',
 			bottom: 0,
-			width: '80%',
+			width: 150,
 			height: 70,
 		},
 		text: {
@@ -53,7 +53,7 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 					source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
 				/>
 				<PotBaseSvg width='100%' style={styles.potBaseGraphic} />
-				<View style={styles.potBase}>
+				<View style={styles.potBaseText}>
 					<Typography variant='heading3Bold' style={styles.text}>
 						{plant.name}
 					</Typography>
