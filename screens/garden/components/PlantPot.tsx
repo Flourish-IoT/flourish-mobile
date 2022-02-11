@@ -24,10 +24,24 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 			display: 'flex',
 			alignItems: 'center',
 		},
-		image: {
+		imageContainer: {
 			width: 150,
 			height: undefined,
 			aspectRatio: 1 / 1,
+			borderWidth:
+				Theme.borderWidth *
+				// Fixes the gap for the img overlap fix
+				1.1,
+			borderBottomWidth: 0,
+			borderColor: Theme.colors.accent,
+			borderTopLeftRadius: Theme.borderRadius,
+			borderTopRightRadius: Theme.borderRadius,
+			overflow: 'hidden',
+		},
+		image: {
+			width: '100%',
+			height: '100%',
+			// Fixes img overlap
 			borderTopLeftRadius: Theme.borderRadius,
 			borderTopRightRadius: Theme.borderRadius,
 		},
@@ -48,10 +62,12 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 	return (
 		<TouchableOpacity style={styles.touchContainer} onPress={onPress}>
 			<View style={styles.container}>
-				<Image
-					style={styles.image}
-					source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
-				/>
+				<View style={styles.imageContainer}>
+					<Image
+						style={styles.image}
+						source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
+					/>
+				</View>
 				<PotBaseSvg width='100%' style={styles.potBaseGraphic} />
 				<View style={styles.potBaseText}>
 					<Typography variant='heading3Bold' style={styles.text}>
