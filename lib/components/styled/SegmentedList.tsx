@@ -22,7 +22,7 @@ export default function SegmentedList({ children, style, ...rest }: SegmentedLis
 		listItem: {
 			width: '100%',
 			height: 65,
-			backgroundColor: Theme.colors.background,
+			backgroundColor: 'white',
 		},
 	});
 

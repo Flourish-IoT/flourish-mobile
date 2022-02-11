@@ -103,6 +103,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}
+						style={styles.segmentedTextInput}
 						right={
 							usernameChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateUsername} />
@@ -116,6 +117,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={email}
 						error={!isValidEmail(email)}
 						onChangeText={setEmail}
+						style={styles.segmentedTextInput}
 						right={
 							emailChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateEmail} />
@@ -166,9 +168,7 @@ export default function ProfileScreenStack() {
 }
 
 const styles = StyleSheet.create({
-	section: {
-		display: 'flex',
-		alignItems: 'flex-start',
-		width: '100%',
+	segmentedTextInput: {
+		backgroundColor: 'white',
 	},
 });

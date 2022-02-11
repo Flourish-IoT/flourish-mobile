@@ -92,7 +92,11 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	};
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }} onBack={navigation.goBack}>
+		<ScreenContainer
+			appBarPadding={false}
+			style={{ justifyContent: 'center', backgroundColor: 'white' }}
+			onBack={navigation.goBack}
+		>
 			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
@@ -205,7 +209,11 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const formIsLoading = sendVerifyEmail.isLoading || verifyEmail.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }} onBack={navigation.goBack}>
+		<ScreenContainer
+			appBarPadding={false}
+			style={{ justifyContent: 'center', backgroundColor: 'white' }}
+			onBack={navigation.goBack}
+		>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.xl }}>
 				Verification Code
 			</Typography>
@@ -273,7 +281,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center', backgroundColor: 'white' }}>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				How would you rate your confidence in caring for your plants?
 			</Typography>
@@ -315,7 +323,14 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 export default function SignUpStack() {
 	return (
-		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
+		<Stack.Navigator
+			screenOptions={{
+				...GlobalStackNavOptions,
+				cardStyle: {
+					backgroundColor: 'white',
+				},
+			}}
+		>
 			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} />
 			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} />
 			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} />

@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleProp, StyleSheet, TextStyle } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Theme } from '../../providers/Theme';
-import SegmentedList from './styled/SegmentedList';
 import StyledTextInput from './styled/TextInput';
 
 interface SearchFieldProps {

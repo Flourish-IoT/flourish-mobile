@@ -11,6 +11,7 @@ import { useChangeProfilePicture } from '../../../data/user';
 import { Portal } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import Pencil from '../../../lib/icons/Pencil';
 
 export default function ProfilePicture({ user }: StyledAvatarProps) {
 	const insets = useSafeAreaInsets();
@@ -28,7 +29,18 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 	const styles = StyleSheet.create({
 		avatar: {
 			marginBottom: Theme.spacing.md,
-			opacity: imageIsProcessing ? 0.2 : 1,
+		},
+		editIcon: {
+			...Theme.util.flexCenter,
+			width: 32,
+			height: 32,
+			backgroundColor: Theme.colors.primary,
+			borderWidth: 3,
+			borderColor: Theme.colors.background,
+			borderRadius: 50,
+			position: 'absolute',
+			top: 0,
+			right: 0,
 		},
 		cameraContainer: { ...(StyleSheet.absoluteFill as object), display: 'flex' },
 		cameraTopBar: {
@@ -144,7 +156,12 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 
 	return (
 		<>
-			<StyledAvatar user={user} style={styles.avatar} onPress={!imageIsProcessing ? onAvatarPress : null} />
+			<TouchableOpacity onPress={!imageIsProcessing ? onAvatarPress : null}>
+				<StyledAvatar user={user} style={styles.avatar} />
+				<View style={styles.editIcon}>
+					<Pencil fill='white' width={15} height={15} />
+				</View>
+			</TouchableOpacity>
 			{cameraOpen && (
 				<Portal>
 					<View style={styles.cameraContainer}>

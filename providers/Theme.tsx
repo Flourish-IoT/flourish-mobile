@@ -230,7 +230,7 @@ export const NavigatorTheme = {
 	dark: Theme.dark,
 	colors: {
 		primary: Theme.colors.primary, // The primary color of the app used to tint various elements. Usually you'll want to use your brand color for this.
-		background: 'white', // The color of various backgrounds, such as background color for the screens.
+		background: Theme.colors.background, // The color of various backgrounds, such as background color for the screens.
 		notification: Theme.colors.notification, // The color of Tab Navigator badge.
 		text: Theme.colors.text, // The text color of various elements.
 		card: Theme.colors.surface, // The background color of card-like elements, such as headers, tab bars etc.
