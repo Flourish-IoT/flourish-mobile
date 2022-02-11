@@ -31,13 +31,17 @@ export default function StyledAccordion({
 			maxWidth: '100%',
 			display: 'flex',
 			flexDirection: 'row',
+			justifyContent: 'space-between',
 			alignItems: 'center',
 			...style,
 		},
-		titleStyle: {
+		title: {
 			color: Theme.colors.text,
-			fontWeight: 'bold',
 			...(titleStyle as object),
+		},
+		icon: {
+			// TODO: Why isn't this all the way to the right because of the justifyContent?
+			transform: [{ translateX: 20 }],
 		},
 	});
 
@@ -45,11 +49,15 @@ export default function StyledAccordion({
 		<List.Accordion
 			title={title}
 			style={styles.accordion}
-			titleStyle={styles.titleStyle}
+			titleStyle={styles.title}
 			expanded={expanded}
 			onPress={() => setExpanded(!expanded)}
 			right={(props) => (
-				<List.Icon {...props} icon={() => <Chevron direction={expanded ? 'up' : 'down'} {...iconProps} />} />
+				<List.Icon
+					style={{ ...(iconProps?.style ?? ({} as object)), ...styles.icon }}
+					{...props}
+					icon={() => <Chevron direction={expanded ? 'up' : 'down'} {...iconProps} />}
+				/>
 			)}
 			{...rest}
 		>

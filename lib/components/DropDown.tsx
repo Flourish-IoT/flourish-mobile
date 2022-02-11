@@ -45,14 +45,14 @@ export default function DropDown({
 	const styles = StyleSheet.create({
 		accordion: {
 			width: longestDisplayName * 8 + 130,
-			backgroundColor: Theme.colors.primary,
+			backgroundColor: 'white',
 			borderRadius: Theme.borderRadius,
 			borderBottomLeftRadius: expanded ? 0 : Theme.borderRadius,
 			borderBottomRightRadius: expanded ? 0 : Theme.borderRadius,
 			...style,
 		},
 		accordionText: {
-			color: 'white',
+			fontFamily: 'Lato-Bold',
 		},
 		itemStyle: {
 			backgroundColor: 'white',
@@ -91,7 +91,7 @@ export default function DropDown({
 			titleStyle={styles.accordionText}
 			expanded={expanded}
 			setExpanded={setExpanded}
-			iconProps={{ fill: 'white' }}
+			iconProps={{ fill: 'white', withBackground: true }}
 		>
 			{items.map((item, index, { length }) => {
 				const isSelected = selectedItems.some((sItem) => sItem === item[valueKey]);
