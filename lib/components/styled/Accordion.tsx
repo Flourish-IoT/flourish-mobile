@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import { List } from 'react-native-paper';
 import { SvgProps } from 'react-native-svg';
 import { Theme } from '../../../providers/Theme';
-import Chevron from '../../icons/Chevron';
+import Chevron, { ChevronProps } from '../../icons/Chevron';
 
 interface StyledAccordion {
 	title: ReactNode;
@@ -12,7 +12,7 @@ interface StyledAccordion {
 	expanded: boolean;
 	setExpanded: (expanded: boolean) => void;
 	children: ReactNode;
-	iconProps?: SvgProps;
+	iconProps?: ChevronProps;
 }
 
 export default function StyledAccordion({

@@ -64,12 +64,12 @@ export const useChangeProfilePicture = () => {
 	const { data: user } = useMe();
 
 	return useMutation(
-		(newImageUri: string) => {
+		(newImageUri: string | undefined) => {
 			const query = `/users/${user.id}`;
 			mockEndpoint(250)
-				.onPut(query, { params: { email: newImageUri } })
+				.onPut(query, { params: { image: newImageUri ?? '' } })
 				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { email: newImageUri } });
+			return AxiosInstance.put<string>(query, { params: { image: newImageUri ?? '' } });
 		},
 		{
 			onSuccess: (res, newImageUri) => {

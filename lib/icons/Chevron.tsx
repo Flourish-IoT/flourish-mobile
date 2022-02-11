@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 import { Theme } from '../../providers/Theme';
 
-interface ChevronProps extends SvgProps {
+export interface ChevronProps extends SvgProps {
 	direction?: 'up' | 'down' | 'left' | 'right';
 	withBackground?: boolean;
 	onPress?: () => void;
