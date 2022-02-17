@@ -13,7 +13,6 @@ export default function SearchField({ onQuery, style, ...rest }: SearchFieldProp
 	const styles = StyleSheet.create({
 		input: {
 			height: 35,
-			backgroundColor: 'white',
 			borderRadius: Theme.borderRadius,
 			borderTopLeftRadius: Theme.borderRadius,
 			borderTopRightRadius: Theme.borderRadius,

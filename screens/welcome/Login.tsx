@@ -59,9 +59,9 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 				Sign in to continue your journey with {AppName}
 			</Typography>
 			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
-				<StyledTextInput label={'Email'} onChangeText={setEmail} value={email} left={<TextInput.Icon name='email' />} />
+				<StyledTextInput label='Email' onChangeText={setEmail} value={email} left={<TextInput.Icon name='email' />} />
 				<StyledTextInput
-					label={'Password'}
+					label='Password'
 					secureTextEntry
 					onChangeText={setPassword}
 					value={password}

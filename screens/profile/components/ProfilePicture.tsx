@@ -43,7 +43,6 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 		try {
 			await changeProfilePicture.mutateAsync(uri);
 			setCameraOpen(false);
-			alert('Updated.');
 		} catch (error) {
 			alert(error);
 		}

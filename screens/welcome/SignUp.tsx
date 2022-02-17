@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { View, Keyboard } from 'react-native';
+import { View, Keyboard, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName } from '../../lib/utils/helper';
@@ -91,6 +91,12 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 		}
 	};
 
+	const styles = StyleSheet.create({
+		input: {
+			backgroundColor: Theme.colors.background,
+		},
+	});
+
 	return (
 		<ScreenContainer
 			appBarPadding={false}
@@ -103,6 +109,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
 				<StyledTextInput
 					label={getUsernameErrorMsg() ?? 'Display Name'}
+					style={styles.input}
 					onChangeText={setUsername}
 					error={!!getUsernameErrorMsg()}
 					value={username}
@@ -110,6 +117,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 				/>
 				<StyledTextInput
 					label={getEmailErrorMsg() ?? 'Email'}
+					style={styles.input}
 					onChangeText={setEmail}
 					error={!!getEmailErrorMsg()}
 					value={email}
@@ -117,6 +125,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 				/>
 				<StyledTextInput
 					label={getPasswordErrorMsg() ?? 'Password'}
+					style={styles.input}
 					secureTextEntry
 					onChangeText={setPassword}
 					error={!!getPasswordErrorMsg()}
@@ -125,6 +134,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 				/>
 				<StyledTextInput
 					label={getPasswordConfirmErrorMsg() ?? 'Confirm Password'}
+					style={styles.input}
 					secureTextEntry
 					onChangeText={setConfirmPassword}
 					error={!!getPasswordConfirmErrorMsg()}
@@ -221,7 +231,14 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 				We have sent a verification code to "{email}"
 			</Typography>
 			<SegmentedList style={{ marginBottom: Theme.spacing.xl }}>
-				<StyledTextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
+				<StyledTextInput
+					label='Security Code'
+					keyboardType='numeric'
+					maxLength={4}
+					onChangeText={setCode}
+					value={code}
+					style={{ backgroundColor: Theme.colors.background }}
+				/>
 			</SegmentedList>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl }}>
 				Didn't receive a code?

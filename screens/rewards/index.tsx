@@ -2,7 +2,6 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useMe } from '../../data/user';
 import ScreenContainer from '../../lib/components/ScreenContainer';
-import ProfilePicture from '../profile/components/ProfilePicture';
 import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
@@ -13,7 +12,6 @@ import FriendsTab from './Friends';
 import Typography from '../../lib/components/styled/Typography';
 import Loading from '../../lib/components/Loading';
 import { getUserLevelName } from '../../lib/utils/helper';
-import { ProgressBar } from 'react-native-paper';
 import StyledAvatar from '../../lib/components/styled/Avatar';
 
 interface RewardsScreenProps {
@@ -33,7 +31,7 @@ export const TopTabBar = ({ state, navigation }) => {
 			minWidth: '100%',
 			flexDirection: 'row',
 			backgroundColor: 'white',
-			maxHeight: 37.3, // Fix
+			maxHeight: 37.3, // NOTE: This is a fix, tab bar is too tall w/o this
 		},
 		tabButton: {
 			width: buttonWidth,

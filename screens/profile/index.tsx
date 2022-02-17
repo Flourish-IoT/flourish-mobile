@@ -60,15 +60,30 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 
 	// Export Data
 	const exportData = useExportData();
-	const onExportDataBtnPress = async () => {
-		try {
-			await exportData.mutateAsync();
-			alert(
-				`We have sent your data to ${user.email} please wait a few minutes and be sure to check your spam or junk folders.`
-			);
-		} catch (error) {
-			alert(`Error: ${error}`);
-		}
+	const onExportDataBtnPress = () => {
+		Alert.alert(
+			'Export Data?',
+			`This will send an email to "${user.email}" with a spreadsheet containing all the data related to your profile.`,
+			[
+				{
+					text: 'Cancel',
+				},
+				{
+					text: 'Send',
+					onPress: async () => {
+						try {
+							await exportData.mutateAsync();
+							Alert.alert(
+								'Request Received',
+								`We will send an email to "${user.email}". Please wait a few minutes and be sure to check your spam or junk folders.`
+							);
+						} catch (error) {
+							alert(error);
+						}
+					},
+				},
+			]
+		);
 	};
 
 	// Logout
@@ -102,7 +117,6 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}
-						style={styles.segmentedTextInput}
 						right={
 							usernameChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateUsername} />
@@ -116,7 +130,6 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={email}
 						error={!isValidEmail(email)}
 						onChangeText={setEmail}
-						style={styles.segmentedTextInput}
 						right={
 							emailChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateEmail} />
@@ -165,9 +178,3 @@ export default function ProfileScreenStack() {
 		</Stack.Navigator>
 	);
 }
-
-const styles = StyleSheet.create({
-	segmentedTextInput: {
-		backgroundColor: 'white',
-	},
-});

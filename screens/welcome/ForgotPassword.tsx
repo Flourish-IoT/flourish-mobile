@@ -36,12 +36,7 @@ const EnterEmailStep = ({ navigation }: ForgotPasswordScreenProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between' }}>
 			<SegmentedList>
-				<TextInput
-					label={'Your Email'}
-					value={email}
-					disabled={sendResetPasswordEmail.isLoading}
-					onChangeText={setEmail}
-				/>
+				<TextInput label='Your Email' value={email} disabled={sendResetPasswordEmail.isLoading} onChangeText={setEmail} />
 			</SegmentedList>
 			<Button
 				variant='primary'
