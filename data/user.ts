@@ -177,11 +177,19 @@ export type UnitPreference = 'Fahrenheit' | 'Celsius';
 export type ConfidenceRating = 1 | 2 | 3;
 
 export interface User {
+	// NOTE: Update the type omits for type FinishAccountParams if you add/remove any fields from User
 	id: number;
 	email: string;
 	username: string;
 	preferences: UserPreferences;
 	image: string | undefined;
+	level: number;
+	xp: number;
+}
+
+export interface UserPreferences {
+	unit_preference: UnitPreference;
+	confidence_rating?: ConfidenceRating;
 }
 
 export const tempMyUser: User = {
@@ -189,6 +197,8 @@ export const tempMyUser: User = {
 	email: 'janedoe123@gmail.com',
 	username: 'Jane Doe',
 	image: undefined,
+	level: 1,
+	xp: 345,
 	preferences: {
 		unit_preference: 'Fahrenheit',
 		confidence_rating: 2,
@@ -200,16 +210,13 @@ export const tempOtherUser: User = {
 	email: 'johnsmith321@gmail.com',
 	username: 'John Smith',
 	image: undefined,
+	level: 2,
+	xp: 200,
 	preferences: {
 		unit_preference: 'Fahrenheit',
 		confidence_rating: 3,
 	},
 };
-
-export interface UserPreferences {
-	unit_preference: UnitPreference;
-	confidence_rating?: ConfidenceRating;
-}
 
 export const useMe = () => {
 	return useQuery(['me'], async () => {

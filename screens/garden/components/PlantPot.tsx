@@ -1,19 +1,23 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ViewMode } from '..';
-import { Plant } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
 import { Theme } from '../../../providers/Theme';
-import PotBaseSvg from './PotBaseSvg';
+import PotBaseSvg, { PotBaseSvgProps } from './PotBaseSvg';
 
 interface PlantProps {
 	viewMode: ViewMode;
-	plant: Plant;
-	onPress: () => void;
+	image?: string;
+	title?: string;
+	subtitle?: string;
+	onPress?: () => void;
 	containerStyle?: ViewStyle;
+	svgProps?: PotBaseSvgProps;
 }
 
-export default function PlantPot({ viewMode, plant, onPress, containerStyle }: PlantProps) {
+export default function PlantPot({ viewMode, image, title, subtitle, onPress, containerStyle, svgProps }: PlantProps) {
+	const svgStyle = svgProps?.style;
+
 	const styles = StyleSheet.create({
 		touchContainer: {
 			width: viewMode === 'Carousel' ? '100%' : '50%',
@@ -21,11 +25,10 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 		},
 		container: {
 			width: '100%',
-			display: 'flex',
-			alignItems: 'center',
+			...Theme.util.flexCenter,
 		},
 		imageContainer: {
-			width: 150,
+			width: '80%',
 			height: undefined,
 			aspectRatio: 1 / 1,
 			borderWidth:
@@ -45,11 +48,13 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 			borderTopLeftRadius: Theme.borderRadius,
 			borderTopRightRadius: Theme.borderRadius,
 		},
-		potBaseGraphic: {},
+		potBaseGraphic: {
+			...(svgStyle ?? ({} as object)),
+		},
 		potBaseText: {
 			position: 'absolute',
 			bottom: 0,
-			width: 150,
+			width: '80%',
 			height: 70,
 		},
 		text: {
@@ -60,23 +65,25 @@ export default function PlantPot({ viewMode, plant, onPress, containerStyle }: P
 	});
 
 	return (
-		<TouchableOpacity style={styles.touchContainer} onPress={onPress}>
+		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!onPress && 1}>
 			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image
 						style={styles.image}
-						source={!!plant.image ? { uri: plant.image } : require('../../../lib/assets/placeholder/plant.png')}
+						source={!!image ? { uri: image } : require('../../../lib/assets/placeholder/plant.png')}
 					/>
 				</View>
-				<PotBaseSvg width='100%' style={styles.potBaseGraphic} />
-				<View style={styles.potBaseText}>
-					<Typography variant='heading3Bold' style={styles.text}>
-						{plant.name}
-					</Typography>
-					<Typography variant='body' style={styles.text}>
-						{plant.commonName}
-					</Typography>
-				</View>
+				<PotBaseSvg width='100%' style={styles.potBaseGraphic} {...svgProps} />
+				{(title || subtitle) && (
+					<View style={styles.potBaseText}>
+						<Typography variant='heading3Bold' style={styles.text}>
+							{title}
+						</Typography>
+						<Typography variant='body' style={styles.text}>
+							{subtitle}
+						</Typography>
+					</View>
+				)}
 			</View>
 		</TouchableOpacity>
 	);

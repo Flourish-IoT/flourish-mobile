@@ -2,7 +2,9 @@ import React from 'react';
 import Svg, { Path, SvgProps, G, Defs, LinearGradient, Stop, ClipPath } from 'react-native-svg';
 import { Theme } from '../../../providers/Theme';
 
-export default function PotBaseSvg({ fill = Theme.colors.accent, ...rest }: SvgProps) {
+export interface PotBaseSvgProps extends SvgProps {}
+
+export default function PotBaseSvg({ fill = Theme.colors.accent, ...rest }: PotBaseSvgProps) {
 	return (
 		<Svg width='161' height='94' viewBox='0 0 161 94' fill='none' {...rest}>
 			<G clip-path='url(#a)'>

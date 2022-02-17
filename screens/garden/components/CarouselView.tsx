@@ -29,7 +29,13 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 				<Carousel
 					data={plants}
 					renderItem={({ item: plant }: CarouselRendererProps) => (
-						<PlantPot viewMode={'Carousel'} plant={plant} onPress={() => onPress(plant)} />
+						<PlantPot
+							viewMode={'Carousel'}
+							image={plant.image}
+							title={plant.name}
+							subtitle={plant.commonName}
+							onPress={() => onPress(plant)}
+						/>
 					)}
 					onSnapToItem={(index) => setSelectedPlant(plants[index])}
 					sliderWidth={Dimensions.get('window').width}

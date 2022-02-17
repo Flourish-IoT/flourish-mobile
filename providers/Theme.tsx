@@ -206,7 +206,7 @@ export const Theme: OurThemeProps = {
 		},
 	},
 	colors: {
-		primary: '#7EBD3E', // Primary color for your app, usually your brand color
+		primary: '#10B295', // Primary color for your app, usually your brand color
 		accent: '#613722', // Secondary color for your app which complements the primary color
 		background: '#EEF8F6', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards

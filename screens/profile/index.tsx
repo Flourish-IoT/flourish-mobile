@@ -89,7 +89,6 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	return (
 		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
-				{/* <StyledAvatar user={user} style={{ marginBottom: Theme.spacing.md }} /> */}
 				<ProfilePicture user={user} />
 				<Typography variant='heading3Bold'>{user.username}</Typography>
 			</View>
@@ -99,7 +98,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 			{
 				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
 					<StyledTextInput
-						label='Username'
+						label='Display Name'
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}

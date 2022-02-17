@@ -45,7 +45,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const disableNextBtn = !formIsValid;
 
 	const getUsernameErrorMsg = () => {
-		if (!usernameIsValid) return 'Username is required';
+		if (!usernameIsValid) return 'Display Name is required';
 		return undefined;
 	};
 

@@ -86,3 +86,16 @@ export function getMetricGaugeColor(metric: MetricRange) {
 			return '#10B295';
 	}
 }
+
+export function getUserLevelName(level: number) {
+	switch (level) {
+		case 1:
+			return 'Plant Explorer';
+		case 2:
+			return 'Plant Enthusiast';
+		case 3:
+			return 'Plant Whisperer';
+		default:
+			return 'Plant Guru';
+	}
+}

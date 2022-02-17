@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
-import { getUserId } from './auth';
+import { useMe } from './user';
 
 export interface Sensor {
 	sensorId: number;
@@ -51,12 +51,20 @@ const tempMyPlants: Plant[] = [
 ];
 
 export const usePlants = (userId: number | 'me') => {
-	return useQuery(['users', userId, 'plants'], async () => {
-		if (userId === 'me') userId = Number(await getUserId());
-		const query = `/users/${userId}/plants`;
-		mockEndpoint(250).onGet(query).replyOnce<Plant[]>(200, tempMyPlants);
-		return AxiosInstance.get<Plant[]>(query).then((res) => res.data);
-	});
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
+
+	return useQuery(
+		['users', userId, 'plants'],
+		async () => {
+			const query = `/users/${userId}/plants`;
+			mockEndpoint(250).onGet(query).replyOnce<Plant[]>(200, tempMyPlants);
+			return AxiosInstance.get<Plant[]>(query).then((res) => res.data);
+		},
+		{
+			enabled: !!user,
+		}
+	);
 };
 
 export interface PlantMetrics {

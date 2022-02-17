@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import Grid from '../../lib/icons/Grid';
 import { Plant, usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
@@ -45,18 +44,18 @@ export function GardenList({ navigation }: GardenScreenProps) {
 				<View
 					style={{
 						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Carousel' ? 'transparent' : Theme.colors.primary,
+						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'transparent',
 					}}
 				>
-					<CarouselIcon fill={viewMode === 'Carousel' ? Theme.colors.primary : 'white'} />
+					<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
 				</View>
 				<View
 					style={{
 						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Grid' ? 'transparent' : Theme.colors.primary,
+						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'transparent',
 					}}
 				>
-					<Grid fill={viewMode === 'Grid' ? Theme.colors.primary : 'white'} />
+					<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
 				</View>
 			</TouchableOpacity>
 
