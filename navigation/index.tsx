@@ -40,7 +40,7 @@ export default function Navigation() {
 	return (
 		<NavigationContainer theme={NavigatorTheme} ref={navigationRef}>
 			<Stack.Navigator screenOptions={GlobalStackNavOptions} initialRouteName={userIsLoggedIn ? 'HomeStack' : 'AuthStack'}>
-				<Stack.Screen name='AuthStack' component={AuthStack} />
+				<Stack.Screen name='AuthStack' component={AuthStack} options={{ cardStyle: { backgroundColor: 'white' } }} />
 				<Stack.Screen name='HomeStack' component={AppBarStack} />
 			</Stack.Navigator>
 		</NavigationContainer>

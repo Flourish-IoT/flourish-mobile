@@ -1,7 +1,7 @@
 import { addDays, addWeeks, format, isAfter, isBefore, isPast, isToday, isTomorrow, isYesterday, subDays } from 'date-fns';
 import React from 'react';
-import { Image } from 'react-native';
-import { List } from 'react-native-paper';
+import { Image, StyleSheet, View, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Task } from '../../../data/calendar';
 import { usePlants } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
@@ -9,14 +9,15 @@ import { Theme } from '../../../providers/Theme';
 
 interface TaskCardProps {
 	task: Task;
+	containerStyle?: ViewStyle;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 
 	if (plantsIsLoading) return null;
 
-	const { id, plantId, datetime, name, complete } = task;
+	const { id, plantId, datetime, title, description, complete } = task;
 	const isLate = isPast(datetime) && !complete;
 
 	const { image: plantImage } = plants.find((p) => p.id === plantId);
@@ -37,25 +38,42 @@ export default function TaskCard({ task }: TaskCardProps) {
 		}
 	};
 
+	const styles = StyleSheet.create({
+		container: {
+			backgroundColor: 'white',
+			display: 'flex',
+			flexDirection: 'row',
+			borderLeftWidth: Theme.spacing.md,
+			borderColor: Theme.colors.primary,
+			borderRadius: Theme.borderRadius,
+			...containerStyle,
+		},
+		textContainer: {
+			flex: 1,
+			padding: Theme.spacing.md,
+		},
+		due: {
+			...(isLate && { color: Theme.colors.error }),
+		},
+		icon: {
+			height: 70,
+			width: 70,
+		},
+	});
+
 	return (
-		<List.Item
-			title={<Typography variant='body'>{name}</Typography>}
-			description={
-				<Typography variant='placeholder' style={isLate ? { color: Theme.colors.error } : {}}>
+		<TouchableOpacity style={styles.container}>
+			<Image
+				style={styles.icon}
+				source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
+			/>
+			<View style={styles.textContainer}>
+				<Typography variant='heading3Bold'>{title}</Typography>
+				<Typography variant='placeholder' style={styles.due}>
 					{getDateText()} {format(datetime, "'at' p")}
 				</Typography>
-			}
-			left={(props) => (
-				<List.Icon
-					{...props}
-					icon={() => (
-						<Image
-							style={{ height: '100%', width: '100%' }}
-							source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
-						/>
-					)}
-				/>
-			)}
-		/>
+				<Typography variant='placeholder'>{description}</Typography>
+			</View>
+		</TouchableOpacity>
 	);
 }

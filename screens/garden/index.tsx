@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Grid from '../../lib/icons/Grid';
 import { Plant, usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
@@ -23,7 +22,7 @@ interface GardenScreenProps {
 export type ViewMode = 'Carousel' | 'Grid';
 
 export function GardenList({ navigation }: GardenScreenProps) {
-	const [viewMode, setViewType] = useState<ViewMode>('Carousel');
+	const [viewMode, setViewMode] = useState<ViewMode>('Carousel');
 	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 	const [searchQuery, setSearchQuery] = useState('');
 
@@ -31,46 +30,36 @@ export function GardenList({ navigation }: GardenScreenProps) {
 		navigation.navigate('SinglePlantStack', { plant });
 	};
 
+	const toggleView = () => {
+		setViewMode(viewMode === 'Carousel' ? 'Grid' : 'Carousel');
+	};
+
 	return (
 		<ScreenContainer scrolls>
-			<View style={{ display: 'flex', flexDirection: 'row' }}>
-				<Button
-					mode='contained'
-					onPress={() => setViewType('Carousel')}
-					style={{
-						...styles.segmentBtn,
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Carousel' ? 'white' : Theme.colors.primary,
-						borderTopLeftRadius: 25,
-						borderTopRightRadius: 0,
-						borderBottomLeftRadius: 25,
-						borderBottomRightRadius: 0,
-					}}
-				>
-					<CarouselIcon fill={viewMode === 'Carousel' ? Theme.colors.primary : 'white'} />
-				</Button>
-				<Button
-					mode='contained'
-					onPress={() => setViewType('Grid')}
-					style={{
-						...styles.segmentBtn,
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Grid' ? 'white' : Theme.colors.primary,
-						borderTopLeftRadius: 0,
-						borderTopRightRadius: 25,
-						borderBottomLeftRadius: 0,
-						borderBottomRightRadius: 25,
-					}}
-				>
-					<Grid fill={viewMode === 'Grid' ? Theme.colors.primary : 'white'} />
-				</Button>
-			</View>
-
-			<View style={{ width: '100%', marginBottom: Theme.spacing.md }}>
+			<View style={styles.filterContainer}>
 				<SearchField onQuery={setSearchQuery} />
 			</View>
 
-			<View style={{ width: '100%', overflow: 'visible' }}>
+			<TouchableOpacity style={styles.segmentBtn} onPress={toggleView}>
+				<View
+					style={{
+						...styles.segmentBtnContent,
+						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'transparent',
+					}}
+				>
+					<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
+				</View>
+				<View
+					style={{
+						...styles.segmentBtnContent,
+						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'transparent',
+					}}
+				>
+					<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
+				</View>
+			</TouchableOpacity>
+
+			<View style={styles.viewContainer}>
 				{plantsIsLoading ? (
 					<Loading animation='rings' text='Loading plants...' />
 				) : !plants ? (
@@ -111,15 +100,27 @@ export default function GardenScreenStack() {
 }
 
 const styles = StyleSheet.create({
-	segmentBtnContent: {
-		width: 50,
+	filterContainer: {
+		width: '100%',
+		marginBottom: Theme.spacing.md,
+	},
+	segmentBtn: {
+		display: 'flex',
+		flexDirection: 'row',
+		borderRadius: 50,
 		borderStyle: 'solid',
 		borderColor: Theme.colors.primary,
 		borderWidth: Theme.borderWidth,
-		margin: 0,
+		overflow: 'hidden',
 	},
-	segmentBtn: {
+	segmentBtnContent: {
+		width: 50,
+		height: 30,
+		margin: 0,
 		...Theme.util.flexCenter,
-		shadowColor: 'transparent',
+	},
+	viewContainer: {
+		width: '100%',
+		overflow: 'visible',
 	},
 });

@@ -161,8 +161,8 @@ export const Theme: OurThemeProps = {
 	shadow: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 0.25 },
-		shadowOpacity: 0.1,
-		shadowRadius: 5,
+		shadowOpacity: 0.15,
+		shadowRadius: 2.5,
 	},
 	animation: {
 		scale: DefaultTheme.animation.scale, // Scale for all animations
@@ -206,8 +206,8 @@ export const Theme: OurThemeProps = {
 		},
 	},
 	colors: {
-		primary: '#5BBEA0', // Primary color for your app, usually your brand color
-		accent: '#9A532F', // Secondary color for your app which complements the primary color
+		primary: '#10B295', // Primary color for your app, usually your brand color
+		accent: '#613722', // Secondary color for your app which complements the primary color
 		background: '#EEF8F6', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards
 		text: '#143F49', // Text color for content
@@ -216,7 +216,7 @@ export const Theme: OurThemeProps = {
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications
 		notification: DefaultTheme.colors.notification, // Background color for badges
-		error: DefaultTheme.colors.error, // The color of error text, for example the error message for text inputs
+		error: '#FF1D25', // The color of error text, for example the error message for text inputs
 		border: 'black', // The color of borders
 		cta: '#FF7C1D',
 	},

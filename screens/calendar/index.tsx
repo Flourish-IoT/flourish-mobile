@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { List } from 'react-native-paper';
 import { usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Chevron from '../../lib/icons/Chevron';
@@ -12,18 +11,15 @@ import {
 	isAfter,
 	isBefore,
 	isFuture,
-	addWeeks,
 	isPast,
-	isToday,
 	addDays,
 	subDays,
 	isSameMonth,
 	isSameWeek,
-	endOfWeek,
 	startOfWeek,
 	isSameDay,
 } from 'date-fns';
-import { getMonthName, padString } from '../../lib/utils/helper';
+import { padString } from '../../lib/utils/helper';
 import { Task, useTasks } from '../../data/calendar';
 import TaskCard from './components/TaskCard';
 import ChipFilter from '../../lib/components/ChipFilter';
@@ -59,10 +55,19 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 	const plantFilteredTasks = selectedPlants.includes(-1) ? tasks : tasks.filter((t) => selectedPlants.includes(t.plantId));
 	const datesToHighlight = plantFilteredTasks.map((t) => format(t.datetime, 'yyyy-MM-dd'));
-	const highlighted = datesToHighlight.reduce((obj, date) => ((obj[date] = { marked: true }), obj), {});
+	const highlighted = datesToHighlight.reduce(
+		(obj, date) => ((obj[date] = { marked: true, dotColor: Theme.colors.cta }), obj),
+		{}
+	);
 
 	// If a date is selected, add it to the marked dates obj
-	selectedDate !== -1 && (highlighted[selectedDate] = { ...highlighted[selectedDate], selected: true });
+	selectedDate !== -1 &&
+		(highlighted[selectedDate] = {
+			...highlighted[selectedDate],
+			selected: true,
+			selectedColor: Theme.colors.primary,
+			dotColor: 'white',
+		});
 	// Add permanent highlight to today's date
 	const todayFormatted = format(new Date(), 'yyyy-MM-dd');
 	selectedDate !== todayFormatted &&
@@ -70,6 +75,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 			...highlighted[todayFormatted],
 			selected: true,
 			selectedColor: 'red',
+			dotColor: 'white',
 		});
 
 	const upcomingTasks = plantFilteredTasks
@@ -92,7 +98,9 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		// Last 5 in the passed 30 days
 		.slice(1)
 		.slice(-5);
-	const selectedDateTasks = plantFilteredTasks.filter((t) => isSameDay(new Date(selectedDate), t.datetime));
+	const selectedDateTasks = plantFilteredTasks.filter((t) =>
+		isSameDay(new Date(selectedDate), new Date(format(t.datetime, 'yyyy-MM-dd')))
+	);
 
 	return (
 		<ScreenContainer scrolls style={{ alignItems: 'flex-start' }}>
@@ -120,7 +128,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 			<Calendar
 				style={styles.calendarStyle}
-				theme={styles.calendarTheme}
+				theme={{ calendarBackground: 'transparent' }}
 				onDayPress={(day) => {
 					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
 				}}
@@ -142,15 +150,25 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 					expanded={intervalTasksExpanded}
 					setExpanded={setIntervalTasksExpanded}
 				>
-					{lateTasks.map((t) => (
-						<TaskCard key={t.id} task={t} />
+					{lateTasks.map((t, index, { length }) => (
+						<TaskCard
+							key={t.id}
+							task={t}
+							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+						/>
 					))}
 				</StyledAccordion>
 			)}
 
 			<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
 				{upcomingTasks.length > 0 ? (
-					upcomingTasks.map((t) => <TaskCard key={t.id} task={t} />)
+					upcomingTasks.map((t, index, { length }) => (
+						<TaskCard
+							key={t.id}
+							task={t}
+							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+						/>
+					))
 				) : (
 					<View style={{ height: 100 }}>
 						<Empty animation='relax' text='No upcoming tasks!' />
@@ -162,11 +180,17 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				height='50%'
 				visible={selectedDate !== -1}
 				onClose={() => setSelectedDate(-1)}
-				title={format(new Date(selectedDate), 'MMMM do')}
+				title={format(addDays(new Date(selectedDate), 1), 'MMMM do')} // Add 1 day because new Date() thinks day 01 is the 2nd of a month
 				content={
 					<>
 						{selectedDateTasks.length > 0 ? (
-							selectedDateTasks.map((t, index) => <TaskCard key={index + String(t.id)} task={t} />)
+							selectedDateTasks.map((t, index, { length }) => (
+								<TaskCard
+									key={t.id}
+									task={t}
+									containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+								/>
+							))
 						) : (
 							<View style={{ height: '50%' }}>
 								<Empty animation='relax' text='No tasks on this date.' />
@@ -185,8 +209,5 @@ const styles = StyleSheet.create({
 		width: Dimensions.get('window').width - Theme.spacing.md * 2,
 		backgroundColor: 'transparent',
 		marginBottom: Theme.spacing.md,
-	},
-	calendarTheme: {
-		backgroundColor: 'transparent',
 	},
 });

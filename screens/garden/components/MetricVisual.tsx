@@ -66,17 +66,10 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			break;
 	}
 
-	const blocks = [
-		{ range: 1, color: '#DADADA' },
-		{ range: 2, color: '#B0B0B0' },
-		{ range: 3, color: '#6B6B6B' },
-		{ range: 4, color: '#B0B0B0' },
-		{ range: 5, color: '#DADADA' },
-	];
-
 	const styles = StyleSheet.create({
 		container: {
-			width: mode === 'block' ? 100 : Dimensions.get('window').width,
+			// width: mode === 'block' ? 100 : Dimensions.get('window').width,
+			width: mode === 'block' ? 100 : '100%',
 			display: 'flex',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
@@ -114,8 +107,9 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			{mode === 'listItem' && (
 				<View style={styles.textContainer}>
 					<Typography variant='body' style={{ fontWeight: 'bold' }}>
-						{getFullMetricName(metricType)}:{' '}
-						<Typography variant='body' style={{ color: getMetricGaugeColor(range) }}>
+						{getFullMetricName(metricType)}
+						{': '}
+						<Typography variant='heading3Bold' style={{ color: getMetricGaugeColor(range) }}>
 							{getMetricRangeDescription(range)}
 						</Typography>
 					</Typography>

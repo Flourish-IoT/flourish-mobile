@@ -20,7 +20,9 @@ export default function GridView({ plants, onPress, style }: GridViewProps) {
 					<PlantPot
 						viewMode={'Grid'}
 						key={index + p.id}
-						plant={p}
+						image={p.image}
+						title={p.name}
+						subtitle={p.commonName}
 						onPress={() => onPress(p)}
 						containerStyle={{
 							marginVertical: isInLastRow ? 0 : Theme.spacing.xl,

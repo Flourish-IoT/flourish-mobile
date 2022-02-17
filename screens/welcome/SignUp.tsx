@@ -11,7 +11,6 @@ import Confidence from '../../lib/icons/Confidence';
 import { getConfidenceText, ConfidenceRating } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import StyledTextInput from '../../lib/components/styled/TextInput';
-import { useQueryClient } from 'react-query';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Button from '../../lib/components/styled/Button';
@@ -46,7 +45,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	const disableNextBtn = !formIsValid;
 
 	const getUsernameErrorMsg = () => {
-		if (!usernameIsValid) return 'Username is required';
+		if (!usernameIsValid) return 'Display Name is required';
 		return undefined;
 	};
 
@@ -93,7 +92,11 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	};
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+		<ScreenContainer
+			appBarPadding={false}
+			style={{ justifyContent: 'center', backgroundColor: 'white' }}
+			onBack={navigation.goBack}
+		>
 			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
@@ -149,7 +152,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 							variant='primary'
 							onPress={() => handleSignUp(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius }}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: Theme.colors.primary }}
 						/>
 					))}
 			</View>
@@ -206,17 +209,21 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const formIsLoading = sendVerifyEmail.isLoading || verifyEmail.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+		<ScreenContainer
+			appBarPadding={false}
+			style={{ justifyContent: 'center', backgroundColor: 'white' }}
+			onBack={navigation.goBack}
+		>
+			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.xl }}>
 				Verification Code
 			</Typography>
-			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl, textAlign: 'center' }}>
 				We have sent a verification code to "{email}"
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList style={{ marginBottom: Theme.spacing.xl }}>
 				<StyledTextInput label='Security Code' keyboardType='numeric' maxLength={4} onChangeText={setCode} value={code} />
 			</SegmentedList>
-			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl }}>
 				Didn't receive a code?
 			</Typography>
 			<Button
@@ -225,7 +232,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 				title='Resend Code'
 				disabled={disableResendBtn}
 				loading={formIsLoading}
-				buttonStyle={{ marginBottom: Theme.spacing.md }}
+				buttonStyle={{ marginBottom: Theme.spacing.xl }}
 			/>
 			<Button
 				variant='primary'
@@ -239,7 +246,6 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 };
 
 const RateExpertiseStep = ({ navigation }: StepProps) => {
-	const queryClient = useQueryClient();
 	const finishAccountSetup = useFinishAccountSetup();
 	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
 	const [skip, setSkip] = useState(false);
@@ -275,7 +281,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center', backgroundColor: 'white' }}>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				How would you rate your confidence in caring for your plants?
 			</Typography>
@@ -317,7 +323,14 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 export default function SignUpStack() {
 	return (
-		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
+		<Stack.Navigator
+			screenOptions={{
+				...GlobalStackNavOptions,
+				cardStyle: {
+					backgroundColor: 'white',
+				},
+			}}
+		>
 			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} />
 			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} />
 			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} />

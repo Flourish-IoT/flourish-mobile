@@ -16,7 +16,7 @@ import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
 import Button from '../../lib/components/styled/Button';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
 import Typography from '../../lib/components/styled/Typography';
-import StyledAvatar from '../../lib/components/styled/Avatar';
+import ProfilePicture from './components/ProfilePicture';
 
 interface ProfileScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -89,7 +89,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	return (
 		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
-				<StyledAvatar user={user} style={{ marginBottom: Theme.spacing.md }} />
+				<ProfilePicture user={user} />
 				<Typography variant='heading3Bold'>{user.username}</Typography>
 			</View>
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
@@ -98,10 +98,11 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 			{
 				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
 					<StyledTextInput
-						label='Username'
+						label='Display Name'
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}
+						style={styles.segmentedTextInput}
 						right={
 							usernameChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateUsername} />
@@ -115,6 +116,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={email}
 						error={!isValidEmail(email)}
 						onChangeText={setEmail}
+						style={styles.segmentedTextInput}
 						right={
 							emailChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateEmail} />
@@ -165,9 +167,7 @@ export default function ProfileScreenStack() {
 }
 
 const styles = StyleSheet.create({
-	section: {
-		display: 'flex',
-		alignItems: 'flex-start',
-		width: '100%',
+	segmentedTextInput: {
+		backgroundColor: 'white',
 	},
 });

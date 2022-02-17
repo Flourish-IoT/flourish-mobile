@@ -7,15 +7,16 @@ import Plant from '../lib/icons/Plant';
 import Profile from '../lib/icons/Profile';
 import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
-import CalendarScreen from '../screens/calendar';
-import GardenScreenStack from '../screens/garden';
 import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import ProfileScreenStack from '../screens/profile';
+import GardenScreenStack from '../screens/garden';
+import CalendarScreen from '../screens/calendar';
+import RewardsScreen from '../screens/rewards';
 
 const Tab = createBottomTabNavigator();
 
-type AppBarRoute = 'Profile' | 'Courses' | 'Garden' | 'Calendar' | 'Social';
+type AppBarRoute = 'Profile' | 'Courses' | 'Garden' | 'Calendar' | 'Rewards';
 
 interface ScreenIconProps extends SvgProps {
 	icon: AppBarRoute;
@@ -34,7 +35,7 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 			return <Plant fill={focused ? 'white' : Theme.colors.text} width={35} />;
 		case 'Calendar':
 			return <Calendar fill={focusColor(focused)} />;
-		case 'Social':
+		case 'Rewards':
 			return <Trophy fill={focusColor(focused)} />;
 	}
 };
@@ -101,10 +102,6 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	);
 }
 
-function RewardsScreenStack() {
-	return null;
-}
-
 function EducationScreenStack() {
 	return null;
 }
@@ -120,7 +117,7 @@ export default function AppBarStack() {
 			<Tab.Screen name='Courses' component={EducationScreenStack} />
 			<Tab.Screen name='Garden' component={GardenScreenStack} />
 			<Tab.Screen name='Calendar' component={CalendarScreen} />
-			<Tab.Screen name='Social' component={RewardsScreenStack} />
+			<Tab.Screen name='Rewards' component={RewardsScreen} />
 		</Tab.Navigator>
 	);
 }

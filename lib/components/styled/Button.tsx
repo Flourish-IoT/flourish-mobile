@@ -62,7 +62,7 @@ export default function StyledButton({
 			) : icon ? (
 				icon
 			) : (
-				<Typography variant='body' style={style.text}>
+				<Typography variant={variant === 'primary' ? 'heading3Bold' : 'body'} style={style.text}>
 					{title}
 				</Typography>
 			)}

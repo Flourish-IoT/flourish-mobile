@@ -49,7 +49,7 @@ export default function StyledTextInput({
 			secureTextEntry={secureTextEntry}
 			left={left}
 			right={right}
-			style={{ maxHeight: 64, width: '100%', backgroundColor: 'white', ...(style as object) }}
+			style={{ maxHeight: 64, width: '100%', backgroundColor: Theme.colors.background, ...(style as object) }}
 			underlineColor='transparent'
 			placeholderTextColor={Theme.colors.text}
 			{...rest}

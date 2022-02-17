@@ -3,6 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
 import { useLayoutEffect } from 'react';
 import { PlantMetric } from '../../data/garden';
+import ScreenContainer from '../../lib/components/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
 
 interface SingleMetricScreenProps {
@@ -22,5 +23,9 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 		navigation.setOptions({ title: type });
 	}, []);
 
-	return <MetricVisual mode={'block'} metricType={type} plantId={plantId} />;
+	return (
+		<ScreenContainer scrolls>
+			<MetricVisual mode='listItem' metricType={type} plantId={plantId} />
+		</ScreenContainer>
+	);
 }

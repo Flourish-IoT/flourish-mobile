@@ -15,6 +15,8 @@ export default function Typography({ variant, children, style, ...rest }: Typogr
 		...style,
 	};
 
+	if (!children) return null;
+
 	return (
 		<Text style={fontStyle} {...rest}>
 			{children}

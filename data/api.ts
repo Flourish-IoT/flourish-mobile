@@ -4,7 +4,7 @@ import createAuthResponseInterceptor from 'axios-auth-refresh';
 import * as SecureStore from 'expo-secure-store';
 import { logOut } from './auth';
 
-export const ApiUrl = 'https://f8rxwugjzj.execute-api.us-east-1.amazonaws.com/default';
+export const ApiUrl = 'http://3.83.190.154:5000/v1';
 
 // TODO: Don't use this once auth is implemented
 export const AxiosInstance = axios.create({
