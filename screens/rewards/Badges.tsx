@@ -1,20 +1,20 @@
 import React from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import TopTabContainer from '../../lib/components/TopTabContainer';
-import { Achievement, useBadges, useUnClaimAchievement } from '../../data/rewards';
+import { Achievement, useClaimedAchievements, useUnClaimAchievement } from '../../data/rewards';
 import Empty from '../../lib/components/Empty';
 import Loading from '../../lib/components/Loading';
 import { ChunkArray } from '../../lib/utils/helper';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
-import BadgePot from './BadgePot';
+import BadgePot from './components/BadgePot';
 
 interface BadgesTabProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
 export default function BadgesTab({ navigation }: BadgesTabProps) {
-	const { data: badges, isLoading: badgesIsLoading, isError: badgesIsError } = useBadges('me');
+	const { data: badges, isLoading: badgesIsLoading, isError: badgesIsError } = useClaimedAchievements('me');
 	const unClaimAchievement = useUnClaimAchievement();
 
 	if (badgesIsLoading) return <Loading animation='rings' />;
@@ -22,7 +22,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 	const chunks: Achievement[][] = ChunkArray(badges, 3);
 
 	const onBadgePress = (badge: Achievement) => {
-		Alert.alert(badge.title, badge.description, [
+		Alert.alert(badge.title, `Lvl ${badge.level} - ${badge.points} pts\n\n` + badge.description, [
 			{
 				text: 'Close',
 				style: 'cancel',
@@ -64,7 +64,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 				chunks.map((chunk, chunkIndex) => (
 					<View key={chunkIndex} style={{ ...styles.shelf, ...(chunkIndex === 0 && { paddingTop: 0 }) }}>
 						{chunk.map((b, aIndex) => (
-							<BadgePot key={String(aIndex + b.id)} badge={b} onPress={() => onBadgePress(b)} />
+							<BadgePot key={String(aIndex + b.id)} badge={b} isLocked={false} onPress={() => onBadgePress(b)} />
 						))}
 					</View>
 				))

@@ -5,6 +5,7 @@ import { View, StyleSheet, Image } from 'react-native';
 import { Plant, plantMetrics } from '../../data/garden';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import Typography from '../../lib/components/styled/Typography';
+import { getPlaceHolder } from '../../lib/utils/helper';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import MetricVisual from './components/MetricVisual';
 import SingleMetricScreen from './SingleMetric';
@@ -27,10 +28,7 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 
 	return (
 		<ScreenContainer scrolls style={styles.screen}>
-			<Image
-				source={plant.image ? { uri: plant.image } : require('../../lib/assets/placeholder/plant.png')}
-				style={styles.image}
-			/>
+			<Image source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} style={styles.image} />
 			<View style={styles.content}>
 				<View style={styles.contentTitle}>
 					<Typography variant='heading2' style={{ textAlign: 'center' }}>

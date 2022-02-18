@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Task } from '../../../data/calendar';
 import { usePlants } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
+import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface TaskCardProps {
@@ -62,10 +63,7 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 
 	return (
 		<TouchableOpacity style={styles.container}>
-			<Image
-				style={styles.icon}
-				source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
-			/>
+			<Image style={styles.icon} source={plantImage ? { uri: plantImage } : getPlaceHolder('plant')} />
 			<View style={styles.textContainer}>
 				<Typography variant='heading3Bold'>{title}</Typography>
 				<Typography variant='placeholder' style={styles.due}>

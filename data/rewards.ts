@@ -50,7 +50,7 @@ const tempMyAchievements: Achievement[] = [
 		image: undefined,
 		description: 'Add 5 indoor plants to your home collection.',
 		level: 1,
-		points: 250,
+		points: 300,
 		progress: 100,
 		claimed: false,
 	},
@@ -59,7 +59,17 @@ const tempMyAchievements: Achievement[] = [
 		title: 'Fern-It-Up-3',
 		image: undefined,
 		description: 'Add 5 indoor plants to your home collection.',
-		level: 1,
+		level: 2,
+		points: 250,
+		progress: 35,
+		claimed: false,
+	},
+	{
+		id: 6,
+		title: 'Fern-It-Up-3',
+		image: undefined,
+		description: 'Add 5 indoor plants to your home collection.',
+		level: 2,
 		points: 250,
 		progress: 100,
 		claimed: false,
@@ -71,15 +81,49 @@ export const useAchievements = (userId: number | 'me') => {
 	if (userId === 'me') userId = user?.id;
 
 	return useQuery(
-		['achievements', userId],
+		['achievements', 'all', userId],
 		async () => {
 			const query = `/achievements/${userId}`;
 			mockEndpoint(250).onGet(query).replyOnce<Achievement[]>(200, tempMyAchievements);
 			const { data: achievements } = await AxiosInstance.get<Achievement[]>(query);
-			return achievements.filter((a) => !a.claimed);
+			// Sort: First by level (lower first) then by points (lower first)
+			const sorted = achievements.sort((a, b) => (a.level === b.level ? a.points - b.points : a.level - b.level));
+			return sorted;
 		},
 		{
 			enabled: !!user,
+		}
+	);
+};
+
+export const useAvailableAchievements = (userId: number | 'me') => {
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
+	const { data: achievements } = useAchievements(userId);
+
+	return useQuery(
+		['achievements', 'available', userId],
+		async () => {
+			return achievements.filter((a) => !a.claimed);
+		},
+		{
+			enabled: !!user && !!achievements,
+		}
+	);
+};
+
+export const useClaimedAchievements = (userId: number | 'me') => {
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
+	const { data: achievements } = useAchievements(userId);
+
+	return useQuery(
+		['achievements', 'claimed', userId],
+		async () => {
+			return achievements.filter((a) => a.claimed);
+		},
+		{
+			enabled: !!user && !!achievements,
 		}
 	);
 };
@@ -97,7 +141,7 @@ export const useClaimAchievement = () => {
 		{
 			onSuccess: (res, achievement) => {
 				// Remove achievement from available achievements
-				queryClient.setQueryData<Achievement[]>(['achievements', user.id], (oldData) => {
+				queryClient.setQueryData<Achievement[]>(['achievements', 'available', user.id], (oldData) => {
 					const claimedAchievement = oldData.find((a) => a.id === achievement.id);
 
 					const index = oldData.indexOf(claimedAchievement);
@@ -107,7 +151,7 @@ export const useClaimAchievement = () => {
 				});
 
 				// Add achievement to claimed badges
-				queryClient.setQueryData<Achievement[]>(['badges', user.id], (oldData) => [
+				queryClient.setQueryData<Achievement[]>(['achievements', 'claimed', user.id], (oldData) => [
 					...oldData,
 					{ ...achievement, claimed: true },
 				]);
@@ -118,24 +162,6 @@ export const useClaimAchievement = () => {
 					xp: oldData.xp + achievement.points,
 				}));
 			},
-		}
-	);
-};
-
-export const useBadges = (userId: number | 'me') => {
-	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
-
-	return useQuery(
-		['badges', userId],
-		async () => {
-			const query = `/achievements/${userId}`;
-			mockEndpoint(250).onGet(query).replyOnce<Achievement[]>(200, tempMyAchievements);
-			const { data: achievements } = await AxiosInstance.get<Achievement[]>(query);
-			return achievements.filter((a) => a.claimed);
-		},
-		{
-			enabled: !!user,
 		}
 	);
 };

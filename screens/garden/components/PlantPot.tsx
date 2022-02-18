@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ViewMode } from '..';
 import Typography from '../../../lib/components/styled/Typography';
+import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 import PotBaseSvg, { PotBaseSvgProps } from './PotBaseSvg';
 
@@ -68,10 +69,7 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!onPress && 1}>
 			<View style={styles.container}>
 				<View style={styles.imageContainer}>
-					<Image
-						style={styles.image}
-						source={!!image ? { uri: image } : require('../../../lib/assets/placeholder/plant.png')}
-					/>
+					<Image style={styles.image} source={!!image ? { uri: image } : getPlaceHolder('plant')} />
 				</View>
 				<PotBaseSvg width='100%' style={styles.potBaseGraphic} {...svgProps} />
 				{(title || subtitle) && (

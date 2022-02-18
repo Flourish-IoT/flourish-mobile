@@ -3,13 +3,13 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { Achievement, useClaimAchievement } from '../../data/rewards';
 import { useMe } from '../../data/user';
+import { EvilIcons } from '@expo/vector-icons';
 import Loading from '../../lib/components/Loading';
 import StyledButton from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
 import { getUserLevel } from '../../lib/utils/helper';
 import { Theme } from '../../providers/Theme';
-import PlantPot from '../garden/components/PlantPot';
-import BadgePot from './BadgePot';
+import BadgePot from './components/BadgePot';
 
 interface AchievementListItemProps {
 	achievement: Achievement;
@@ -37,10 +37,18 @@ export default function AchievementListItem({ achievement }: AchievementListItem
 
 	if (userIsLoading) return <Loading animation='rings' />;
 
+	const isLocked = getUserLevel(user.xp) < achievement.level;
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.plantPotContainer}>
-				<BadgePot badge={achievement} containerStyle={styles.badge} imageStyle={{ width: '90%' }} />
+				<BadgePot
+					badge={achievement}
+					showLevel
+					isLocked={isLocked}
+					containerStyle={styles.badge}
+					imageStyle={{ width: '90%' }}
+				/>
 			</View>
 			<View style={styles.content}>
 				<Typography variant='heading3Bold'>
@@ -54,6 +62,8 @@ export default function AchievementListItem({ achievement }: AchievementListItem
 						title='Claim'
 						buttonStyle={styles.claimButton}
 						onPress={onClaimPress}
+						disabled={isLocked}
+						icon={isLocked && <EvilIcons name='lock' style={{ color: 'white', fontSize: 30 }} />}
 						loading={claimAchievement.isLoading}
 					/>
 				)}

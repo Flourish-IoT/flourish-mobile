@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import TopTabContainer from '../../lib/components/TopTabContainer';
-import { useAchievements } from '../../data/rewards';
+import { useAvailableAchievements } from '../../data/rewards';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';
 import { StyleSheet, View } from 'react-native';
@@ -14,7 +14,7 @@ interface AchievementsTabProps {
 }
 
 export default function AchievementsTab({ navigation }: AchievementsTabProps) {
-	const { isLoading: achievementsIsLoading, data: achievements, isError: achievementsIsError } = useAchievements('me');
+	const { isLoading: achievementsIsLoading, data: achievements, isError: achievementsIsError } = useAvailableAchievements('me');
 
 	return (
 		<TopTabContainer scrolls>

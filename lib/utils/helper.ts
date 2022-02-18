@@ -111,3 +111,14 @@ export const ChunkArray = (array: any[], amountPerChunk: number) =>
 		resultArray[chunkIndex].push(item);
 		return resultArray;
 	}, []);
+
+export const getPlaceHolder = (fileName: 'plant' | 'profile') => {
+	const path = '../assets/placeholder/';
+
+	const images = {
+		plant: require(path + 'plant.png'),
+		profile: require(path + 'profile.png'),
+	};
+
+	return images[fileName];
+};
