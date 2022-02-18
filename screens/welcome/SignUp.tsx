@@ -153,7 +153,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				or sign up with
 			</Typography>
-			<View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+			<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
 				{services
 					.filter((s) => s !== 'Email')
 					.map((name) => (
@@ -310,7 +310,6 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 				style={{
 					height: 50,
 					width: '100%',
-					display: 'flex',
 					flexDirection: 'row',
 					justifyContent: 'space-between',
 					marginBottom: Theme.spacing.md,

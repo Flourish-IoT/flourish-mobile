@@ -6,6 +6,16 @@ import Loading from '../../lib/components/Loading';
 import Chevron from '../../lib/icons/Chevron';
 import { Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { padString } from '../../lib/utils/helper';
+import { Task, useTasks } from '../../data/calendar';
+import TaskCard from './components/TaskCard';
+import ChipFilter from '../../lib/components/ChipFilter';
+import Empty from '../../lib/components/Empty';
+import StyledModal from '../../lib/components/styled/Modal';
+import ScreenContainer from '../../lib/components/ScreenContainer';
+import { Theme } from '../../providers/Theme';
+import StyledAccordion from '../../lib/components/styled/Accordion';
+import DropDown from '../../lib/components/DropDown';
 import {
 	format,
 	isAfter,
@@ -19,16 +29,6 @@ import {
 	startOfWeek,
 	isSameDay,
 } from 'date-fns';
-import { padString } from '../../lib/utils/helper';
-import { Task, useTasks } from '../../data/calendar';
-import TaskCard from './components/TaskCard';
-import ChipFilter from '../../lib/components/ChipFilter';
-import Empty from '../../lib/components/Empty';
-import StyledModal from '../../lib/components/styled/Modal';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import { Theme } from '../../providers/Theme';
-import StyledAccordion from '../../lib/components/styled/Accordion';
-import DropDown from '../../lib/components/DropDown';
 
 interface CalendarScreenProps {
 	navigation: NavigationProp<ParamListBase>;

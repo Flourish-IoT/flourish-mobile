@@ -41,7 +41,6 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 	const styles = StyleSheet.create({
 		container: {
 			backgroundColor: 'white',
-			display: 'flex',
 			flexDirection: 'row',
 			borderLeftWidth: Theme.spacing.md,
 			borderColor: Theme.colors.primary,

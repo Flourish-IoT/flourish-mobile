@@ -19,7 +19,6 @@ export default function RadioButton({ isSelected, style, onPress }: RadioButtonP
 				borderColor: '#e5e5e5',
 				borderWidth: 5,
 				borderRadius: 15,
-				display: 'flex',
 				backgroundColor: isSelected ? 'black' : 'white',
 				...style,
 			}}

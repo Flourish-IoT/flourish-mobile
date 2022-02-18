@@ -56,7 +56,6 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			paddingBottom: insets.bottom,
 			backgroundColor: 'white',
 			borderTopWidth: 0,
-			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
@@ -65,7 +64,6 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 		appBarButton: {
 			flex: 1,
 			height: '100%',
-			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-around',
 			alignItems: 'center',

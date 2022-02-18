@@ -70,7 +70,6 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 		container: {
 			// width: mode === 'block' ? 100 : Dimensions.get('window').width,
 			width: mode === 'block' ? 100 : '100%',
-			display: 'flex',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
@@ -78,7 +77,6 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 		iconContainer: {
 			height: 80,
 			width: 70,
-			display: 'flex',
 			alignItems: 'center',
 			justifyContent: 'space-between',
 			...Theme.util.flexCenter,

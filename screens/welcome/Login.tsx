@@ -82,7 +82,6 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 			<View
 				style={{
 					width: '100%',
-					display: 'flex',
 					flexDirection: 'row',
 					justifyContent: 'space-between',
 					marginBottom: Theme.spacing.md,

@@ -153,7 +153,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
 				Account
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList>
 				<Button variant='in-list' onPress={() => navigation.navigate('ChangePassword')} title='Change Password' />
 				<Button variant='in-list' onPress={onLogOutBtnPress} title='Log Out' />
 				<Button

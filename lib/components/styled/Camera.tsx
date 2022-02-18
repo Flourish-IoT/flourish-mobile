@@ -33,7 +33,9 @@ export default function StyledCamera({ open, onCapture, captureProcessing, setCa
 	if (!open) return null;
 
 	const styles = StyleSheet.create({
-		cameraContainer: { ...(StyleSheet.absoluteFill as object), display: 'flex' },
+		cameraContainer: {
+			...(StyleSheet.absoluteFill as object),
+		},
 		cameraTopBar: {
 			paddingTop: insets.top,
 			paddingLeft: Theme.spacing.md,
@@ -41,9 +43,9 @@ export default function StyledCamera({ open, onCapture, captureProcessing, setCa
 			paddingBottom: Theme.spacing.md,
 			width: '100%',
 			backgroundColor: '#000000',
-			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-between',
+			alignItems: 'center',
 		},
 		cameraBottomBar: {
 			position: 'absolute',

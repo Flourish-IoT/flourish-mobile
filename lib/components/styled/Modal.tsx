@@ -25,7 +25,6 @@ export default function StyledModal({ visible, onClose, title, content, actionIt
 		>
 			<View
 				style={{
-					display: 'flex',
 					justifyContent: 'space-between',
 					alignItems: 'center',
 					backgroundColor: 'white',
@@ -39,7 +38,7 @@ export default function StyledModal({ visible, onClose, title, content, actionIt
 					{title}
 				</Typography>
 				<View style={{ width: '100%' }}>{content}</View>
-				<View style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>{actionItems}</View>
+				<View style={{ flexDirection: 'row', width: '100%' }}>{actionItems}</View>
 			</View>
 		</Modal>
 	);

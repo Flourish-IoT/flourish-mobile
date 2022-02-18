@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
 		marginBottom: Theme.spacing.md,
 	},
 	segmentBtn: {
-		display: 'flex',
 		flexDirection: 'row',
 		borderRadius: 50,
 		borderStyle: 'solid',

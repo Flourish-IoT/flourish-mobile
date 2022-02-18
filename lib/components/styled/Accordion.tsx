@@ -29,7 +29,6 @@ export default function StyledAccordion({
 		accordion: {
 			height: 50,
 			maxWidth: '100%',
-			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',

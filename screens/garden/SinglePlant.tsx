@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
 		padding: Theme.spacing.md,
 	},
 	contentTitle: {
-		display: 'flex',
 		alignItems: 'center',
 	},
 });

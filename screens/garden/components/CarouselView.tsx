@@ -46,7 +46,6 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 			<View
 				style={{
 					width: '100%',
-					display: 'flex',
 					flexDirection: 'row',
 					justifyContent: 'center',
 				}}
