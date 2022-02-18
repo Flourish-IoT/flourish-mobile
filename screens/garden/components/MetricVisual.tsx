@@ -68,7 +68,6 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 
 	const styles = StyleSheet.create({
 		container: {
-			// width: mode === 'block' ? 100 : Dimensions.get('window').width,
 			width: mode === 'block' ? 100 : '100%',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
@@ -79,7 +78,6 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 			width: 70,
 			alignItems: 'center',
 			justifyContent: 'space-between',
-			...Theme.util.flexCenter,
 		},
 		textContainer: { flex: 1, paddingLeft: Theme.spacing.md },
 		graphic: {
@@ -90,10 +88,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 				transform: [{ translateX: -35 }],
 			}),
 		},
-		gauge: {
-			width: mode === 'block' ? '100%' : 100,
-			...Theme.util.flexCenter,
-		},
+		gauge: {},
 	});
 
 	return (

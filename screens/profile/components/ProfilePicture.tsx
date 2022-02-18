@@ -94,7 +94,7 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 
 		if (!photo.cancelled) {
 			updateProfilePic(
-				// @ts-ignore
+				// @ts-ignore: This is correct
 				photo.uri
 			);
 		}
