@@ -14,16 +14,16 @@ interface AchievementsTabProps {
 }
 
 export default function AchievementsTab({ navigation }: AchievementsTabProps) {
-	const { isLoading: achievementsIsLoading, data: achievements, isError } = useAchievements('me');
+	const { isLoading: achievementsIsLoading, data: achievements, isError: achievementsIsError } = useAchievements('me');
 
 	return (
 		<TopTabContainer scrolls>
 			{achievementsIsLoading ? (
 				<Loading animation='rings' />
 			) : achievements.length === 0 ? (
-				<Empty animation='magnifyingGlass' text='No achievements found.' />
-			) : isError ? (
-				<Empty animation='error' text='Error loading achievements.' />
+				<Empty animation='magnifyingGlass' size='lg' text='No achievements to claim.' />
+			) : achievementsIsError ? (
+				<Empty animation='error' size='lg' text='Error loading achievements.' />
 			) : (
 				<View style={styles.list}>
 					{achievements.map((a, index, { length }) => (

@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { Achievement, useClaimAchievement } from '../../data/rewards';
+import { useMe } from '../../data/user';
+import Loading from '../../lib/components/Loading';
 import StyledButton from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
+import { getUserLevel } from '../../lib/utils/helper';
 import { Theme } from '../../providers/Theme';
 import PlantPot from '../garden/components/PlantPot';
+import BadgePot from './BadgePot';
 
 interface AchievementListItemProps {
 	achievement: Achievement;
@@ -13,25 +17,35 @@ interface AchievementListItemProps {
 
 export default function AchievementListItem({ achievement }: AchievementListItemProps) {
 	const { id, title, description, level, points, image, progress, claimed } = achievement;
+	const { data: user, isLoading: userIsLoading } = useMe();
 	const claimAchievement = useClaimAchievement();
 
 	const canClaim = !claimed && progress === 100;
 
 	const onClaimPress = async () => {
 		try {
+			const currentLvl = getUserLevel(user.xp);
 			await claimAchievement.mutateAsync(achievement);
+			const newLevel = getUserLevel(user.xp + achievement.points);
+			if (newLevel > currentLvl) {
+				Alert.alert('Level Up', `You are now level ${newLevel}!`);
+			}
 		} catch (error) {
 			alert(error);
 		}
 	};
 
+	if (userIsLoading) return <Loading animation='rings' />;
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.plantPotContainer}>
-				<PlantPot svgProps={{ height: '40%' }} viewMode='Carousel' image={image} />
+				<BadgePot badge={achievement} containerStyle={styles.badge} imageStyle={{ width: '90%' }} />
 			</View>
 			<View style={styles.content}>
-				<Typography variant='heading3Bold'>{title}</Typography>
+				<Typography variant='heading3Bold'>
+					{title} <Typography variant='placeholder'>{points} pts</Typography>
+				</Typography>
 				<Typography variant='body'>{description}</Typography>
 				<ProgressBar style={styles.progressBar} progress={progress / 100} color={Theme.colors.primary} />
 				{canClaim && (
@@ -59,10 +73,15 @@ const styles = StyleSheet.create({
 		width: '25%',
 		height: '100%',
 	},
+	badge: {
+		width: '100%',
+		justifyContent: 'center',
+	},
 	content: {
 		width: '75%',
 		height: '100%',
 		padding: Theme.spacing.md,
+		paddingLeft: Theme.spacing.md * 2,
 		justifyContent: 'space-between',
 	},
 	progressBar: {

@@ -183,7 +183,6 @@ export interface User {
 	username: string;
 	preferences: UserPreferences;
 	image: string | undefined;
-	level: number;
 	xp: number;
 }
 
@@ -197,7 +196,6 @@ export const tempMyUser: User = {
 	email: 'janedoe123@gmail.com',
 	username: 'Jane Doe',
 	image: undefined,
-	level: 1,
 	xp: 345,
 	preferences: {
 		unit_preference: 'Fahrenheit',
@@ -210,7 +208,6 @@ export const tempOtherUser: User = {
 	email: 'johnsmith321@gmail.com',
 	username: 'John Smith',
 	image: undefined,
-	level: 2,
 	xp: 200,
 	preferences: {
 		unit_preference: 'Fahrenheit',

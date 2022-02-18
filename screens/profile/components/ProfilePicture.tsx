@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import StyledAvatar, { StyledAvatarProps } from '../../../lib/components/styled/Avatar';
 import { Theme } from '../../../providers/Theme';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Alert, TouchableOpacity, View, StyleSheet, AlertButton } from 'react-native';
 import { AppName } from '../../../lib/utils/helper';
 import { useChangeProfilePicture } from '../../../data/user';
 import Pencil from '../../../lib/icons/Pencil';
@@ -49,7 +49,7 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 	};
 
 	const onAvatarPress = () => {
-		Alert.alert('Select photo...', undefined, [
+		const options: AlertButton[] = [
 			{
 				text: 'Camera',
 				onPress: () => {
@@ -60,14 +60,22 @@ export default function ProfilePicture({ user }: StyledAvatarProps) {
 				text: 'Photos',
 				onPress: openPhotos,
 			},
-			{
-				text: 'Remove Photo',
-				onPress: () => updateProfilePic(undefined),
-			},
+
 			{
 				text: 'Cancel',
+				style: 'cancel',
 			},
-		]);
+		];
+
+		// If there's a photo, add remove option
+		!!user.image &&
+			options.splice(options.length - 1, 0, {
+				text: 'Remove Photo',
+				style: 'destructive',
+				onPress: () => updateProfilePic(undefined),
+			});
+
+		Alert.alert('Select photo...', undefined, options);
 	};
 
 	const openPhotos = async () => {

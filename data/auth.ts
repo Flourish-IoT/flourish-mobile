@@ -82,7 +82,7 @@ export const useVerifyEmail = () => {
 	);
 };
 
-type FinishAccountParams = Omit<User, 'id' | 'email' | 'username' | 'level' | 'xp'>;
+type FinishAccountParams = Omit<User, 'id' | 'email' | 'username' | 'xp'>;
 
 export const useFinishAccountSetup = () => {
 	const { data: user } = useMe();

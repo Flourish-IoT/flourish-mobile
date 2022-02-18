@@ -22,10 +22,12 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 	const onChangePasswordPress = () => {
 		Alert.alert('Are your sure?', `You are about to delete your ${AppName} account, this cannot be undone.`, [
 			{
-				text: 'No',
+				text: 'Cancel',
+				style: 'cancel',
 			},
 			{
 				text: 'Yes',
+				style: 'destructive',
 				onPress: async () => {
 					try {
 						await deleteAccount.mutateAsync(currentPassword);

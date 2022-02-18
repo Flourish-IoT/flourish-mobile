@@ -67,6 +67,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 			[
 				{
 					text: 'Cancel',
+					style: 'cancel',
 				},
 				{
 					text: 'Send',
@@ -90,10 +91,12 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	const onLogOutBtnPress = () => {
 		Alert.alert('Are your sure?', 'You are about to log out.', [
 			{
-				text: 'No',
+				text: 'Cancel',
+				style: 'cancel',
 			},
 			{
 				text: 'Yes',
+				style: 'destructive',
 				onPress: logOut,
 			},
 		]);

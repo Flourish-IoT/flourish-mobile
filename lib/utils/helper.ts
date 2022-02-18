@@ -87,6 +87,10 @@ export function getMetricGaugeColor(metric: MetricRange) {
 	}
 }
 
+export function getUserLevel(xp: number) {
+	return Math.floor(0.06 * Math.sqrt(xp));
+}
+
 export function getUserLevelName(level: number) {
 	switch (level) {
 		case 1:
@@ -99,3 +103,11 @@ export function getUserLevelName(level: number) {
 			return 'Plant Guru';
 	}
 }
+
+export const ChunkArray = (array: any[], amountPerChunk: number) =>
+	array.reduce((resultArray, item, index) => {
+		const chunkIndex = Math.floor(index / amountPerChunk);
+		if (!resultArray[chunkIndex]) resultArray[chunkIndex] = []; // start a new chunk
+		resultArray[chunkIndex].push(item);
+		return resultArray;
+	}, []);

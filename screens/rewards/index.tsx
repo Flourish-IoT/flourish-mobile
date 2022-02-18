@@ -11,7 +11,7 @@ import BadgesTab from './Badges';
 import FriendsTab from './Friends';
 import Typography from '../../lib/components/styled/Typography';
 import Loading from '../../lib/components/Loading';
-import { getUserLevelName } from '../../lib/utils/helper';
+import { getUserLevel, getUserLevelName } from '../../lib/utils/helper';
 import StyledAvatar from '../../lib/components/styled/Avatar';
 
 interface RewardsScreenProps {
@@ -76,6 +76,8 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 
 	if (userIsLoading) return <Loading animation='rings' />;
 
+	const userLevel = getUserLevel(user.xp);
+
 	const styles = StyleSheet.create({
 		screenContainer: {
 			paddingTop: insets.top,
@@ -110,7 +112,7 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 					{user.username}
 				</Typography>
 				<Typography style={styles.topSectionText} variant='placeholder'>
-					{getUserLevelName(user.level)}
+					Lvl {userLevel} - {getUserLevelName(userLevel)}
 				</Typography>
 				<Typography style={styles.topSectionText} variant='heading3Bold'>
 					{user.xp} pts
