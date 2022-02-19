@@ -11,6 +11,7 @@ interface ScreenContainerProps {
 	appBarPadding?: boolean;
 	safePadding?: boolean;
 	onBack?: () => void;
+	bounces?: boolean;
 	style?: ViewStyle;
 }
 
@@ -20,6 +21,7 @@ export default function ScreenContainer({
 	appBarPadding = true,
 	safePadding = true,
 	onBack,
+	bounces = true,
 	style,
 }: ScreenContainerProps) {
 	const insets = useSafeAreaInsets();
@@ -54,7 +56,7 @@ export default function ScreenContainer({
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			{scrolls ? (
-				<ScrollView contentContainerStyle={{ ...styles.container }}>
+				<ScrollView contentContainerStyle={{ ...styles.container }} bounces={bounces}>
 					{!!onBack && <BackBtn />}
 					{children}
 				</ScrollView>

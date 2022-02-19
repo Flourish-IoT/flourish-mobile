@@ -67,6 +67,22 @@ export const usePlants = (userId: number | 'me') => {
 	);
 };
 
+export const useSinglePlant = (userId: number | 'me', plantId: number) => {
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
+	const { data: plants } = usePlants(userId);
+
+	return useQuery(
+		['users', userId, 'plants', plantId],
+		async () => {
+			return plants.find((p) => p.id === plantId);
+		},
+		{
+			enabled: !!user && !!plants,
+		}
+	);
+};
+
 export interface PlantMetrics {
 	deviceId: number;
 	time: Date;

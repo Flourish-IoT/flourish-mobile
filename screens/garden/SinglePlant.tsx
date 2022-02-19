@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useLayoutEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Plant, plantMetrics } from '../../data/garden';
+import ModalBackButton from '../../lib/components/ModalBackButton';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import Typography from '../../lib/components/styled/Typography';
 import { getPlaceHolder } from '../../lib/utils/helper';
@@ -22,12 +23,9 @@ interface SinglePlantScreenRouteProps {
 export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) {
 	const { plant } = route.params as SinglePlantScreenRouteProps;
 
-	useLayoutEffect(() => {
-		navigation.setOptions({ title: plant.name });
-	}, []);
-
 	return (
-		<ScreenContainer scrolls style={styles.screen}>
+		<ScreenContainer scrolls style={styles.screen} bounces={false}>
+			<ModalBackButton absolutePos onPress={navigation.goBack} />
 			<Image source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} style={styles.image} />
 			<View style={styles.content}>
 				<View style={styles.contentTitle}>
@@ -38,15 +36,14 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 						{plant.commonName}
 					</Typography>
 				</View>
-				{plantMetrics.map((m) => (
+				{plantMetrics.map((m, mIndex, { length }) => (
 					<MetricVisual
 						key={m}
 						mode='listItem'
 						metricType={m}
 						plantId={plant.id}
-						onPress={() => {
-							navigation.navigate('SingleMetric', { plantId: plant.id, type: m });
-						}}
+						onPress={() => navigation.navigate('SingleMetric', { plantId: plant.id, type: m })}
+						containerStyle={{ marginBottom: mIndex === length - 1 ? 0 : Theme.spacing.md }}
 					/>
 				))}
 			</View>
@@ -68,10 +65,10 @@ export default function SinglePlantStack({ route, navigation }: SinglePlantScree
 			<Stack.Screen
 				name='SinglePlantIndex'
 				component={SinglePlantIndex}
-				options={{ headerLeft: null }}
+				options={{ headerShown: null }}
 				initialParams={{ plant }}
 			/>
-			<Stack.Screen name='SingleMetric' component={SingleMetricScreen} />
+			<Stack.Screen name='SingleMetric' component={SingleMetricScreen} options={{ headerShown: false }} />
 		</Stack.Navigator>
 	);
 }
@@ -79,6 +76,7 @@ export default function SinglePlantStack({ route, navigation }: SinglePlantScree
 const styles = StyleSheet.create({
 	screen: {
 		padding: 0,
+		backgroundColor: 'white',
 	},
 	image: {
 		width: '100%',
@@ -90,5 +88,6 @@ const styles = StyleSheet.create({
 	},
 	contentTitle: {
 		alignItems: 'center',
+		marginBottom: Theme.spacing.md,
 	},
 });

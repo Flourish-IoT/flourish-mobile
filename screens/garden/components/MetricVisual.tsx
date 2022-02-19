@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
 import { useShowHumidity } from '../../../data/user';
@@ -36,9 +36,10 @@ interface MetricVisualProps {
 	metricType: PlantMetric;
 	plantId: number;
 	onPress?: () => void;
+	containerStyle?: ViewStyle;
 }
 
-export default function MetricVisual({ mode, metricType, plantId, onPress }: MetricVisualProps) {
+export default function MetricVisual({ mode, metricType, plantId, onPress, containerStyle }: MetricVisualProps) {
 	const { data: showHumidity, isLoading: showHumidityIsLoading } = useShowHumidity();
 	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
 
@@ -68,18 +69,26 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 
 	const styles = StyleSheet.create({
 		container: {
+			backgroundColor: mode === 'block' ? 'transparent' : Theme.colors.background,
 			width: mode === 'block' ? 100 : '100%',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
+			borderRadius: Theme.borderRadius,
+			padding: Theme.spacing.sm,
+			...containerStyle,
 		},
 		iconContainer: {
-			height: 80,
+			height: mode === 'block' ? 80 : undefined,
 			width: 70,
 			alignItems: 'center',
 			justifyContent: 'space-between',
+			...(mode === 'listItem' && Theme.util.flexCenter),
 		},
-		textContainer: { flex: 1, paddingLeft: Theme.spacing.md },
+		textContainer: {
+			flex: 1,
+			paddingLeft: Theme.spacing.sm,
+		},
 		graphic: {
 			...(mode === 'block' && {
 				position: 'absolute',
@@ -94,7 +103,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
 			<View style={styles.iconContainer}>
-				{mode === 'block' && <MeasurementGauge range={range} style={styles.gauge} />}
+				<MeasurementGauge range={range} style={styles.gauge} />
 				<MeasurementGraphic type={metricType} range={range} width='100%' style={styles.graphic} />
 			</View>
 			{mode === 'listItem' && (
@@ -109,7 +118,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress }: Met
 					<Typography variant='placeholder'>{raw}</Typography>
 				</View>
 			)}
-			{mode === 'listItem' && <Chevron direction='right' />}
+			{mode === 'listItem' && !!onPress && <Chevron direction='right' withBackground />}
 		</TouchableOpacity>
 	);
 }

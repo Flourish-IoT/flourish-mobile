@@ -44,7 +44,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 				<View
 					style={{
 						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'transparent',
+						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'white',
 					}}
 				>
 					<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
@@ -52,7 +52,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 				<View
 					style={{
 						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'transparent',
+						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'white',
 					}}
 				>
 					<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
