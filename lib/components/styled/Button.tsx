@@ -28,6 +28,24 @@ export default function StyledButton({
 	icon,
 	...rest
 }: StyledButtonProps) {
+	const getBgColor = () => {
+		// @ts-ignore: backgroundColor is a valid property
+		const specifiedBgColor = buttonStyle?.backgroundColor;
+
+		if (!!specifiedBgColor) {
+			return disabled ? specifiedBgColor + '50' : specifiedBgColor;
+		}
+
+		if (variant === 'primary') {
+			// NOTE: Fixes opacity w/ disabled bug for TouchableOpacity
+			// https://github.com/facebook/react-native/issues/17105
+			// (This says it's fixed but it's still an issue)
+			return disabled ? Theme.colors.cta + '50' : Theme.colors.cta;
+		}
+
+		return 'transparent';
+	};
+
 	const style = StyleSheet.create({
 		button: {
 			shadowColor: 'transparent',
@@ -35,7 +53,6 @@ export default function StyledButton({
 			alignItems: 'flex-start',
 			...(variant === 'primary' && {
 				alignItems: 'center',
-				backgroundColor: Theme.colors.cta,
 				height: 58,
 				borderRadius: 100,
 				paddingHorizontal: 32,
@@ -43,7 +60,7 @@ export default function StyledButton({
 			...(variant === 'text' && {}),
 			...(variant === 'in-list' && { width: '100%', height: '100%', paddingLeft: Theme.spacing.md }),
 			...(buttonStyle as object),
-			opacity: disabled ? 0.5 : 1,
+			backgroundColor: getBgColor(),
 		},
 		text: {
 			color: Theme.colors.primary,
@@ -56,7 +73,7 @@ export default function StyledButton({
 	});
 
 	return (
-		<TouchableOpacity {...rest} onPress={onPress} style={{ ...style.button }} disabled={disabled}>
+		<TouchableOpacity {...rest} onPress={onPress} style={style.button} disabled={disabled}>
 			{loading ? (
 				<Loading animation='rings' size='icon' />
 			) : icon ? (
