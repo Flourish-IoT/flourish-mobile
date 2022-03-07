@@ -123,7 +123,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				displayKey='name'
 				valueKey='id'
 				onFilterChange={setSelectedPlants}
-				style={{ marginVertical: Theme.spacing.md }}
+				containerStyle={{ marginVertical: Theme.spacing.md }}
 			/>
 
 			<Calendar

@@ -13,6 +13,7 @@ import ProfileScreenStack from '../screens/profile';
 import GardenScreenStack from '../screens/garden';
 import CalendarScreen from '../screens/calendar';
 import RewardsScreen from '../screens/rewards';
+import EducationScreenStack from '../education';
 
 const Tab = createBottomTabNavigator();
 
@@ -98,10 +99,6 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			})}
 		</View>
 	);
-}
-
-function EducationScreenStack() {
-	return null;
 }
 
 export default function AppBarStack() {

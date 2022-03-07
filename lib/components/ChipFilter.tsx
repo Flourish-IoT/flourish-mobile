@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { Theme } from '../../providers/Theme';
 
@@ -11,7 +11,7 @@ interface ChipFilterProps {
 	displayKey: string;
 	valueKey: string;
 	onFilterChange: (items: number[]) => void;
-	style?: ViewStyle;
+	containerStyle?: ViewStyle;
 }
 
 export default function ChipFilter({
@@ -22,7 +22,7 @@ export default function ChipFilter({
 	displayKey,
 	valueKey,
 	onFilterChange,
-	style,
+	containerStyle,
 }: ChipFilterProps) {
 	const toggleSelected = (newSelection: number, isSelected: boolean) => {
 		// If selecting an already selected record
@@ -51,27 +51,38 @@ export default function ChipFilter({
 	showAllOption && (items = [{ [displayKey]: 'All', [valueKey]: -1 }, ...items]);
 
 	return (
-		<View style={{ flexDirection: 'row', overflow: 'visible', ...style }}>
-			<ScrollView horizontal style={{ overflow: 'visible' }}>
-				{items.map((item, index) => {
-					const isSelected = selectedItems.some((sItem) => sItem === item[valueKey]);
-					return (
-						<Chip
-							key={index + String(item[valueKey])}
-							selected={isSelected}
-							onPress={() => toggleSelected(item[valueKey], isSelected)}
-							style={{
-								marginHorizontal: Theme.spacing.xs,
-								backgroundColor: isSelected ? Theme.colors.primary : 'white',
-							}}
-							selectedColor='white'
-							textStyle={{ color: isSelected ? 'white' : Theme.colors.text }}
-						>
-							{item[displayKey]}
-						</Chip>
-					);
-				})}
-			</ScrollView>
-		</View>
+		<ScrollView horizontal style={{ ...styles.container, ...containerStyle }}>
+			{items.map((item, index) => {
+				const isSelected = selectedItems.some((sItem) => sItem === item[valueKey]);
+				return (
+					<Chip
+						key={index + String(item[valueKey])}
+						selected={isSelected}
+						onPress={() => toggleSelected(item[valueKey], isSelected)}
+						icon={() => null}
+						textStyle={{ ...styles.textStyle, color: isSelected ? 'white' : Theme.colors.text }}
+						style={{
+							...styles.chipContainer,
+							backgroundColor: isSelected ? Theme.colors.primary : 'white',
+						}}
+					>
+						{item[displayKey]}
+					</Chip>
+				);
+			})}
+		</ScrollView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: 'row',
+		overflow: 'visible',
+	},
+	chipContainer: {
+		marginHorizontal: Theme.spacing.xs,
+	},
+	textStyle: {
+		paddingRight: 4,
+	},
+});
