@@ -51,7 +51,7 @@ export default function AchievementListItem({ achievement }: AchievementListItem
 				/>
 			</View>
 			<View style={styles.content}>
-				<Typography variant='heading3Bold'>
+				<Typography variant='h3bold'>
 					{title} <Typography variant='placeholder'>{points} pts</Typography>
 				</Typography>
 				<Typography variant='body'>{description}</Typography>

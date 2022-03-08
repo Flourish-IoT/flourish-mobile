@@ -65,7 +65,7 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 		<TouchableOpacity style={styles.container}>
 			<Image style={styles.icon} source={plantImage ? { uri: plantImage } : getPlaceHolder('plant')} />
 			<View style={styles.textContainer}>
-				<Typography variant='heading3Bold'>{title}</Typography>
+				<Typography variant='h3bold'>{title}</Typography>
 				<Typography variant='placeholder' style={styles.due}>
 					{getDateText()} {format(datetime, "'at' p")}
 				</Typography>

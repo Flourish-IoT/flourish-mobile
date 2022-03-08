@@ -99,7 +99,7 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Verification Code
 			</Typography>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>

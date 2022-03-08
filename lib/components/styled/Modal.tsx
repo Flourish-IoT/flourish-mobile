@@ -34,7 +34,7 @@ export default function StyledModal({ visible, onClose, title, content, actionIt
 					height: height,
 				}}
 			>
-				<Typography variant='heading3Bold' style={{ textAlign: 'center' }}>
+				<Typography variant='h3bold' style={{ textAlign: 'center' }}>
 					{title}
 				</Typography>
 				<View style={{ width: '100%' }}>{content}</View>

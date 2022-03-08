@@ -14,7 +14,7 @@
 		"splash": {
 			"image": "./lib/assets/splash.png",
 			"resizeMode": "contain",
-			"backgroundColor": "#613722"
+			"backgroundColor": "#9A532F"
 		},
 		"plugins": [
 			[
@@ -39,7 +39,7 @@
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./lib/assets/adaptive-icon.png",
-				"backgroundColor": "#613722"
+				"backgroundColor": "#9A532F"
 			}
 		}
 	}

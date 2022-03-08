@@ -74,7 +74,7 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 				<PotBaseSvg width='100%' style={styles.potBaseGraphic} {...svgProps} />
 				{(title || subtitle) && (
 					<View style={styles.potBaseText}>
-						<Typography variant='heading3Bold' style={styles.text}>
+						<Typography variant='h3bold' style={styles.text}>
 							{title}
 						</Typography>
 						<Typography variant='body' style={styles.text}>

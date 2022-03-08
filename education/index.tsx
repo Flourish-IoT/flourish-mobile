@@ -27,7 +27,7 @@ export default function EducationScreenStack() {
 			</View>
 
 			<View style={styles.sectionTitle}>
-				<Typography variant='heading2'>Topic</Typography>
+				<Typography variant='h2'>Topic</Typography>
 				<StyledButton variant='text' title='View All' />
 			</View>
 			<ChipFilter
@@ -41,7 +41,7 @@ export default function EducationScreenStack() {
 			/>
 
 			<View style={styles.sectionTitle}>
-				<Typography variant='heading2'>Quick Tutorials</Typography>
+				<Typography variant='h2'>Quick Tutorials</Typography>
 				<StyledButton variant='text' title='View All' />
 			</View>
 
@@ -63,7 +63,7 @@ export default function EducationScreenStack() {
 			</ScrollView>
 
 			<View style={styles.sectionTitle}>
-				<Typography variant='heading2'>Learning Course</Typography>
+				<Typography variant='h2'>Learning Course</Typography>
 				<StyledButton variant='text' title='View All' />
 			</View>
 
@@ -85,7 +85,7 @@ export default function EducationScreenStack() {
 			</ScrollView>
 
 			<View style={styles.sectionTitle}>
-				<Typography variant='heading2'>Popular Plants</Typography>
+				<Typography variant='h2'>Popular Plants</Typography>
 				<StyledButton variant='text' title='View All' />
 			</View>
 

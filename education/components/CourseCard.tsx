@@ -18,7 +18,7 @@ export default function CourseCard({ cardData, type, containerStyle }: CourseCar
 			<Image style={styles.image} source={cardData.image ? { uri: cardData.image } : getPlaceHolder('plant')} />
 			{type === 'Tutorial' && <VideoPlay style={styles.videoPlayButton} />}
 			<View style={styles.titleContainer}>
-				<Typography variant='heading3Bold' style={styles.titleText}>
+				<Typography variant='h3bold' style={styles.titleText}>
 					{cardData.name}
 				</Typography>
 			</View>

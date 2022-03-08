@@ -108,9 +108,9 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
 			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
 				<ProfilePicture user={user} />
-				<Typography variant='heading3Bold'>{user.username}</Typography>
+				<Typography variant='h3bold'>{user.username}</Typography>
 			</View>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				General
 			</Typography>
 			{
@@ -144,13 +144,13 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 					<Button variant='in-list' title='FAQ' />
 				</SegmentedList>
 			}
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Data
 			</Typography>
 			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
 				<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
 			</SegmentedList>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Account
 			</Typography>
 			<SegmentedList>

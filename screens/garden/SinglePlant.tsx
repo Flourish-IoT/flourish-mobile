@@ -29,7 +29,7 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 			<Image source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} style={styles.image} />
 			<View style={styles.content}>
 				<View style={styles.contentTitle}>
-					<Typography variant='heading2' style={{ textAlign: 'center' }}>
+					<Typography variant='h2' style={{ textAlign: 'center' }}>
 						{plant.name}
 					</Typography>
 					<Typography variant='placeholder' style={{ textAlign: 'center' }}>

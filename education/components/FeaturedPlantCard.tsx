@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 		bottom: 10,
 		right: -Theme.spacing.md / 2,
 		borderRadius: Theme.borderRadius / 2,
-		backgroundColor: Theme.colors.primary,
+		backgroundColor: Theme.colors.secondary,
 		paddingVertical: Theme.spacing.xs,
 		paddingHorizontal: Theme.spacing.sm,
 	},

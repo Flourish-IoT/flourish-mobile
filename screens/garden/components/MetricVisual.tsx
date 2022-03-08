@@ -111,7 +111,7 @@ export default function MetricVisual({ mode, metricType, plantId, onPress, conta
 					<Typography variant='body' style={{ fontWeight: 'bold' }}>
 						{getFullMetricName(metricType)}
 						{': '}
-						<Typography variant='heading3Bold' style={{ color: getMetricGaugeColor(range) }}>
+						<Typography variant='h3bold' style={{ color: getMetricGaugeColor(range) }}>
 							{getMetricRangeDescription(range)}
 						</Typography>
 					</Typography>

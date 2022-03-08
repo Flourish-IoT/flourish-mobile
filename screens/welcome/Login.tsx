@@ -55,7 +55,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }} onBack={navigation.goBack}>
-			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign in to continue your journey with {AppName}
 			</Typography>
 			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
@@ -76,7 +76,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 				loading={formIsLoading}
 				buttonStyle={{ marginBottom: Theme.spacing.md }}
 			/>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				or sign in with
 			</Typography>
 			<View

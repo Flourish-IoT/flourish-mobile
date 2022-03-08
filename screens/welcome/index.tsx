@@ -25,7 +25,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 		>
 			<View style={{ flex: 1, justifyContent: 'center' }}>
 				<Logo style={{ height: 250, width: 250 }} />
-				<Typography variant='heading3Bold' style={{ textAlign: 'center', color: 'white' }}>
+				<Typography variant='h3bold' style={{ textAlign: 'center', color: 'white' }}>
 					Plant care made easy.
 				</Typography>
 			</View>
@@ -40,7 +40,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 					<Typography variant='body' style={{ textAlign: 'center' }}>
 						Already have an account?
 					</Typography>
-					<Typography variant='heading3Bold' style={{ textAlign: 'center', color: Theme.colors.cta }}>
+					<Typography variant='h3bold' style={{ textAlign: 'center', color: Theme.colors.cta }}>
 						Log In
 					</Typography>
 				</TouchableOpacity>

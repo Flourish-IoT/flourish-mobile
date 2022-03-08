@@ -45,13 +45,13 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 		<ScreenContainer scrolls>
 			<View style={styles.header}>
 				<ModalBackButton absolutePos={false} onPress={navigation.goBack} style={styles.backButton} />
-				<Typography variant='heading1'>{type}</Typography>
+				<Typography variant='h1'>{type}</Typography>
 			</View>
 			<View style={styles.metricVisualContainer}>
 				<MetricVisual mode='block' metricType={type} plantId={plantId} containerStyle={styles.metricVisual} />
 				<View style={styles.metricTextContainer}>
-					<Typography variant='heading1'>{getData().raw}</Typography>
-					<Typography variant='heading3Bold' style={{ color: getMetricGaugeColor(getData().range) }}>
+					<Typography variant='h1'>{getData().raw}</Typography>
+					<Typography variant='h3bold' style={{ color: getMetricGaugeColor(getData().range) }}>
 						{getMetricRangeDescription(getData().range)}
 					</Typography>
 				</View>

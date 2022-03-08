@@ -60,7 +60,7 @@ export const TopTabBar = ({ state, navigation }) => {
 						onPress={() => navigation.navigate({ name: route.name, merge: true })}
 						style={styles.tabButton}
 					>
-						<Typography variant='heading3Bold' style={{ ...styles.tabLabel, ...(isFocused && activeTabStyle) }}>
+						<Typography variant='h3bold' style={{ ...styles.tabLabel, ...(isFocused && activeTabStyle) }}>
 							{route.name}
 						</Typography>
 					</TouchableOpacity>
@@ -108,13 +108,13 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 		<ScreenContainer safePadding={false} style={styles.screenContainer}>
 			<View style={styles.topSection}>
 				<StyledAvatar user={user} style={styles.avatar} />
-				<Typography style={styles.topSectionText} variant='heading3Bold'>
+				<Typography style={styles.topSectionText} variant='h3bold'>
 					{user.username}
 				</Typography>
 				<Typography style={styles.topSectionText} variant='placeholder'>
 					Lvl {userLevel} - {getUserLevelName(userLevel)}
 				</Typography>
-				<Typography style={styles.topSectionText} variant='heading3Bold'>
+				<Typography style={styles.topSectionText} variant='h3bold'>
 					{user.xp} pts
 				</Typography>
 				{/* TODO: Progress bar isn't showing up */}

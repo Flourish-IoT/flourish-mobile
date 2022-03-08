@@ -10,6 +10,8 @@ import SplashScreen from '../screens/welcome/Splash';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
+	secondary: string;
+	warning: string;
 	border: string;
 	cta: string;
 }
@@ -28,22 +30,14 @@ interface OurFontObjProps extends ReactNativePaper.ThemeFont {
 	color?: string;
 }
 
-export type OurFontName =
-	| 'heading1'
-	| 'heading2'
-	| 'heading3Bold'
-	| 'heading3Regular'
-	| 'body'
-	| 'subHeader'
-	| 'paragraph'
-	| 'placeholder';
+export type OurFontName = 'h1' | 'h2' | 'h3bold' | 'h3' | 'body' | 'subHeader' | 'paragraph' | 'placeholder';
 
 interface OurFontsProps {
 	// Custom font types here
-	heading1: OurFontObjProps;
-	heading2: OurFontObjProps;
-	heading3Bold: OurFontObjProps;
-	heading3Regular: OurFontObjProps;
+	h1: OurFontObjProps;
+	h2: OurFontObjProps;
+	h3: OurFontObjProps;
+	h3bold: OurFontObjProps;
 	body: OurFontObjProps;
 	subHeader: OurFontObjProps;
 	paragraph: OurFontObjProps;
@@ -51,23 +45,23 @@ interface OurFontsProps {
 }
 
 const OurFonts: OurFontsProps = {
-	heading1: {
+	h1: {
 		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
 		fontSize: 28,
 	},
-	heading2: {
+	h2: {
 		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
 		fontSize: 20,
 	},
-	heading3Bold: {
-		fontFamily: 'Filson-Soft-Bold',
+	h3: {
+		fontFamily: 'Filson-Soft-Regular',
 		fontWeight: 'normal',
 		fontSize: 16,
 	},
-	heading3Regular: {
-		fontFamily: 'Filson-Soft-Regular',
+	h3bold: {
+		fontFamily: 'Filson-Soft-Bold',
 		fontWeight: 'normal',
 		fontSize: 16,
 	},
@@ -206,19 +200,21 @@ export const Theme: OurThemeProps = {
 		},
 	},
 	colors: {
-		primary: '#10B295', // Primary color for your app, usually your brand color
-		accent: '#613722', // Secondary color for your app which complements the primary color
-		background: '#EEF8F6', // Background color for pages, such as lists
+		primary: '#8BA889', // Primary color for your app, usually your brand color
+		secondary: '#568A9A',
+		accent: '#9A532F', // Secondary color for your app which complements the primary color
+		background: '#F5F7FB', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards
-		text: '#143F49', // Text color for content
+		text: '#022229', // Text color for content
 		disabled: '#C2D9D2', // Color for disabled elements
 		placeholder: '#143F4970', // Color for placeholder text, such as input placeholder
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications
 		notification: DefaultTheme.colors.notification, // Background color for badges
-		error: '#FF1D25', // The color of error text, for example the error message for text inputs
+		warning: 'E7A600',
+		error: '#E92000', // The color of error text, for example the error message for text inputs
 		border: 'black', // The color of borders
-		cta: '#FF7C1D',
+		cta: '#DB7F50',
 	},
 	fonts: {
 		...OurFonts,

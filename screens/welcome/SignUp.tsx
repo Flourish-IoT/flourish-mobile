@@ -103,7 +103,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			style={{ justifyContent: 'center', backgroundColor: 'white' }}
 			onBack={navigation.goBack}
 		>
-			<Typography variant='heading3Bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
 			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
@@ -224,7 +224,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			style={{ justifyContent: 'center', backgroundColor: 'white' }}
 			onBack={navigation.goBack}
 		>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.xl }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.xl }}>
 				Verification Code
 			</Typography>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl, textAlign: 'center' }}>
@@ -299,7 +299,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center', backgroundColor: 'white' }}>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				How would you rate your confidence in caring for your plants?
 			</Typography>
 			<Confidence rating={userRating} style={{ marginBottom: Theme.spacing.md }} />
