@@ -55,7 +55,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 	};
 
 	return (
-		<TopTabContainer scrolls style={styles.container}>
+		<TopTabContainer scrolls bounces={false} style={styles.container}>
 			{chunks.length === 0 ? (
 				<Empty animation='magnifyingGlass' text='No badges to claim.' />
 			) : badgesIsError ? (
