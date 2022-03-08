@@ -13,7 +13,7 @@ import ProfileScreenStack from '../screens/profile';
 import GardenScreenStack from '../screens/garden';
 import CalendarScreen from '../screens/calendar';
 import RewardsScreen from '../screens/rewards';
-import EducationScreenStack from '../education';
+import EducationScreenStack from '../screens/education';
 
 const Tab = createBottomTabNavigator();
 

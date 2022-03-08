@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Image, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
-import { Tutorial, Course } from '../../data/education';
-import Typography from '../../lib/components/styled/Typography';
-import VideoPlay from '../../lib/icons/VideoPlay';
-import { getPlaceHolder } from '../../lib/utils/helper';
-import { Theme } from '../../providers/Theme';
+import { Tutorial, Course } from '../../../data/education';
+import Typography from '../../../lib/components/styled/Typography';
+import VideoPlay from '../../../lib/icons/VideoPlay';
+import { getPlaceHolder } from '../../../lib/utils/helper';
+import { Theme } from '../../../providers/Theme';
 
 interface CourseCardProps {
 	cardData: Tutorial | Course;

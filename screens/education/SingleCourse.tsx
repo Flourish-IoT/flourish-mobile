@@ -1,19 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import { useLearningCourses } from '../data/education';
-import Loading from '../lib/components/Loading';
-import ScreenContainer from '../lib/components/ScreenContainer';
-import { Theme } from '../providers/Theme';
-import ModalBackButton from '../lib/components/ModalBackButton';
-import { getPlaceHolder, padString } from '../lib/utils/helper';
-import Typography from '../lib/components/styled/Typography';
-import StyledButton from '../lib/components/styled/Button';
-import Share from '../lib/icons/Share';
-import Heart from '../lib/icons/Heart';
-import Empty from '../lib/components/Empty';
+import { useLearningCourses } from '../../data/education';
+import Loading from '../../lib/components/Loading';
+import ScreenContainer from '../../lib/components/ScreenContainer';
+import { Theme } from '../../providers/Theme';
+import ModalBackButton from '../../lib/components/ModalBackButton';
+import { getPlaceHolder, padString } from '../../lib/utils/helper';
+import Typography from '../../lib/components/styled/Typography';
+import StyledButton from '../../lib/components/styled/Button';
+import Share from '../../lib/icons/Share';
+import Heart from '../../lib/icons/Heart';
+import Empty from '../../lib/components/Empty';
 import CourseCard from './components/CourseCard';
-import StyledDivider from '../lib/components/styled/Divider';
+import StyledDivider from '../../lib/components/styled/Divider';
 
 interface SingleCourseProps {
 	navigation: NavigationProp<ParamListBase>;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Image, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
-import { FeaturedPlant } from '../../data/education';
-import Typography from '../../lib/components/styled/Typography';
-import { getPlaceHolder } from '../../lib/utils/helper';
-import { Theme } from '../../providers/Theme';
+import { FeaturedPlant } from '../../../data/education';
+import Typography from '../../../lib/components/styled/Typography';
+import { getPlaceHolder } from '../../../lib/utils/helper';
+import { Theme } from '../../../providers/Theme';
 
 interface FeaturedPlantProps {
 	plant: FeaturedPlant;
