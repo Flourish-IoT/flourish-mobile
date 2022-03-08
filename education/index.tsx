@@ -17,9 +17,9 @@ import FeaturedPlantCard from './components/FeaturedPlantCard';
 export default function EducationScreenStack() {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedTags, setSelectedTags] = useState(educationTags.map((name, index) => index));
-	let { data: quickTutorials, isLoading: quickTutorialsIsLoading } = useQuickTutorials();
-	let { data: learningCourses, isLoading: learningCoursesIsLoading } = useLearningCourses();
-	let { data: featuredPlants, isLoading: featuredPlantsIsLoading } = useFeaturedPlants();
+	let { data: quickTutorials, isLoading: quickTutorialsIsLoading, isError: quickTutorialsIsError } = useQuickTutorials();
+	let { data: learningCourses, isLoading: learningCoursesIsLoading, isError: learningCoursesIsError } = useLearningCourses();
+	let { data: featuredPlants, isLoading: featuredPlantsIsLoading, isError: featuredPlantsIsError } = useFeaturedPlants();
 
 	const didSearch = searchQuery.trim().length !== 0;
 	if (didSearch) {
@@ -75,6 +75,8 @@ export default function EducationScreenStack() {
 			<ScrollView style={styles.scrollContainer} horizontal>
 				{quickTutorialsIsLoading ? (
 					<Loading animation='rings' />
+				) : quickTutorialsIsError ? (
+					<Empty animation='error' text='There was an error getting the quick tutorials...' />
 				) : quickTutorials.length === 0 ? (
 					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
@@ -97,6 +99,8 @@ export default function EducationScreenStack() {
 			<ScrollView style={styles.scrollContainer} horizontal>
 				{learningCoursesIsLoading ? (
 					<Loading animation='rings' />
+				) : learningCoursesIsError ? (
+					<Empty animation='error' text='There was an error getting the learning courses...' />
 				) : learningCourses.length === 0 ? (
 					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
@@ -119,6 +123,8 @@ export default function EducationScreenStack() {
 			<ScrollView style={{ ...styles.scrollContainer, marginBottom: 0 }} horizontal>
 				{featuredPlantsIsLoading ? (
 					<Loading animation='rings' />
+				) : featuredPlantsIsError ? (
+					<Empty animation='error' text='There was an error getting the popular plants...' />
 				) : featuredPlants.length === 0 ? (
 					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (

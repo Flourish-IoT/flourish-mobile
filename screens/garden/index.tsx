@@ -23,7 +23,7 @@ export type ViewMode = 'Carousel' | 'Grid';
 
 export function GardenList({ navigation }: GardenScreenProps) {
 	const [viewMode, setViewMode] = useState<ViewMode>('Carousel');
-	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
+	const { data: plants, isLoading: plantsIsLoading, isError: plantsIsError } = usePlants('me');
 	const [searchQuery, setSearchQuery] = useState('');
 
 	const onPlantSelect = (plant: Plant) => {
@@ -62,7 +62,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 			<View style={styles.viewContainer}>
 				{plantsIsLoading ? (
 					<Loading animation='rings' text='Loading plants...' />
-				) : !plants ? (
+				) : plantsIsError ? (
 					<Empty animation='error' text='There was an error getting your plants...' />
 				) : filterData(plants, searchQuery).length === 0 ? (
 					<Empty

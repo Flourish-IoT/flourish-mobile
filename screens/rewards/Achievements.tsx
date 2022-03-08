@@ -20,10 +20,10 @@ export default function AchievementsTab({ navigation }: AchievementsTabProps) {
 		<TopTabContainer scrolls>
 			{achievementsIsLoading ? (
 				<Loading animation='rings' />
-			) : achievements.length === 0 ? (
-				<Empty animation='magnifyingGlass' size='lg' text='No achievements to claim.' />
 			) : achievementsIsError ? (
 				<Empty animation='error' size='lg' text='Error loading achievements.' />
+			) : achievements.length === 0 ? (
+				<Empty animation='magnifyingGlass' size='lg' text='No achievements to claim.' />
 			) : (
 				<View style={styles.list}>
 					{achievements.map((a, index, { length }) => (
