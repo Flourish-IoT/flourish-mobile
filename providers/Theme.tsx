@@ -164,9 +164,6 @@ export const Theme: OurThemeProps = {
 	lottie: {
 		wrapper: {
 			// The container around all the lottie animation elements (lottie itself, text beneath)
-			height: '100%',
-			width: '100%',
-			alignSelf: 'center',
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
