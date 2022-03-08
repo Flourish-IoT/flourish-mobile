@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { educationTopics, useFeaturedPlants, useLearningCourses, useQuickTutorials } from '../data/education';
+import { educationTags, useFeaturedPlants, useLearningCourses, useQuickTutorials } from '../data/education';
 import ChipFilter from '../lib/components/ChipFilter';
 import Empty from '../lib/components/Empty';
 import Loading from '../lib/components/Loading';
@@ -9,16 +9,43 @@ import ScreenContainer from '../lib/components/ScreenContainer';
 import SearchField from '../lib/components/SearchField';
 import StyledButton from '../lib/components/styled/Button';
 import Typography from '../lib/components/styled/Typography';
+import { arrayHasInCommon, filterData } from '../lib/utils/helper';
 import { Theme } from '../providers/Theme';
 import CourseCard from './components/CourseCard';
 import FeaturedPlantCard from './components/FeaturedPlantCard';
 
 export default function EducationScreenStack() {
 	const [searchQuery, setSearchQuery] = useState('');
-	const [selectedTopics, setSelectedTopics] = useState(educationTopics.map((name, index) => index));
-	const { data: quickTutorials, isLoading: quickTutorialsIsLoading } = useQuickTutorials();
-	const { data: learningCourses, isLoading: learningCoursesIsLoading } = useLearningCourses();
-	const { data: featuredPlants, isLoading: featuredPlantsIsLoading } = useFeaturedPlants();
+	const [selectedTags, setSelectedTags] = useState(educationTags.map((name, index) => index));
+	let { data: quickTutorials, isLoading: quickTutorialsIsLoading } = useQuickTutorials();
+	let { data: learningCourses, isLoading: learningCoursesIsLoading } = useLearningCourses();
+	let { data: featuredPlants, isLoading: featuredPlantsIsLoading } = useFeaturedPlants();
+
+	const didSearch = searchQuery.trim().length !== 0;
+	if (didSearch) {
+		quickTutorials = filterData(quickTutorials, searchQuery);
+		learningCourses = filterData(learningCourses, searchQuery);
+		featuredPlants = filterData(featuredPlants, searchQuery);
+	}
+
+	const didChangeTags = selectedTags.length !== educationTags.length;
+	if (didChangeTags) {
+		quickTutorials = quickTutorials.filter((tut) =>
+			arrayHasInCommon(
+				tut.tags,
+				selectedTags.map((st) => educationTags[st])
+			)
+		);
+		learningCourses = learningCourses.filter((tut) =>
+			arrayHasInCommon(
+				tut.tags,
+				selectedTags.map((st) => educationTags[st])
+			)
+		);
+	}
+
+	let emptyResultText = 'Nothing came up.';
+	if (didSearch || didChangeTags) emptyResultText = emptyResultText + ' Please check your filters.';
 
 	return (
 		<ScreenContainer scrolls style={styles.screenContainer}>
@@ -28,28 +55,28 @@ export default function EducationScreenStack() {
 
 			<View style={styles.sectionTitle}>
 				<Typography variant='h2'>Topic</Typography>
-				<StyledButton variant='text' title='View All' />
 			</View>
 			<ChipFilter
 				showAllOption={false}
-				items={educationTopics.map((name, index) => ({ name, index }))}
-				selectedItems={selectedTopics}
+				canHaveNoneSelected
+				items={educationTags.map((name, index) => ({ name, index }))}
+				selectedItems={selectedTags}
 				displayKey='name'
 				valueKey='index'
-				onFilterChange={setSelectedTopics}
-				containerStyle={{ marginBottom: Theme.spacing.md }}
+				onFilterChange={setSelectedTags}
+				containerStyle={styles.chipFilter}
 			/>
 
 			<View style={styles.sectionTitle}>
 				<Typography variant='h2'>Quick Tutorials</Typography>
-				<StyledButton variant='text' title='View All' />
+				<StyledButton disabled={quickTutorials.length === 0} variant='text' title='View All' />
 			</View>
 
 			<ScrollView style={styles.scrollContainer} horizontal>
-				{learningCoursesIsLoading ? (
+				{quickTutorialsIsLoading ? (
 					<Loading animation='rings' />
 				) : quickTutorials.length === 0 ? (
-					<Empty text='Nothing came up.' />
+					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
 					quickTutorials.map((qt, index, { length }) => (
 						<CourseCard
@@ -64,14 +91,14 @@ export default function EducationScreenStack() {
 
 			<View style={styles.sectionTitle}>
 				<Typography variant='h2'>Learning Course</Typography>
-				<StyledButton variant='text' title='View All' />
+				<StyledButton disabled={learningCourses.length === 0} variant='text' title='View All' />
 			</View>
 
 			<ScrollView style={styles.scrollContainer} horizontal>
 				{learningCoursesIsLoading ? (
 					<Loading animation='rings' />
 				) : learningCourses.length === 0 ? (
-					<Empty text='Nothing came up.' />
+					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
 					learningCourses.map((lc, index, { length }) => (
 						<CourseCard
@@ -86,14 +113,14 @@ export default function EducationScreenStack() {
 
 			<View style={styles.sectionTitle}>
 				<Typography variant='h2'>Popular Plants</Typography>
-				<StyledButton variant='text' title='View All' />
+				<StyledButton disabled={featuredPlants.length === 0} variant='text' title='View All' />
 			</View>
 
 			<ScrollView style={{ ...styles.scrollContainer, marginBottom: 0 }} horizontal>
 				{featuredPlantsIsLoading ? (
 					<Loading animation='rings' />
 				) : featuredPlants.length === 0 ? (
-					<Empty text='Nothing came up.' />
+					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
 					featuredPlants.map((fp, fpIndex, { length }) => (
 						<FeaturedPlantCard
@@ -117,8 +144,11 @@ const styles = StyleSheet.create({
 		marginBottom: Theme.spacing.md,
 		width: '100%',
 	},
+	chipFilter: {
+		marginBottom: Theme.spacing.xl,
+	},
 	scrollContainer: {
-		marginBottom: Theme.spacing.md,
+		marginBottom: Theme.spacing.xl,
 		width: '100%',
 		overflow: 'visible',
 	},

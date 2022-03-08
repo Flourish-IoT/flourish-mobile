@@ -30,8 +30,8 @@ export const getMonthName = (month: number) => {
 	return monthNames[month];
 };
 
-export function filterData<T>(data?: T[], query?: string) {
-	if (!data) return [];
+export function filterData<T>(data: T[], query: string) {
+	if (query.trim().length === 0) return data;
 
 	const normalize = (text: string) => text.toString().replace(/\s/g, '').toLowerCase();
 
@@ -104,7 +104,7 @@ export function getUserLevelName(level: number) {
 	}
 }
 
-export const ChunkArray = (array: any[], amountPerChunk: number) =>
+export const chunkArray = (array: any[], amountPerChunk: number) =>
 	array.reduce((resultArray, item, index) => {
 		const chunkIndex = Math.floor(index / amountPerChunk);
 		if (!resultArray[chunkIndex]) resultArray[chunkIndex] = []; // start a new chunk
@@ -121,4 +121,9 @@ export const getPlaceHolder = (fileName: 'plant' | 'profile') => {
 	};
 
 	return images[fileName];
+};
+
+export const arrayHasInCommon = (arr1: any[], arr2: any[]) => {
+	if (arr1.length === 0 || arr2.length === 0) return false;
+	return arr1.some((item) => arr2.includes(item));
 };

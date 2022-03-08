@@ -4,7 +4,7 @@ import TopTabContainer from '../../lib/components/TopTabContainer';
 import { Achievement, useClaimedAchievements, useUnClaimAchievement } from '../../data/rewards';
 import Empty from '../../lib/components/Empty';
 import Loading from '../../lib/components/Loading';
-import { ChunkArray } from '../../lib/utils/helper';
+import { chunkArray } from '../../lib/utils/helper';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
 import BadgePot from './components/BadgePot';
@@ -19,7 +19,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 
 	if (badgesIsLoading) return <Loading animation='rings' />;
 
-	const chunks: Achievement[][] = ChunkArray(badges, 3);
+	const chunks: Achievement[][] = chunkArray(badges, 3);
 
 	const onBadgePress = (badge: Achievement) => {
 		Alert.alert(badge.title, `Lvl ${badge.level} - ${badge.points} pts\n\n` + badge.description, [

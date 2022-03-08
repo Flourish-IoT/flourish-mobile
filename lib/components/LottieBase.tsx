@@ -32,7 +32,7 @@ export const getLottie = (name: LottieName) => {
 
 export default function LottieBase({ animation, text, size = 'md', style }: LottieBaseParams) {
 	return (
-		<View style={[Theme.lottie.wrapper, style]}>
+		<View style={{ ...Theme.lottie.wrapper, ...style }}>
 			{!!animation && (
 				<LottieView
 					style={{ width: Theme.lottie.width[size] }}
