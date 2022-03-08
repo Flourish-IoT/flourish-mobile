@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
 		borderRadius: Theme.borderRadius,
 	},
 	titleContainer: {
+		...Theme.util.flexCenter,
 		position: 'absolute',
 		bottom: 10,
 		right: -Theme.spacing.md / 2,
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Theme.colors.secondary,
 		paddingVertical: Theme.spacing.xs,
 		paddingHorizontal: Theme.spacing.sm,
+		maxHeight: 50,
 	},
 	titleText: {
 		color: 'white',

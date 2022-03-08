@@ -142,7 +142,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 							key={String(index + fp.id)}
 							plant={fp}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
-							onPress={() => navigation.navigate('SinglePlantExplorer', { courseId: fp.id })}
+							onPress={() => {}} // TODO: Open featured plant page
 						/>
 					))
 				)}
