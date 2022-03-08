@@ -1,6 +1,6 @@
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
 import { useLoginWithEmail } from '../../data/auth';
 import ScreenContainer from '../../lib/components/ScreenContainer';
@@ -9,7 +9,7 @@ import SegmentedList from '../../lib/components/styled/SegmentedList';
 import StyledTextInput from '../../lib/components/styled/TextInput';
 import Typography from '../../lib/components/styled/Typography';
 import SsoServices from '../../lib/icons/SsoServices';
-import { AppName } from '../../lib/utils/helper';
+import { AppName, getServiceColor } from '../../lib/utils/helper';
 import { isValidEmail } from '../../lib/utils/validation';
 import { Theme } from '../../providers/Theme';
 import { Service, services } from './SignUp';
@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const formIsLoading = loginWithEmail.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }} onBack={navigation.goBack}>
+		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
 			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign in to continue your journey with {AppName}
 			</Typography>
@@ -95,7 +95,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 							variant='primary'
 							onPress={() => handleSignInWithService(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: Theme.colors.primary }}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: getServiceColor(name) }}
 						/>
 					))}
 			</View>
@@ -103,3 +103,9 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 		</ScreenContainer>
 	);
 }
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'center',
+	},
+});

@@ -24,8 +24,8 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 	const [selectedPlant, setSelectedPlant] = useState(plants[firstItemIndex]);
 
 	return (
-		<View style={{ width: '100%', overflow: 'visible', marginVertical: Theme.spacing.xl, ...style }}>
-			<View style={{ width: '100%', overflow: 'visible', marginLeft: -Theme.spacing.md, marginBottom: Theme.spacing.md }}>
+		<View style={{ width: '100%', overflow: 'visible', marginVertical: Theme.spacing.screenContainer, ...style }}>
+			<View style={{ width: '100%', overflow: 'visible', marginLeft: -Theme.spacing.screenContainer, marginBottom: Theme.spacing.screenContainer }}>
 				<Carousel
 					data={plants}
 					renderItem={({ item: plant }: CarouselRendererProps) => (

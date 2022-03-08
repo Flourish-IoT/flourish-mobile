@@ -105,7 +105,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	if (userIsLoading) return <Loading animation='rings' />;
 
 	return (
-		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+		<ScreenContainer scrolls style={styles.screenContainer}>
 			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
 				<ProfilePicture user={user} />
 				<Typography variant='h3bold'>{user.username}</Typography>
@@ -166,6 +166,13 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 		</ScreenContainer>
 	);
 };
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'space-between',
+		alignItems: 'flex-start',
+	},
+});
 
 const Stack = createStackNavigator();
 

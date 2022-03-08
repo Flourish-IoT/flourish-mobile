@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 		marginBottom: Theme.spacing.lg * 3,
 	},
 	backButton: {
-		marginRight: Theme.spacing.md,
+		marginRight: Theme.spacing.screenContainer,
 	},
 	metricVisualContainer: {
 		flexDirection: 'row',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
 import { AppName } from '../../lib/utils/helper';
@@ -41,7 +41,7 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer style={styles.screenContainer}>
 			<SegmentedList>
 				<TextInput
 					label={'Current password'}
@@ -62,3 +62,9 @@ export default function DeleteAccountScreen({ navigation }: DeleteAccountScreenP
 		</ScreenContainer>
 	);
 }
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'space-between',
+	},
+});

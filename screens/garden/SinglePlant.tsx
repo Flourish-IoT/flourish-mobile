@@ -24,7 +24,7 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 	const { plant } = route.params as SinglePlantScreenRouteProps;
 
 	return (
-		<ScreenContainer scrolls style={styles.screen} bounces={false}>
+		<ScreenContainer scrolls style={styles.screenContainer} bounces={false}>
 			<ModalBackButton absolutePos onPress={navigation.goBack} />
 			<Image source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} style={styles.image} />
 			<View style={styles.content}>
@@ -74,7 +74,7 @@ export default function SinglePlantStack({ route, navigation }: SinglePlantScree
 }
 
 const styles = StyleSheet.create({
-	screen: {
+	screenContainer: {
 		padding: 0,
 		backgroundColor: 'white',
 	},
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 		aspectRatio: 1 / 1,
 	},
 	content: {
-		padding: Theme.spacing.md,
+		padding: Theme.spacing.screenContainer,
 	},
 	contentTitle: {
 		alignItems: 'center',

@@ -6,6 +6,7 @@ import { isValidPassword } from '../../lib/utils/validation';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
 import Button from '../../lib/components/styled/Button';
+import { StyleSheet } from 'react-native';
 
 interface ChangePasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -45,7 +46,7 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 	};
 
 	return (
-		<ScreenContainer style={{ justifyContent: 'space-between' }}>
+		<ScreenContainer style={styles.screenContainer}>
 			<SegmentedList>
 				<TextInput
 					label={'Current password'}
@@ -81,3 +82,9 @@ export default function ChangePasswordScreen({ navigation }: ChangePasswordScree
 		</ScreenContainer>
 	);
 }
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'space-between',
+	},
+});

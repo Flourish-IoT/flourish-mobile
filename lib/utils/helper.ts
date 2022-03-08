@@ -1,8 +1,20 @@
 import { MetricRange, PlantMetric } from '../../data/garden';
+import { Service } from '../../screens/welcome/SignUp';
 
 const AppConfig = require('../../app.json');
 
 export const AppName = AppConfig.expo.name;
+
+export const getServiceColor = (service: Service) => {
+	switch (service) {
+		case 'Apple':
+			return 'black';
+		case 'Facebook':
+			return '#4267B2';
+		case 'Google':
+			return '#4285F4';
+	}
+};
 
 export const padString = (text: string | number, direction: 'left' | 'right', length: number, char: string) => {
 	// Adds enough of the specified character to make text as long as length

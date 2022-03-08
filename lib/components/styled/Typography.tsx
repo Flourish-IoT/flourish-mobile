@@ -11,7 +11,12 @@ interface TypographyProps {
 export default function Typography({ variant, children, style, ...rest }: TypographyProps) {
 	const fontStyle: TextStyle = {
 		...Theme.fonts[variant],
-		...(!Theme.fonts[variant].color && { color: Theme.colors.text }),
+		...(!Theme.fonts[variant].color && {
+			color: Theme.colors.text,
+		}),
+		...(!!Theme.fonts[variant].lineHeight && {
+			lineHeight: Theme.fonts[variant].lineHeight,
+		}),
 		...style,
 	};
 
@@ -19,6 +24,7 @@ export default function Typography({ variant, children, style, ...rest }: Typogr
 
 	return (
 		<Text style={fontStyle} {...rest}>
+			{variant === 'li' && '\u2022   '}
 			{children}
 		</Text>
 	);

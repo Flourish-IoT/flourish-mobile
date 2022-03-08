@@ -1,11 +1,11 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import Logo from '../../lib/icons/Logo';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import Button from '../../lib/components/styled/Button';
 import { Theme } from '../../providers/Theme';
 import CurvedContainer from './components/CurvedContainer';
-import { View } from 'react-native';
 import Typography from '../../lib/components/styled/Typography';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -15,14 +15,7 @@ interface WelcomeScreenProps {
 
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 	return (
-		<ScreenContainer
-			appBarPadding={false}
-			safePadding={false}
-			style={{
-				justifyContent: 'center',
-				backgroundColor: Theme.colors.accent,
-			}}
-		>
+		<ScreenContainer appBarPadding={false} safePadding={false} style={styles.screenContainer}>
 			<View style={{ flex: 1, justifyContent: 'center' }}>
 				<Logo style={{ height: 250, width: 250 }} />
 				<Typography variant='h3bold' style={{ textAlign: 'center', color: 'white' }}>
@@ -48,3 +41,10 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 		</ScreenContainer>
 	);
 }
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'center',
+		backgroundColor: Theme.colors.accent,
+	},
+});

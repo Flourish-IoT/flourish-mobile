@@ -103,7 +103,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	);
 
 	return (
-		<ScreenContainer scrolls style={{ alignItems: 'flex-start' }}>
+		<ScreenContainer scrolls style={styles.screenContainer}>
 			<DropDown
 				title={selectedInterval}
 				showAllOption={false}
@@ -204,6 +204,9 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 }
 
 const styles = StyleSheet.create({
+	screenContainer: {
+		alignItems: 'flex-start',
+	},
 	calendarStyle: {
 		// TODO: Figure out why '100%' doesn't work
 		width: Dimensions.get('window').width - Theme.spacing.md * 2,

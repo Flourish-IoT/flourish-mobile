@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { NavigationProp, ParamListBase } from '@react-navigation/core';
+import { createStackNavigator } from '@react-navigation/stack';
 import { View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { educationTags, useFeaturedPlants, useLearningCourses, useQuickTutorials } from '../data/education';
@@ -10,11 +12,16 @@ import SearchField from '../lib/components/SearchField';
 import StyledButton from '../lib/components/styled/Button';
 import Typography from '../lib/components/styled/Typography';
 import { arrayHasInCommon, filterData } from '../lib/utils/helper';
-import { Theme } from '../providers/Theme';
+import { GlobalStackNavOptions, Theme } from '../providers/Theme';
 import CourseCard from './components/CourseCard';
 import FeaturedPlantCard from './components/FeaturedPlantCard';
+import SingleCourse from './SingleCourse';
 
-export default function EducationScreenStack() {
+interface EducationIndexProps {
+	navigation: NavigationProp<ParamListBase>;
+}
+
+export function EducationIndex({ navigation }: EducationIndexProps) {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedTags, setSelectedTags] = useState(educationTags.map((name, index) => index));
 	let { data: quickTutorials, isLoading: quickTutorialsIsLoading, isError: quickTutorialsIsError } = useQuickTutorials();
@@ -86,6 +93,7 @@ export default function EducationScreenStack() {
 							cardData={qt}
 							type='Tutorial'
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
+							onPress={() => {}} // TODO: Open native video
 						/>
 					))
 				)}
@@ -110,6 +118,7 @@ export default function EducationScreenStack() {
 							cardData={lc}
 							type='Course'
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
+							onPress={() => navigation.navigate('SingleCourse', { courseId: lc.id })}
 						/>
 					))
 				)}
@@ -128,11 +137,12 @@ export default function EducationScreenStack() {
 				) : featuredPlants.length === 0 ? (
 					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
-					featuredPlants.map((fp, fpIndex, { length }) => (
+					featuredPlants.map((fp, index, { length }) => (
 						<FeaturedPlantCard
-							key={String(fpIndex + fp.id)}
+							key={String(index + fp.id)}
 							plant={fp}
-							containerStyle={{ marginRight: fpIndex !== length - 1 ? Theme.spacing.md : 0 }}
+							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
+							onPress={() => navigation.navigate('SinglePlantExplorer', { courseId: fp.id })}
 						/>
 					))
 				)}
@@ -166,3 +176,19 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 });
+
+const Stack = createStackNavigator();
+
+export default function EducationScreenStack() {
+	return (
+		<Stack.Navigator screenOptions={GlobalStackNavOptions}>
+			<Stack.Screen name='EducationIndex' component={EducationIndex} />
+			<Stack.Screen name='SingleCourse' component={SingleCourse} options={{ presentation: 'modal', headerLeft: null }} />
+			<Stack.Screen
+				name='SinglePlantExplore'
+				component={SingleCourse}
+				options={{ presentation: 'modal', headerLeft: null }}
+			/>
+		</Stack.Navigator>
+	);
+}

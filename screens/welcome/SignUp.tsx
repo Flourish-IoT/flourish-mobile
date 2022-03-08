@@ -3,7 +3,7 @@ import { TextInput } from 'react-native-paper';
 import { View, Keyboard, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
-import { AppName } from '../../lib/utils/helper';
+import { AppName, getServiceColor } from '../../lib/utils/helper';
 import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import { useFinishAccountSetup, useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
 import RadioButton from '../../lib/components/styled/RadioButton';
@@ -19,9 +19,8 @@ import SegmentedList from '../../lib/components/styled/SegmentedList';
 
 const Stack = createStackNavigator();
 
-export type Service = 'Apple' | 'Facebook' | 'Google' | 'Email';
-
-export const services: Service[] = ['Apple', 'Facebook', 'Google', 'Email'];
+export const services = ['Apple', 'Facebook', 'Google', 'Email'] as const;
+export type Service = typeof services[number];
 
 interface StepProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -162,7 +161,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 							variant='primary'
 							onPress={() => handleSignUp(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: Theme.colors.primary }}
+							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: getServiceColor(name) }}
 						/>
 					))}
 			</View>

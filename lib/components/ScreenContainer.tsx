@@ -30,7 +30,7 @@ export default function ScreenContainer({
 		container: {
 			alignItems: 'center',
 			overflow: 'visible',
-			padding: Theme.spacing.md,
+			padding: Theme.spacing.screenContainer,
 			paddingBottom: insets.bottom + (appBarPadding ? Theme.appBarHeight + appBarCenterBtnSize / 2 : 0),
 			...(!safePadding && {
 				padding: 0,
@@ -47,7 +47,7 @@ export default function ScreenContainer({
 			position: 'absolute',
 			top: 0,
 			left: 0,
-			margin: Theme.spacing.md,
+			margin: Theme.spacing.screenContainer,
 		},
 	});
 

@@ -9,12 +9,13 @@ import { Theme } from '../../providers/Theme';
 interface CourseCardProps {
 	cardData: Tutorial | Course;
 	type: 'Tutorial' | 'Course';
+	onPress: () => void;
 	containerStyle?: ViewStyle;
 }
 
-export default function CourseCard({ cardData, type, containerStyle }: CourseCardProps) {
+export default function CourseCard({ cardData, type, onPress, containerStyle }: CourseCardProps) {
 	return (
-		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }}>
+		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }} onPress={onPress}>
 			<Image style={styles.image} source={cardData.image ? { uri: cardData.image } : getPlaceHolder('plant')} />
 			{type === 'Tutorial' && <VideoPlay style={styles.videoPlayButton} />}
 			<View style={styles.titleContainer}>

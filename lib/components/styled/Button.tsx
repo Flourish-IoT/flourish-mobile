@@ -11,7 +11,7 @@ interface StyledButtonProps {
 	onPress?: () => void;
 	buttonStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 	textStyle?: StyleProp<TextStyle>;
-	variant: 'primary' | 'text' | 'in-list';
+	variant: 'primary' | 'text' | 'in-list' | 'button';
 	disabled?: boolean;
 	loading?: boolean;
 	icon?: JSX.Element;
@@ -36,11 +36,13 @@ export default function StyledButton({
 			return disabled ? specifiedBgColor + '50' : specifiedBgColor;
 		}
 
+		// NOTE: Fixes opacity w/ disabled bug for TouchableOpacity
+		// https://github.com/facebook/react-native/issues/17105
+		// (This says it's fixed but it's still an issue)
 		if (variant === 'primary') {
-			// NOTE: Fixes opacity w/ disabled bug for TouchableOpacity
-			// https://github.com/facebook/react-native/issues/17105
-			// (This says it's fixed but it's still an issue)
 			return disabled ? Theme.colors.cta + '50' : Theme.colors.cta;
+		} else if (variant === 'button') {
+			return disabled ? Theme.colors.primary + '50' : Theme.colors.primary;
 		}
 
 		return 'transparent';
@@ -58,15 +60,29 @@ export default function StyledButton({
 				paddingHorizontal: 32,
 			}),
 			...(variant === 'text' && {}),
-			...(variant === 'in-list' && { width: '100%', height: '100%', paddingLeft: Theme.spacing.md }),
+			...(variant === 'button' && {
+				height: 45,
+				width: 45,
+				borderRadius: 100,
+				alignItems: 'center',
+			}),
+			...(variant === 'in-list' && {
+				width: '100%',
+				height: '100%',
+				paddingLeft: Theme.spacing.md,
+			}),
 			...(buttonStyle as object),
 			backgroundColor: getBgColor(),
 		},
 		text: {
 			color: Theme.colors.primary,
 			textTransform: 'none',
-			...(variant === 'primary' && { color: 'white' }),
-			...(variant === 'text' && { color: Theme.colors.text }),
+			...(variant === 'primary' && {
+				color: 'white',
+			}),
+			...(variant === 'text' && {
+				color: Theme.colors.text,
+			}),
 			...(variant === 'in-list' && {}),
 			...(textStyle as object),
 		},

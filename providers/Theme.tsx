@@ -28,9 +28,10 @@ interface LottieSizeObj {
 interface OurFontObjProps extends ReactNativePaper.ThemeFont {
 	fontSize: number;
 	color?: string;
+	lineHeight?: number;
 }
 
-export type OurFontName = 'h1' | 'h2' | 'h3bold' | 'h3' | 'body' | 'subHeader' | 'paragraph' | 'placeholder';
+export type OurFontName = 'h1' | 'h2' | 'h3bold' | 'h3' | 'body' | 'subHeader' | 'paragraph' | 'placeholder' | 'li';
 
 interface OurFontsProps {
 	// Custom font types here
@@ -42,6 +43,7 @@ interface OurFontsProps {
 	subHeader: OurFontObjProps;
 	paragraph: OurFontObjProps;
 	placeholder: OurFontObjProps;
+	li: OurFontObjProps;
 }
 
 const OurFonts: OurFontsProps = {
@@ -79,12 +81,18 @@ const OurFonts: OurFontsProps = {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
 		fontSize: 14,
+		lineHeight: 20,
 	},
 	placeholder: {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
 		fontSize: 14,
 		color: '#143F4970',
+	},
+	li: {
+		fontFamily: 'Lato-Regular',
+		fontWeight: 'normal',
+		fontSize: 14,
 	},
 };
 
@@ -115,6 +123,7 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 		md: number;
 		lg: number;
 		xl: number;
+		screenContainer: number;
 	};
 	appBarHeight: number;
 	shadow: {
@@ -150,6 +159,7 @@ export const Theme: OurThemeProps = {
 		md: 12,
 		lg: 16,
 		xl: 32,
+		screenContainer: 16,
 	},
 	appBarHeight: 60,
 	shadow: {
@@ -208,7 +218,7 @@ export const Theme: OurThemeProps = {
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications
 		notification: DefaultTheme.colors.notification, // Background color for badges
-		warning: 'E7A600',
+		warning: '#E7A600',
 		error: '#E92000', // The color of error text, for example the error message for text inputs
 		border: 'black', // The color of borders
 		cta: '#DB7F50',

@@ -8,11 +8,12 @@ import { Theme } from '../../providers/Theme';
 interface FeaturedPlantProps {
 	plant: FeaturedPlant;
 	containerStyle?: ViewStyle;
+	onPress: () => void;
 }
 
-export default function FeaturedPlantCard({ plant, containerStyle }: FeaturedPlantProps) {
+export default function FeaturedPlantCard({ plant, onPress, containerStyle }: FeaturedPlantProps) {
 	return (
-		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }}>
+		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }} onPress={onPress}>
 			<Image style={styles.image} source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} />
 			<View style={styles.titleContainer}>
 				<Typography variant='paragraph' style={styles.titleText}>

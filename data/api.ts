@@ -13,7 +13,7 @@ export const AxiosInstance = axios.create({
 });
 
 export const mockEndpoint = (delay?: number) => {
-	return new MockAdapter(AxiosInstance, { delayResponse: delay ?? 0 });
+	return new MockAdapter(AxiosInstance, { delayResponse: __DEV__ ? delay ?? 0 : 0 });
 };
 
 export interface Token {

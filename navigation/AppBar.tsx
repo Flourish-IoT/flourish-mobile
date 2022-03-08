@@ -105,7 +105,8 @@ export default function AppBarStack() {
 	return (
 		<Tab.Navigator
 			screenOptions={{ headerShown: false }}
-			initialRouteName='Garden'
+			// TODO: Put this back, do not commit! initialRouteName='Garden'
+			initialRouteName='Courses'
 			tabBar={(props) => <OurTabBar {...props} />}
 		>
 			<Tab.Screen name='Profile' component={ProfileScreenStack} />
