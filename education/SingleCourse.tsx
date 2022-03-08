@@ -38,6 +38,19 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 		<ScreenContainer scrolls style={styles.screenContainer}>
 			<ModalBackButton absolutePos onPress={navigation.goBack} />
 			<Image source={course.image ? { uri: course.image } : getPlaceHolder('plant')} style={styles.modalImage} />
+			<View style={styles.actionItemsContainer}>
+				<StyledButton
+					variant='button'
+					icon={<Share />}
+					buttonStyle={{ marginRight: Theme.spacing.lg }}
+					// onPress={() => {}} // TODO: Open shareable dialog
+				/>
+				<StyledButton
+					variant='button'
+					icon={<Heart />}
+					// onPress={() => {}} // TODO: Add to favorites list
+				/>
+			</View>
 			<View style={styles.content}>
 				<Typography variant='placeholder'>Learning Course</Typography>
 				<Typography variant='paragraph' style={styles.textNode}>
@@ -66,9 +79,15 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 									{value}
 								</Typography>
 							);
+						case 'liTitle':
+							return (
+								<Typography key={index} variant='body' style={{ ...styles.textNode, ...styles.listNode }}>
+									{value}
+								</Typography>
+							);
 						case 'li':
 							return (
-								<Typography key={index} variant={type} style={styles.textNode}>
+								<Typography key={index} variant={type} style={{ ...styles.textNode, ...styles.listNode }}>
 									{value}
 								</Typography>
 							);
@@ -97,12 +116,12 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 					}
 				})}
 
-				<StyledDivider style={styles.divider} />
+				<StyledDivider style={{ ...styles.divider, marginTop: 0 }} />
 
 				<Typography variant='h3bold' style={styles.textNode}>
 					Explore More
 				</Typography>
-				<ScrollView style={styles.scrollContainer} horizontal>
+				<ScrollView style={{ ...styles.scrollContainer, marginBottom: 0 }} horizontal>
 					{learningCoursesIsLoading ? (
 						<Loading animation='rings' />
 					) : learningCoursesIsError ? (
@@ -121,19 +140,6 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 						))
 					)}
 				</ScrollView>
-			</View>
-			<View style={styles.actionItemsContainer}>
-				<StyledButton
-					variant='button'
-					icon={<Share />}
-					buttonStyle={{ marginRight: Theme.spacing.lg }}
-					// onPress={() => {}} // TODO: Open shareable dialog
-				/>
-				<StyledButton
-					variant='button'
-					icon={<Heart />}
-					// onPress={() => {}} // TODO: Add to favorites list
-				/>
 			</View>
 		</ScreenContainer>
 	);
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
 	content: {
 		width: '100%',
 		minHeight: '100%',
-		padding: Theme.spacing.screenContainer,
+		paddingHorizontal: Theme.spacing.screenContainer,
 		paddingTop: Theme.spacing.xl,
 		transform: [{ translateY: -25 }],
 		backgroundColor: Theme.colors.background,
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({
 		zIndex: 3,
 	},
 	scrollContainer: {
+		flexGrow: undefined,
 		marginBottom: Theme.spacing.xl,
 		width: '100%',
 		overflow: 'visible',
@@ -185,6 +192,9 @@ const styles = StyleSheet.create({
 	imageNode: {
 		height: 230,
 		borderRadius: Theme.borderRadius,
+	},
+	listNode: {
+		marginBottom: Theme.spacing.md,
 	},
 	stepNode: {
 		flexDirection: 'row',

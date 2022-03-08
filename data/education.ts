@@ -34,7 +34,7 @@ export interface Course {
 }
 
 export interface CourseNode {
-	type: OurFontName | 'li' | 'step' | 'image';
+	type: OurFontName | 'liTitle' | 'li' | 'step' | 'image';
 	value: string;
 }
 
@@ -78,7 +78,7 @@ export const useLearningCourses = () => {
 							value: 'What You’ll Need',
 						},
 						{
-							type: 'paragraph',
+							type: 'liTitle',
 							value: 'Equipment / Tools',
 						},
 						{
@@ -94,7 +94,7 @@ export const useLearningCourses = () => {
 							value: 'Gardening gloves (optional)',
 						},
 						{
-							type: 'paragraph',
+							type: 'liTitle',
 							value: 'Materials',
 						},
 						{
