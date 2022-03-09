@@ -1,4 +1,5 @@
 import { MetricRange, PlantMetric } from '../../data/garden';
+import { Theme } from '../../providers/Theme';
 import { Service } from '../../screens/welcome/SignUp';
 
 const AppConfig = require('../../app.json');
@@ -90,12 +91,12 @@ export const getMetricGaugeColor = (metric: MetricRange) => {
 	switch (metric) {
 		case 1:
 		case 5:
-			return '#FF614A';
+			return Theme.colors.error;
 		case 2:
 		case 4:
-			return '#FFDB3F';
+			return Theme.colors.warning;
 		case 3:
-			return '#10B295';
+			return '#00A083';
 	}
 };
 
