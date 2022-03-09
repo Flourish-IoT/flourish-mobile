@@ -114,7 +114,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 				General
 			</Typography>
 			{
-				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 					<StyledTextInput
 						label='Display Name'
 						value={username}
@@ -147,7 +147,7 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Data
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 				<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
 			</SegmentedList>
 			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>

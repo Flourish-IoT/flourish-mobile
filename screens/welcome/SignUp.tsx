@@ -16,6 +16,7 @@ import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Button from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
+import Tos from './components/Tos';
 
 const Stack = createStackNavigator();
 
@@ -92,7 +93,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 
 	const styles = StyleSheet.create({
 		input: {
-			backgroundColor: Theme.colors.background,
+			backgroundColor: '#EEF8F6',
 		},
 	});
 
@@ -105,7 +106,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 				<StyledTextInput
 					label={getUsernameErrorMsg() ?? 'Display Name'}
 					style={styles.input}
@@ -152,12 +153,14 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				or sign up with
 			</Typography>
-			<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+			<View
+				style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: Theme.spacing.md }}
+			>
 				{services
 					.filter((s) => s !== 'Email')
-					.map((name) => (
+					.map((name, index) => (
 						<Button
-							key={name}
+							key={index + name}
 							variant='primary'
 							onPress={() => handleSignUp(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
@@ -165,6 +168,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 						/>
 					))}
 			</View>
+			<Tos />
 		</ScreenContainer>
 	);
 };
@@ -229,7 +233,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl, textAlign: 'center' }}>
 				We have sent a verification code to "{email}"
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.xl }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.xl }}>
 				<StyledTextInput
 					label='Security Code'
 					keyboardType='numeric'
@@ -314,8 +318,8 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 					marginBottom: Theme.spacing.md,
 				}}
 			>
-				{ratings.map((r) => (
-					<RadioButton key={r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
+				{ratings.map((r, index) => (
+					<RadioButton key={index + r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
 				))}
 			</View>
 			<Button

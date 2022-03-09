@@ -14,7 +14,7 @@ export interface Task {
 export const useTasks = (userId: number | 'me') => {
 	return useQuery(['tasks', userId], () => {
 		const query = `/tasks/${userId}`;
-		mockEndpoint(250)
+		mockEndpoint(200)
 			.onGet(query)
 			.replyOnce<Task[]>(200, [
 				{ id: 1, plantId: 1, datetime: new Date(), title: 'Water Edward', description: '', complete: false },

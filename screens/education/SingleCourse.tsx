@@ -75,19 +75,19 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 						case 'paragraph':
 						case 'placeholder':
 							return (
-								<Typography key={index} variant={type} style={styles.textNode}>
+								<Typography key={index + type} variant={type} style={styles.textNode}>
 									{value}
 								</Typography>
 							);
 						case 'liTitle':
 							return (
-								<Typography key={index} variant='body' style={{ ...styles.textNode, ...styles.listNode }}>
+								<Typography key={index + type} variant='body' style={{ ...styles.textNode, ...styles.listNode }}>
 									{value}
 								</Typography>
 							);
 						case 'li':
 							return (
-								<Typography key={index} variant={type} style={{ ...styles.textNode, ...styles.listNode }}>
+								<Typography key={index + type} variant={type} style={{ ...styles.textNode, ...styles.listNode }}>
 									{value}
 								</Typography>
 							);
@@ -96,7 +96,7 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 							const stepIndex = steps.indexOf(node) + 1;
 
 							return (
-								<View key={index} style={{ ...styles.textNode, ...styles.stepNode }}>
+								<View key={index + type} style={{ ...styles.textNode, ...styles.stepNode }}>
 									<Typography variant='h2' style={styles.stepNodeNumber}>
 										{padString(stepIndex, 'left', 2, '0')}
 									</Typography>
@@ -108,7 +108,7 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 						case 'image':
 							return (
 								<Image
-									key={index}
+									key={index + type}
 									source={value ? { uri: value } : getPlaceHolder('plant')}
 									style={{ ...styles.textNode, ...styles.imageNode }}
 								/>

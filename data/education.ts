@@ -14,7 +14,7 @@ export interface FeaturedPlant {
 export const useFeaturedPlants = () => {
 	return useQuery(['education', 'featured-plants'], () => {
 		const query = `/education/featured-plants`;
-		mockEndpoint(250)
+		mockEndpoint(200)
 			.onGet(query)
 			.replyOnce<FeaturedPlant[]>(200, [
 				{ id: 1, name: 'Monstera', image: undefined },
@@ -41,7 +41,7 @@ export interface CourseNode {
 export const useLearningCourses = () => {
 	return useQuery(['education', 'learning-course'], () => {
 		const query = `/education/learning-course`;
-		mockEndpoint(250)
+		mockEndpoint(200)
 			.onGet(query)
 			.replyOnce<Course[]>(200, [
 				{
@@ -203,7 +203,7 @@ export interface Tutorial extends Course {
 export const useQuickTutorials = () => {
 	return useQuery(['education', 'quick-tutorial'], () => {
 		const query = `/education/quick-tutorial`;
-		mockEndpoint(250)
+		mockEndpoint(200)
 			.onGet(query)
 			.replyOnce<Tutorial[]>(200, [
 				{

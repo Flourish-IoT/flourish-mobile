@@ -10,7 +10,6 @@ import SplashScreen from '../screens/welcome/Splash';
 
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
-	secondary: string;
 	warning: string;
 	border: string;
 	cta: string;
@@ -31,7 +30,7 @@ interface OurFontObjProps extends ReactNativePaper.ThemeFont {
 	lineHeight?: number;
 }
 
-export type OurFontName = 'h1' | 'h2' | 'h3bold' | 'h3' | 'body' | 'subHeader' | 'paragraph' | 'placeholder' | 'li';
+export type OurFontName = 'h1' | 'h2' | 'h3bold' | 'h3' | 'body' | 'subHeader' | 'paragraph' | 'placeholder' | 'li' | 'link';
 
 interface OurFontsProps {
 	// Custom font types here
@@ -44,6 +43,7 @@ interface OurFontsProps {
 	paragraph: OurFontObjProps;
 	placeholder: OurFontObjProps;
 	li: OurFontObjProps;
+	link: OurFontObjProps;
 }
 
 const OurFonts: OurFontsProps = {
@@ -93,6 +93,12 @@ const OurFonts: OurFontsProps = {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
 		fontSize: 14,
+	},
+	link: {
+		fontFamily: 'Lato-Regular',
+		fontWeight: 'normal',
+		fontSize: 14,
+		color: '#799E76',
 	},
 };
 
@@ -208,7 +214,6 @@ export const Theme: OurThemeProps = {
 	},
 	colors: {
 		primary: '#799E76', // Primary color for your app, usually your brand color
-		secondary: '#568A9A',
 		accent: '#9A532F', // Secondary color for your app which complements the primary color
 		background: '#F5F7FB', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards

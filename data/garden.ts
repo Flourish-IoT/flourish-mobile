@@ -58,7 +58,7 @@ export const usePlants = (userId: number | 'me') => {
 		['users', userId, 'plants'],
 		async () => {
 			const query = `/users/${userId}/plants`;
-			mockEndpoint(250).onGet(query).replyOnce<Plant[]>(200, tempMyPlants);
+			mockEndpoint(200).onGet(query).replyOnce<Plant[]>(200, tempMyPlants);
 			return AxiosInstance.get<Plant[]>(query).then((res) => res.data);
 		},
 		{
@@ -134,7 +134,7 @@ export function tempMyPlantData(): PlantMetrics {
 export const usePlantData = (plantId: number) => {
 	return useQuery(['plants', plantId, 'data'], () => {
 		const query = `/plants/${plantId}/data`;
-		mockEndpoint(250).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
+		mockEndpoint(200).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
 		return AxiosInstance.get<PlantMetrics>(query).then(({ data }) => ({ ...data, time: new Date(data.time) }));
 	});
 };

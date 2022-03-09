@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import TopTabContainer from '../../lib/components/TopTabContainer';
-import { Achievement, useClaimedAchievements, useUnClaimAchievement } from '../../data/rewards';
+import { Mission, useClaimedMissions, useUnClaimMission } from '../../data/rewards';
 import Empty from '../../lib/components/Empty';
 import Loading from '../../lib/components/Loading';
 import { chunkArray } from '../../lib/utils/helper';
@@ -14,14 +14,14 @@ interface BadgesTabProps {
 }
 
 export default function BadgesTab({ navigation }: BadgesTabProps) {
-	const { data: badges, isLoading: badgesIsLoading, isError: badgesIsError } = useClaimedAchievements('me');
-	const unClaimAchievement = useUnClaimAchievement();
+	const { data: badges, isLoading: badgesIsLoading, isError: badgesIsError } = useClaimedMissions('me');
+	const unClaimMission = useUnClaimMission();
 
 	if (badgesIsLoading) return <Loading animation='rings' />;
 
-	const chunks: Achievement[][] = chunkArray(badges, 3);
+	const chunks: Mission[][] = chunkArray(badges, 3);
 
-	const onBadgePress = (badge: Achievement) => {
+	const onBadgePress = (badge: Mission) => {
 		Alert.alert(badge.title, `Lvl ${badge.level} - ${badge.points} pts\n\n` + badge.description, [
 			{
 				text: 'Close',
@@ -46,9 +46,9 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 		]);
 	};
 
-	const unClaim = async (badge: Achievement) => {
+	const unClaim = async (badge: Mission) => {
 		try {
-			await unClaimAchievement.mutateAsync(badge);
+			await unClaimMission.mutateAsync(badge);
 		} catch (error) {
 			alert(error);
 		}
@@ -57,14 +57,19 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 	return (
 		<TopTabContainer scrolls bounces={false} style={styles.container}>
 			{chunks.length === 0 ? (
-				<Empty animation='magnifyingGlass' text='No badges to claim.' />
+				<Empty animation='magnifyingGlass' size='lg' text='No badges to claim.' />
 			) : badgesIsError ? (
 				<Empty animation='error' text='Error loading badges.' />
 			) : (
 				chunks.map((chunk, chunkIndex) => (
 					<View key={chunkIndex} style={{ ...styles.shelf, ...(chunkIndex === 0 && { paddingTop: 0 }) }}>
 						{chunk.map((b, aIndex) => (
-							<BadgePot key={String(aIndex + b.id)} badge={b} isLocked={false} onPress={() => onBadgePress(b)} />
+							<BadgePot
+								key={String(aIndex + b.id)}
+								badge={b}
+								onPress={() => onBadgePress(b)}
+								containerStyle={styles.badge}
+							/>
 						))}
 					</View>
 				))
@@ -91,5 +96,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		alignItems: 'flex-end',
+	},
+	badge: {
+		transform: [{ translateY: 5.5 }], // FIX: Gap between pot and shelf
 	},
 });

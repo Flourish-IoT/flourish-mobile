@@ -25,7 +25,14 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 
 	return (
 		<View style={{ width: '100%', overflow: 'visible', marginVertical: Theme.spacing.screenContainer, ...style }}>
-			<View style={{ width: '100%', overflow: 'visible', marginLeft: -Theme.spacing.screenContainer, marginBottom: Theme.spacing.screenContainer }}>
+			<View
+				style={{
+					width: '100%',
+					overflow: 'visible',
+					marginLeft: -Theme.spacing.screenContainer,
+					marginBottom: Theme.spacing.screenContainer,
+				}}
+			>
 				<Carousel
 					data={plants}
 					renderItem={({ item: plant }: CarouselRendererProps) => (
@@ -50,9 +57,9 @@ export default function CarouselView({ navigation, plants, onPress, style }: Car
 					justifyContent: 'center',
 				}}
 			>
-				{plantMetrics.map((m) => (
+				{plantMetrics.map((m, index) => (
 					<MetricVisual
-						key={m}
+						key={index + m}
 						mode='block'
 						metricType={m}
 						plantId={selectedPlant.id}

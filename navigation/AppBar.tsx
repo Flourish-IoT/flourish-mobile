@@ -89,7 +89,7 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 				return (
 					<TouchableOpacity
 						activeOpacity={1}
-						key={name}
+						key={index + name}
 						onPress={() => navigation.navigate(name)}
 						style={isCenterBtn ? { ...styles.appBarButton, ...centerBtnStyle } : styles.appBarButton}
 					>

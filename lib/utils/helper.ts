@@ -62,16 +62,16 @@ export function filterData<T>(data: T[], query: string) {
 	return data.filter((d) => (query && query.length > 0 ? getObjectValues(d).includes(normalize(query)) : true));
 }
 
-export function getFullMetricName(metric: PlantMetric) {
+export const getFullMetricName = (metric: PlantMetric) => {
 	switch (metric) {
 		case 'Water':
 			return 'Soil Moisture';
 		default:
 			return metric;
 	}
-}
+};
 
-export function getMetricRangeDescription(metric: MetricRange) {
+export const getMetricRangeDescription = (metric: MetricRange) => {
 	switch (metric) {
 		case 1:
 			return 'Very Low';
@@ -84,9 +84,9 @@ export function getMetricRangeDescription(metric: MetricRange) {
 		case 5:
 			return 'Very High';
 	}
-}
+};
 
-export function getMetricGaugeColor(metric: MetricRange) {
+export const getMetricGaugeColor = (metric: MetricRange) => {
 	switch (metric) {
 		case 1:
 		case 5:
@@ -97,13 +97,36 @@ export function getMetricGaugeColor(metric: MetricRange) {
 		case 3:
 			return '#10B295';
 	}
-}
+};
 
-export function getUserLevel(xp: number) {
-	return Math.floor(0.06 * Math.sqrt(xp));
-}
+export const LevelMultiplier = 0.08;
 
-export function getUserLevelName(level: number) {
+export const getUserLevel = (xp: number) => {
+	const potentialLvl = Math.floor(LevelMultiplier * Math.sqrt(xp));
+	return potentialLvl < 1 ? 1 : potentialLvl;
+};
+
+export const getXpReqForLevel = (level: number) => {
+	return Math.ceil(Math.pow(level / LevelMultiplier, 2));
+};
+
+export const getXpRangeOfLevel = (level: number) => {
+	return getXpReqForLevel(level + 1) - getXpReqForLevel(level);
+};
+
+export const getRewardsProgress = (xp: number) => {
+	const currentLevel = getUserLevel(xp);
+	const xpProgressInLevel = xp - getXpReqForLevel(currentLevel);
+
+	return {
+		level: currentLevel,
+		xp: xpProgressInLevel,
+		percent: Math.floor((xpProgressInLevel / getXpRangeOfLevel(currentLevel)) * 100),
+		required: getXpReqForLevel(currentLevel + 1) - xp,
+	};
+};
+
+export const getUserLevelName = (level: number) => {
 	switch (level) {
 		case 1:
 			return 'Plant Explorer';
@@ -114,22 +137,21 @@ export function getUserLevelName(level: number) {
 		default:
 			return 'Plant Guru';
 	}
-}
+};
 
 export const chunkArray = (array: any[], amountPerChunk: number) =>
 	array.reduce((resultArray, item, index) => {
 		const chunkIndex = Math.floor(index / amountPerChunk);
-		if (!resultArray[chunkIndex]) resultArray[chunkIndex] = []; // start a new chunk
+		if (!resultArray[chunkIndex]) resultArray[chunkIndex] = []; // Start a new chunk
 		resultArray[chunkIndex].push(item);
 		return resultArray;
 	}, []);
 
-export const getPlaceHolder = (fileName: 'plant' | 'profile') => {
+export const getPlaceHolder = (fileName: 'plant') => {
 	const path = '../assets/placeholder/';
 
 	const images = {
 		plant: require(path + 'plant.png'),
-		profile: require(path + 'profile.png'),
 	};
 
 	return images[fileName];

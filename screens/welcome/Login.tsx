@@ -13,6 +13,7 @@ import { AppName, getServiceColor } from '../../lib/utils/helper';
 import { isValidEmail } from '../../lib/utils/validation';
 import { Theme } from '../../providers/Theme';
 import { Service, services } from './SignUp';
+import Tos from './components/Tos';
 
 interface LoginScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -58,7 +59,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
 				Sign in to continue your journey with {AppName}
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 				<StyledTextInput label='Email' onChangeText={setEmail} value={email} left={<TextInput.Icon name='email' />} />
 				<StyledTextInput
 					label='Password'
@@ -79,27 +80,26 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				or sign in with
 			</Typography>
-			<View
-				style={{
-					width: '100%',
-					flexDirection: 'row',
-					justifyContent: 'space-between',
-					marginBottom: Theme.spacing.md,
-				}}
-			>
+			<View style={styles.servicesContainer}>
 				{services
 					.filter((s) => s !== 'Email')
-					.map((name) => (
+					.map((name, index) => (
 						<Button
-							key={name}
+							key={index + name}
 							variant='primary'
 							onPress={() => handleSignInWithService(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: getServiceColor(name) }}
+							buttonStyle={{ ...styles.serviceButton, backgroundColor: getServiceColor(name) }}
 						/>
 					))}
 			</View>
-			<Button variant='text' title='Forgot Password' onPress={() => navigation.navigate('ForgotPassword')} />
+			<Button
+				variant='text'
+				title='Forgot Password'
+				onPress={() => navigation.navigate('ForgotPassword')}
+				buttonStyle={{ marginBottom: Theme.spacing.md }}
+			/>
+			<Tos />
 		</ScreenContainer>
 	);
 }
@@ -107,5 +107,15 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 const styles = StyleSheet.create({
 	screenContainer: {
 		justifyContent: 'center',
+	},
+	servicesContainer: {
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: Theme.spacing.md,
+	},
+	serviceButton: {
+		width: 100,
+		borderRadius: Theme.borderRadius,
 	},
 });

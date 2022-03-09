@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 		bottom: 10,
 		right: -Theme.spacing.md / 2,
 		borderRadius: Theme.borderRadius / 2,
-		backgroundColor: Theme.colors.secondary,
+		backgroundColor: Theme.colors.primary,
 		paddingVertical: Theme.spacing.xs,
 		paddingHorizontal: Theme.spacing.sm,
 		maxHeight: 50,

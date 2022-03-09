@@ -38,7 +38,7 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 				</View>
 				{plantMetrics.map((m, mIndex, { length }) => (
 					<MetricVisual
-						key={m}
+						key={mIndex + m}
 						mode='listItem'
 						metricType={m}
 						plantId={plant.id}

@@ -1,14 +1,15 @@
 import React, { ReactNode } from 'react';
-import { Text, TextStyle } from 'react-native';
+import { Text, TextStyle, Linking } from 'react-native';
 import { OurFontName, Theme } from '../../../providers/Theme';
 
 interface TypographyProps {
 	variant: OurFontName;
 	children?: ReactNode;
+	externalLink?: string;
 	style?: TextStyle;
 }
 
-export default function Typography({ variant, children, style, ...rest }: TypographyProps) {
+export default function Typography({ variant, children, externalLink, style, ...rest }: TypographyProps) {
 	const fontStyle: TextStyle = {
 		...Theme.fonts[variant],
 		...(!Theme.fonts[variant].color && {
@@ -16,6 +17,9 @@ export default function Typography({ variant, children, style, ...rest }: Typogr
 		}),
 		...(!!Theme.fonts[variant].lineHeight && {
 			lineHeight: Theme.fonts[variant].lineHeight,
+		}),
+		...(variant === 'link' && {
+			textDecorationLine: 'underline',
 		}),
 		...style,
 	};

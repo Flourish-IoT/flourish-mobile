@@ -1,33 +1,36 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Image, ViewStyle, View } from 'react-native';
-import { Achievement } from '../../../data/rewards';
+import { Mission } from '../../../data/rewards';
 import Typography from '../../../lib/components/styled/Typography';
 import HalfPot from '../../../lib/icons/HalfPot';
 import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface BadgePotProps {
-	badge: Achievement;
+	badge: Mission;
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
 	imageStyle?: ViewStyle;
 	showLevel?: boolean;
-	isLocked: boolean;
 }
 
-export default function BadgePot({ badge, onPress, containerStyle, imageStyle, showLevel = false, isLocked }: BadgePotProps) {
+export default function BadgePot({ badge, onPress, containerStyle, imageStyle, showLevel = false }: BadgePotProps) {
 	return (
 		<TouchableOpacity
-			style={{ ...styles.badge, ...containerStyle }}
+			style={{ ...styles.container, ...containerStyle }}
 			onPress={onPress}
-			disabled={isLocked}
+			disabled={!onPress}
 			activeOpacity={onPress ? 0.3 : 1}
 		>
-			<Image
-				style={{ ...styles.image, ...(imageStyle as object) }}
-				source={badge.image ? { uri: badge.image } : getPlaceHolder('plant')}
-			/>
-			<HalfPot />
+			<View style={styles.imageContainer}>
+				<Image
+					style={{ ...styles.image, ...(imageStyle as object) }}
+					source={badge.image ? { uri: badge.image } : getPlaceHolder('plant')}
+				/>
+			</View>
+			<View style={styles.potContainer}>
+				<HalfPot style={styles.pot} />
+			</View>
 			{showLevel && (
 				<View style={styles.labelContainer}>
 					<Typography variant='body'>Lvl {badge.level}</Typography>
@@ -38,23 +41,37 @@ export default function BadgePot({ badge, onPress, containerStyle, imageStyle, s
 }
 
 const styles = StyleSheet.create({
-	badge: {
-		height: '100%',
-		width: '30%',
-		justifyContent: 'flex-end',
-		alignItems: 'center',
+	container: {
+		width: 90,
+		height: 120,
+		...Theme.util.flexCenter,
+		transform: [{ translateY: 0 }], // FIX: Fixes centering of pot within container
+	},
+	imageContainer: {
+		width: '80%',
+		height: '60%',
 	},
 	image: {
-		height: undefined,
-		width: '80%',
-		aspectRatio: 1 / 1,
+		width: '100%',
+		height: '100%',
 		borderTopLeftRadius: Theme.borderRadius,
 		borderTopRightRadius: Theme.borderRadius,
-		transform: [{ translateY: 1 }], // NOTE: This fixes 1px gap between image and pot
+		transform: [{ translateY: 8 }], // FIX: Fixes centering of pot within container
+	},
+	potContainer: {
+		width: '100%',
+		height: '40%',
+		transform: [{ translateY: 8 }], // FIX: Fixes centering of pot within container
+	},
+	pot: {
+		maxWidth: '100%',
+		height: '100%',
+		transform: [{ translateY: -3 }], // FIX: Fixes gap between image and pot
 	},
 	labelContainer: {
 		position: 'absolute',
-		bottom: 25,
+		bottom: 10,
+		right: -10,
 		paddingHorizontal: Theme.spacing.sm,
 		paddingVertical: Theme.spacing.xs,
 		backgroundColor: 'white',
@@ -62,6 +79,5 @@ const styles = StyleSheet.create({
 		alignSelf: 'flex-end',
 		...Theme.util.flexCenter,
 		...Theme.shadow,
-		transform: [{ translateX: 10 }],
 	},
 });

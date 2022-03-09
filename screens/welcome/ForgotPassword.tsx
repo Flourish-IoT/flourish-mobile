@@ -105,7 +105,7 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				We have sent a password reset code to "{email}"
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 				<TextInput
 					label='Security Code'
 					keyboardType='numeric'

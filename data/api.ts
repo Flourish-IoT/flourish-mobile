@@ -74,7 +74,7 @@ export const refresh = async () => {
 	const refreshToken = await getRefreshToken();
 
 	const query = '/token';
-	mockEndpoint(250)
+	mockEndpoint(200)
 		.onPost(query, {
 			grantType: 'refresh_token',
 			accessToken: accessToken.accessToken,
