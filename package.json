@@ -2,7 +2,7 @@
 	"main": "node_modules/expo/AppEntry.js",
 	"private": true,
 	"name": "flourish",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"author": "The Flourish Team",
 	"license": "ISC",
 	"homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
@@ -57,7 +57,8 @@
 		"react-native-web": "0.17.1",
 		"react-query": "^3.33.1",
 		"expo-av": "~10.2.0",
-		"react-native-webview": "11.15.0"
+		"react-native-webview": "11.15.0",
+		"expo-updates": "~0.11.6"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
