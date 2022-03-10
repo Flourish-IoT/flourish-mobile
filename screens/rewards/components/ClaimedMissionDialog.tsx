@@ -86,7 +86,7 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 					<Typography variant='h1' style={styles.text}>
 						MISSION COMPLETE
 					</Typography>
-					<BadgePot badge={mission} containerStyle={styles.badgePot} />
+					<BadgePot image={mission.image} containerStyle={styles.badgePot} />
 					<View style={styles.spacer} />
 					<Typography variant='body' style={styles.text}>
 						+{mission.points} points

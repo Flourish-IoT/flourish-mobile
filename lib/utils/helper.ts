@@ -96,7 +96,7 @@ export const getMetricGaugeColor = (metric: MetricRange) => {
 		case 4:
 			return Theme.colors.warning;
 		case 3:
-			return '#00A083';
+			return Theme.colors.passing;
 	}
 };
 

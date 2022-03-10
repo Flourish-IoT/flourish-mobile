@@ -34,7 +34,12 @@ export default function MissionListItem({ mission, onClaim, isLoading, container
 			<View style={styles.topSection}>
 				{/* LEFT */}
 				<View style={styles.topLeftContainer}>
-					<BadgePot badge={mission} showLevel containerStyle={styles.badge} imageStyle={{ width: '100%' }} />
+					<BadgePot
+						image={mission.image}
+						level={mission.level}
+						containerStyle={styles.badge}
+						imageStyle={{ width: '100%' }}
+					/>
 				</View>
 				{/* RIGHT */}
 				<View style={styles.topRightContainer}>

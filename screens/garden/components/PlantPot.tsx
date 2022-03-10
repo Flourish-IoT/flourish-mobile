@@ -4,7 +4,7 @@ import { ViewMode } from '..';
 import Typography from '../../../lib/components/styled/Typography';
 import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
-import PotBaseSvg, { PotBaseSvgProps } from './PotBaseSvg';
+import PotFullSize, { PotBaseSvgProps } from '../../../lib/icons/PotFullSize';
 
 interface PlantProps {
 	viewMode: ViewMode;
@@ -56,7 +56,8 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 			position: 'absolute',
 			bottom: 0,
 			width: '80%',
-			height: 70,
+			height: 93.8,
+			...Theme.util.flexCenter,
 		},
 		text: {
 			width: '100%',
@@ -71,7 +72,7 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 				<View style={styles.imageContainer}>
 					<Image style={styles.image} source={!!image ? { uri: image } : getPlaceHolder('plant')} />
 				</View>
-				<PotBaseSvg width='100%' style={styles.potBaseGraphic} {...svgProps} />
+				<PotFullSize width='100%' style={styles.potBaseGraphic} {...svgProps} />
 				{(title || subtitle) && (
 					<View style={styles.potBaseText}>
 						<Typography variant='h3bold' style={styles.text}>

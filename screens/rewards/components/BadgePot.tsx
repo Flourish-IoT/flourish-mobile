@@ -2,19 +2,19 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, Image, ViewStyle, View } from 'react-native';
 import { Mission } from '../../../data/rewards';
 import Typography from '../../../lib/components/styled/Typography';
-import HalfPot from '../../../lib/icons/HalfPot';
+import PotHalfSize from '../../../lib/icons/PotHalfSize';
 import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface BadgePotProps {
-	badge: Mission;
+	image: string | undefined;
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
 	imageStyle?: ViewStyle;
-	showLevel?: boolean;
+	level?: number;
 }
 
-export default function BadgePot({ badge, onPress, containerStyle, imageStyle, showLevel = false }: BadgePotProps) {
+export default function BadgePot({ image, onPress, containerStyle, imageStyle, level }: BadgePotProps) {
 	return (
 		<TouchableOpacity
 			style={{ ...styles.container, ...containerStyle }}
@@ -25,15 +25,15 @@ export default function BadgePot({ badge, onPress, containerStyle, imageStyle, s
 			<View style={styles.imageContainer}>
 				<Image
 					style={{ ...styles.image, ...(imageStyle as object) }}
-					source={badge.image ? { uri: badge.image } : getPlaceHolder('plant')}
+					source={!!image ? { uri: image } : getPlaceHolder('plant')}
 				/>
 			</View>
 			<View style={styles.potContainer}>
-				<HalfPot style={styles.pot} />
+				<PotHalfSize style={styles.pot} />
 			</View>
-			{showLevel && (
+			{!!level && (
 				<View style={styles.labelContainer}>
-					<Typography variant='body'>Lvl {badge.level}</Typography>
+					<Typography variant='body'>Lvl {level}</Typography>
 				</View>
 			)}
 		</TouchableOpacity>

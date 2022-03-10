@@ -66,7 +66,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 						{chunk.map((b, aIndex) => (
 							<BadgePot
 								key={String(aIndex + b.id)}
-								badge={b}
+								image={b.image}
 								onPress={() => onBadgePress(b)}
 								containerStyle={styles.badge}
 							/>
