@@ -16,6 +16,7 @@ import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import CourseCard from './components/CourseCard';
 import FeaturedPlantCard from './components/FeaturedPlantCard';
 import SingleCourse from './SingleCourse';
+import VideoCard from './components/VideoCard';
 
 interface EducationIndexProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -88,12 +89,10 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 					<Empty size='lg' animation='magnifyingGlass' text={emptyResultText} />
 				) : (
 					quickTutorials.map((qt, index, { length }) => (
-						<CourseCard
+						<VideoCard
 							key={String(index + qt.id)}
-							cardData={qt}
-							type='Tutorial'
+							videoData={qt}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
-							onPress={() => {}} // TODO: Open native video
 						/>
 					))
 				)}
@@ -116,7 +115,6 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 						<CourseCard
 							key={String(index + lc.id)}
 							cardData={lc}
-							type='Course'
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 							onPress={() => navigation.navigate('SingleCourse', { courseId: lc.id })}
 						/>

@@ -1,26 +1,33 @@
 import React from 'react';
-import { View, Image, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
-import { Course } from '../../../data/education';
+import { View, StyleSheet, ViewStyle } from 'react-native';
+import { Tutorial } from '../../../data/education';
 import Typography from '../../../lib/components/styled/Typography';
-import { getPlaceHolder } from '../../../lib/utils/helper';
+import { Video } from 'expo-av';
 import { Theme } from '../../../providers/Theme';
+import { WebView } from 'react-native-webview';
 
-interface CourseCardProps {
-	cardData: Course;
-	onPress: () => void;
+interface VideoCardProps {
+	videoData: Tutorial;
 	containerStyle?: ViewStyle;
 }
 
-export default function CourseCard({ cardData, onPress, containerStyle }: CourseCardProps) {
+export default function VideoCard({ videoData, containerStyle }: VideoCardProps) {
+	const videoIsDirectFile = videoData.link.split('/').pop().indexOf('.') > 0; // Checks if there's a period at the end
+
 	return (
-		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }} onPress={onPress}>
-			<Image style={styles.image} source={cardData.image ? { uri: cardData.image } : getPlaceHolder('plant')} />
+		<View style={{ ...styles.container, ...(containerStyle as object) }}>
+			{videoIsDirectFile ? (
+				<Video style={styles.video} source={{ uri: videoData.link }} useNativeControls resizeMode='contain' />
+			) : (
+				<WebView style={styles.video} source={{ uri: videoData.link }} />
+			)}
+
 			<View style={styles.titleContainer}>
 				<Typography variant='h3bold' style={styles.titleText}>
-					{cardData.name}
+					{videoData.name}
 				</Typography>
 			</View>
-		</TouchableOpacity>
+		</View>
 	);
 }
 
@@ -32,7 +39,7 @@ const styles = StyleSheet.create({
 		width: 180,
 		height: 190,
 	},
-	image: {
+	video: {
 		width: '100%',
 		height: imageHeightPercentage + '%',
 		borderTopLeftRadius: Theme.borderRadius,

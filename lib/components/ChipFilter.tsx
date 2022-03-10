@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: Theme.spacing.xs,
 	},
 	textStyle: {
-		paddingRight: 4,
+		paddingRight: 4, // FIX: Fixes horizontal centering
+		paddingTop: 1, // FIX: Fixes vertical centering
 	},
 });
