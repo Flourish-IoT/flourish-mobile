@@ -63,7 +63,6 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 	const [attempts, setAttempts] = useState(0);
 
 	const formIsValid = !resetCode.some((n) => n === null);
-	console.log(resetCode);
 	const disableVerifyBtn = !formIsValid || attempts > 0;
 	const disableResendBtn = attempts === 0;
 
