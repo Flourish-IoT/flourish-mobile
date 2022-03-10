@@ -6,11 +6,13 @@ import { PlantMetric, usePlantData } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Typography from '../../lib/components/styled/Typography';
 import { Theme } from '../../providers/Theme';
 import { getMetricGaugeColor, getMetricRangeDescription } from '../../lib/utils/helper';
 import Loading from '../../lib/components/Loading';
+
+import { BarChart } from 'react-native-chart-kit';
 
 interface SingleMetricScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -56,6 +58,46 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 					</Typography>
 				</View>
 			</View>
+			<View
+				style={
+					{
+						// backgroundColor: Theme.colors.background,
+					}
+				}
+			>
+				<BarChart
+					style={
+						{
+							// backgroundColor: Theme.colors.background,
+						}
+					}
+					data={{
+						labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+						datasets: [
+							{
+								data: [50, 40, 20, 30, 50, 43],
+							},
+						],
+					}}
+					width={Dimensions.get('window').width - Theme.spacing.md * 2}
+					height={220}
+					yAxisSuffix='%'
+					yAxisLabel=''
+					chartConfig={{
+						backgroundGradientFromOpacity: 0,
+						backgroundGradientToOpacity: 0,
+
+						fillShadowGradientOpacity: 1,
+						color: () => `#015669`,
+						//015669 -> 038780
+						labelColor: () => Theme.colors.text,
+
+						barPercentage: 0.5,
+						barRadius: 5,
+						decimalPlaces: 0,
+					}}
+				/>
+			</View>
 		</ScreenContainer>
 	);
 }
@@ -71,6 +113,7 @@ const styles = StyleSheet.create({
 	},
 	metricVisualContainer: {
 		flexDirection: 'row',
+		marginBottom: Theme.spacing.lg,
 	},
 	metricVisual: {
 		transform: [{ scale: 1.5 }],
