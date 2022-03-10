@@ -25,7 +25,7 @@ interface ScreenIconProps extends SvgProps {
 }
 
 const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
-	const focusColor = (focused: boolean) => (focused ? Theme.colors.primary : Theme.colors.disabled);
+	const focusColor = (focused: boolean) => (focused ? 'white' : Theme.colors.faded);
 
 	switch (icon) {
 		case 'Profile':
@@ -33,7 +33,7 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 		case 'Courses':
 			return <GradCap fill={focusColor(focused)} />;
 		case 'Garden':
-			return <Plant fill={focused ? 'white' : Theme.colors.text} width={35} />;
+			return <Plant fill={focused ? 'white' : Theme.colors.primary} width={35} />;
 		case 'Calendar':
 			return <Calendar fill={focusColor(focused)} />;
 		case 'Rewards':
@@ -62,7 +62,7 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			alignItems: 'center',
 			...Theme.shadow,
 		},
-		appBarButton: {
+		appBarBtnOuter: {
 			flex: 1,
 			height: '100%',
 			flexDirection: 'row',
@@ -76,6 +76,15 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			{state.routes.map(({ name }, index) => {
 				const isFocused = state.index === index;
 				const isCenterBtn = name === 'Garden';
+
+				const appBarBtnInner: ViewStyle = {
+					...Theme.util.flexCenter,
+					width: '75%',
+					height: undefined,
+					aspectRatio: 1.1 / 1,
+					borderRadius: Theme.borderRadius,
+					backgroundColor: isFocused ? Theme.colors.primary : 'transparent',
+				};
 
 				const centerBtnStyle: ViewStyle = {
 					borderRadius: 100,
@@ -91,9 +100,11 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 						activeOpacity={1}
 						key={index + name}
 						onPress={() => navigation.navigate(name)}
-						style={isCenterBtn ? { ...styles.appBarButton, ...centerBtnStyle } : styles.appBarButton}
+						style={isCenterBtn ? { ...styles.appBarBtnOuter, ...centerBtnStyle } : styles.appBarBtnOuter}
 					>
-						<ScreenIcon icon={name as AppBarRoute} focused={isFocused} />
+						<View style={!isCenterBtn && appBarBtnInner}>
+							<ScreenIcon icon={name as AppBarRoute} focused={isFocused} />
+						</View>
 					</TouchableOpacity>
 				);
 			})}
@@ -105,7 +116,6 @@ export default function AppBarStack() {
 	return (
 		<Tab.Navigator
 			screenOptions={{ headerShown: false }}
-			// TODO: Put this back, do not commit! initialRouteName='Garden'
 			initialRouteName='Garden'
 			tabBar={(props) => <OurTabBar {...props} />}
 		>
