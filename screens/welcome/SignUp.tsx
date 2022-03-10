@@ -17,6 +17,7 @@ import Button from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
 import Tos from './components/Tos';
+import VerificationCodeField from '../../lib/components/VerificationCodeField';
 
 const Stack = createStackNavigator();
 
@@ -184,16 +185,12 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const verifyEmail = useVerifyEmail();
 	const { email, username, password } = route.params as EmailVerificationStepProps;
 
-	const [code, setCode] = useState<string>('2022');
+	const [code, setCode] = useState<number[]>([2, 2, 2, 2]);
 	const [attempts, setAttempts] = useState(0);
 
-	const formIsValid = String(code).trim().length === 4;
+	const formIsValid = !code.some((n) => n === null);
 	const disableVerifyBtn = !formIsValid || attempts > 0;
 	const disableResendBtn = attempts === 0;
-
-	useEffect(() => {
-		formIsValid && Keyboard.dismiss();
-	}, [code]);
 
 	const onResend = async () => {
 		try {
@@ -227,22 +224,18 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			style={{ justifyContent: 'center', backgroundColor: 'white' }}
 			onBack={navigation.goBack}
 		>
-			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.xl }}>
-				Verification Code
+			<Typography variant='h1' style={{ marginBottom: Theme.spacing.xl }}>
+				Verification
 			</Typography>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl, textAlign: 'center' }}>
-				We have sent a verification code to "{email}"
+				We have sent a verification code to the email {email}
 			</Typography>
-			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.xl }}>
-				<StyledTextInput
-					label='Security Code'
-					keyboardType='numeric'
-					maxLength={4}
-					onChangeText={setCode}
-					value={code}
-					style={{ backgroundColor: Theme.colors.background }}
-				/>
-			</SegmentedList>
+			<VerificationCodeField
+				onInput={setCode}
+				value={code}
+				containerStyle={{ marginBottom: Theme.spacing.xl }}
+				disabled={formIsLoading}
+			/>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl }}>
 				Didn't receive a code?
 			</Typography>

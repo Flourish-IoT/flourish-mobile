@@ -113,15 +113,19 @@ export const useSendResetPasswordEmail = () => {
 
 interface CheckPasswordVerificationCodeParams {
 	email: string;
-	reset_code: string;
+	reset_code: number[];
 }
 
 export const useVerifyResetPasswordEmail = () => {
 	return useMutation(
 		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
 			const query = `/users/verify?code=password_reset`;
-			mockEndpoint(0).onPost(query, { params: { email, reset_code } }).replyOnce<number>(200, tempMyUser.id);
-			return AxiosInstance.post<number>(query, { params: { email, reset_code } });
+			const formattedCode = reset_code.join('');
+
+			mockEndpoint(0)
+				.onPost(query, { params: { email, reset_code: formattedCode } })
+				.replyOnce<number>(200, tempMyUser.id);
+			return AxiosInstance.post<number>(query, { params: { email, reset_code: formattedCode } });
 		},
 		{
 			onSuccess: async ({ data: userId }, { email, reset_code }) => {

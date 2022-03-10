@@ -10,6 +10,7 @@ import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Typography from '../../lib/components/styled/Typography';
 import SegmentedList from '../../lib/components/styled/SegmentedList';
 import Button from '../../lib/components/styled/Button';
+import VerificationCodeField from '../../lib/components/VerificationCodeField';
 
 interface ForgotPasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -58,10 +59,11 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 	const verifyResetPasswordEmail = useVerifyResetPasswordEmail();
 	const { email } = route.params as VerifyStepRouteProps;
 
-	const [resetCode, setResetCode] = useState<string>('2022');
+	const [resetCode, setResetCode] = useState<number[]>([null, null, null, null]);
 	const [attempts, setAttempts] = useState(0);
 
-	const formIsValid = String(resetCode).trim().length === 4;
+	const formIsValid = !resetCode.some((n) => n === null);
+	console.log(resetCode);
 	const disableVerifyBtn = !formIsValid || attempts > 0;
 	const disableResendBtn = attempts === 0;
 
@@ -99,21 +101,18 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
-			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
-				Verification Code
+			<Typography variant='h1' style={{ marginBottom: Theme.spacing.md }}>
+				Verification
 			</Typography>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
-				We have sent a password reset code to "{email}"
+				We have sent a verification code to the email {email}
 			</Typography>
-			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
-				<TextInput
-					label='Security Code'
-					keyboardType='numeric'
-					maxLength={4}
-					onChangeText={setResetCode}
-					value={resetCode}
-				/>
-			</SegmentedList>
+			<VerificationCodeField
+				onInput={setResetCode}
+				value={resetCode}
+				containerStyle={{ marginBottom: Theme.spacing.md }}
+				disabled={formIsLoading}
+			/>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				Didn't receive a code?
 			</Typography>

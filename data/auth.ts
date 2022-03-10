@@ -54,7 +54,7 @@ export const useSendVerifyEmail = () => {
 
 interface CheckEmailVerificationCodeParams {
 	email: string;
-	code: string;
+	code: number[];
 }
 
 interface AuthResponse {
@@ -66,11 +66,15 @@ export const useVerifyEmail = () => {
 	return useMutation(
 		({ email, code }: CheckEmailVerificationCodeParams) => {
 			const query = `/users/verify?code=verification`;
-			mockEndpoint(0).onPost(query, { params: { email, code } }).replyOnce<AuthResponse>(200, {
-				jwt: tempToken,
-				userId: tempMyUser.id,
-			});
-			return AxiosInstance.post<AuthResponse>(query, { params: { email, code } });
+			const formattedCode = code.join('');
+
+			mockEndpoint(0)
+				.onPost(query, { params: { email, code: formattedCode } })
+				.replyOnce<AuthResponse>(200, {
+					jwt: tempToken,
+					userId: tempMyUser.id,
+				});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, code: formattedCode } });
 		},
 		{
 			onSuccess: async ({ data }, { email, code }) => {
