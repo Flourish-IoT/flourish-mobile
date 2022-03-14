@@ -120,6 +120,11 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}
+						style={{
+							// FIX: This input isn't getting the top radius from the SegmentedList
+							borderTopLeftRadius: Theme.borderRadius,
+							borderTopRightRadius: Theme.borderRadius,
+						}}
 						right={
 							usernameChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateUsername} />

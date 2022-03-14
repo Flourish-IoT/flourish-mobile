@@ -1,33 +1,44 @@
 import React from 'react';
-import { StyleProp, StyleSheet, TextStyle } from 'react-native';
+import { NativeSyntheticEvent, StyleProp, StyleSheet, TextInputFocusEventData, TextStyle, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Theme } from '../../providers/Theme';
 import StyledTextInput from './styled/TextInput';
 
 interface SearchFieldProps {
 	onQuery: (query: string) => void;
-	style?: StyleProp<TextStyle>;
+	onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+	onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+	containerStyle?: StyleProp<TextStyle>;
+	inputStyle?: StyleProp<TextStyle>;
 }
 
-export default function SearchField({ onQuery, style, ...rest }: SearchFieldProps) {
+export default function SearchField({ onQuery, containerStyle, inputStyle, onBlur, onFocus, ...rest }: SearchFieldProps) {
 	const styles = StyleSheet.create({
+		container: {
+			...Theme.shadow,
+			...(containerStyle as object),
+		},
 		input: {
 			height: 35,
 			borderRadius: Theme.borderRadius,
 			borderTopLeftRadius: Theme.borderRadius,
 			borderTopRightRadius: Theme.borderRadius,
-			...Theme.shadow,
-			...(style as object),
+			overflow: 'hidden',
+			...(inputStyle as object),
 		},
 	});
 
 	return (
-		<StyledTextInput
-			style={styles.input}
-			onChangeText={onQuery}
-			placeholder='Search'
-			left={<TextInput.Icon name='magnify' color={Theme.colors.primary} />}
-			{...rest}
-		/>
+		<View style={styles.container}>
+			<StyledTextInput
+				style={styles.input}
+				onChangeText={onQuery}
+				placeholder='Search'
+				left={<TextInput.Icon name='magnify' color={Theme.colors.primary} />}
+				onBlur={onBlur}
+				onFocus={onFocus}
+				{...rest}
+			/>
+		</View>
 	);
 }

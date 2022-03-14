@@ -148,11 +148,12 @@ export const chunkArray = (array: any[], amountPerChunk: number) =>
 		return resultArray;
 	}, []);
 
-export const getPlaceHolder = (fileName: 'plant') => {
+export const getPlaceHolder = (fileName: 'plant' | 'preSearchState') => {
 	const path = '../assets/placeholder/';
 
 	const images = {
 		plant: require(path + 'plant.png'),
+		preSearchState: require(path + 'preSearchState.png'),
 	};
 
 	return images[fileName];

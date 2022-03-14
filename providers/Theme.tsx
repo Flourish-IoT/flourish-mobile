@@ -126,6 +126,7 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 	fonts: CombinedFonts;
 	borderWidth: number;
 	borderRadius: number;
+	activeOpacity: number;
 	spacing: {
 		xs: number;
 		sm: number;
@@ -162,6 +163,7 @@ export const Theme: OurThemeProps = {
 	roundness: 2, // Roundness of common elements, such as buttons
 	borderWidth: 2,
 	borderRadius: 10, // Common border radius
+	activeOpacity: 0.2, // The opacity while holding down on touchable elements, usually used when required to be defined
 	spacing: {
 		xs: 4,
 		sm: 8,
@@ -256,6 +258,9 @@ export const GlobalStackNavOptions: StackNavigationOptions = {
 	headerShown: false,
 	headerStyle: { backgroundColor: Theme.colors.primary },
 	headerTitleStyle: { color: 'white' },
+	cardStyle: {
+		...Theme.shadow,
+	},
 	headerLeft: ({ canGoBack, onPress }) =>
 		canGoBack ? (
 			<TouchableOpacity onPress={onPress} style={{ padding: Theme.spacing.md }}>

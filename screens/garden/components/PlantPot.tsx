@@ -67,7 +67,7 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 	});
 
 	return (
-		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!onPress && 1}>
+		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!!onPress ? Theme.activeOpacity : 1}>
 			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image style={styles.image} source={!!image ? { uri: image } : getPlaceHolder('plant')} />

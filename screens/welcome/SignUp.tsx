@@ -93,21 +93,38 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 	};
 
 	const styles = StyleSheet.create({
+		screenContainer: {
+			justifyContent: 'space-between',
+			backgroundColor: 'white',
+		},
+		title: {
+			textAlign: 'center',
+			marginBottom: Theme.spacing.md,
+		},
+		segmentedList: {
+			marginBottom: Theme.spacing.md,
+		},
 		input: {
 			backgroundColor: '#EEF8F6',
+		},
+		servicesContainer: {
+			width: '100%',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			marginBottom: Theme.spacing.md,
+		},
+		serviceButton: {
+			width: 100,
+			borderRadius: Theme.borderRadius,
 		},
 	});
 
 	return (
-		<ScreenContainer
-			appBarPadding={false}
-			style={{ justifyContent: 'center', backgroundColor: 'white' }}
-			onBack={navigation.goBack}
-		>
-			<Typography variant='h3bold' style={{ textAlign: 'center', marginBottom: Theme.spacing.md }}>
+		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
+			<Typography variant='h3bold' style={styles.title}>
 				Sign up to begin your journey with {AppName}
 			</Typography>
-			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={styles.segmentedList}>
 				<StyledTextInput
 					label={getUsernameErrorMsg() ?? 'Display Name'}
 					style={styles.input}
@@ -154,9 +171,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				or sign up with
 			</Typography>
-			<View
-				style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: Theme.spacing.md }}
-			>
+			<View style={styles.servicesContainer}>
 				{services
 					.filter((s) => s !== 'Email')
 					.map((name, index) => (
@@ -165,7 +180,7 @@ const ContinueWithServiceStep = ({ navigation }: StepProps) => {
 							variant='primary'
 							onPress={() => handleSignUp(name)}
 							icon={<SsoServices type={name} fill='white' height={30} />}
-							buttonStyle={{ width: 100, borderRadius: Theme.borderRadius, backgroundColor: getServiceColor(name) }}
+							buttonStyle={{ ...styles.serviceButton, backgroundColor: getServiceColor(name) }}
 						/>
 					))}
 			</View>
@@ -185,7 +200,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	const verifyEmail = useVerifyEmail();
 	const { email, username, password } = route.params as EmailVerificationStepProps;
 
-	const [code, setCode] = useState<number[]>([2, 2, 2, 2]);
+	const [code, setCode] = useState<number[]>([null, null, null, null]);
 	const [attempts, setAttempts] = useState(0);
 
 	const formIsValid = !code.some((n) => n === null);
@@ -221,7 +236,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	return (
 		<ScreenContainer
 			appBarPadding={false}
-			style={{ justifyContent: 'center', backgroundColor: 'white' }}
+			style={{ justifyContent: 'space-between', backgroundColor: 'white' }}
 			onBack={navigation.goBack}
 		>
 			<Typography variant='h1' style={{ marginBottom: Theme.spacing.xl }}>
@@ -236,17 +251,19 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 				containerStyle={{ marginBottom: Theme.spacing.xl }}
 				disabled={formIsLoading}
 			/>
-			<Typography variant='body' style={{ marginBottom: Theme.spacing.xl }}>
-				Didn't receive a code?
-			</Typography>
-			<Button
-				variant='text'
-				onPress={onResend}
-				title='Resend Code'
-				disabled={disableResendBtn}
-				loading={formIsLoading}
-				buttonStyle={{ marginBottom: Theme.spacing.xl }}
-			/>
+			<View style={{ alignItems: 'center' }}>
+				<Typography variant='body' style={{ marginBottom: Theme.spacing.xl }}>
+					Didn't receive a code?
+				</Typography>
+				<Button
+					variant='text'
+					onPress={onResend}
+					title='Resend Code'
+					disabled={disableResendBtn}
+					loading={formIsLoading}
+					buttonStyle={{ marginBottom: Theme.spacing.xl }}
+				/>
+			</View>
 			<Button
 				variant='primary'
 				title='Verify'
@@ -294,7 +311,7 @@ const RateExpertiseStep = ({ navigation }: StepProps) => {
 	const formIsLoading = finishAccountSetup.isLoading;
 
 	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center', backgroundColor: 'white' }}>
+		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between', backgroundColor: 'white' }}>
 			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				How would you rate your confidence in caring for your plants?
 			</Typography>

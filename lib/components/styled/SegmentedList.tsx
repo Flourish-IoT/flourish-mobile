@@ -11,6 +11,7 @@ export default function SegmentedList({ children, containerStyle, ...rest }: Seg
 	return (
 		<View style={{ ...styles.container, ...containerStyle }}>
 			{Children.toArray(children).map((item, index, { length }) => {
+				const isFirst = index === 0;
 				const isLast = index === length - 1;
 
 				return (
@@ -19,6 +20,11 @@ export default function SegmentedList({ children, containerStyle, ...rest }: Seg
 						style={{
 							...styles.listItem,
 							...(!isLast && { borderBottomWidth: 1, borderColor: Theme.colors.disabled }),
+							...(isFirst && { borderTopLeftRadius: Theme.borderRadius, borderTopRightRadius: Theme.borderRadius }),
+							...(isLast && {
+								borderBottomLeftRadius: Theme.borderRadius,
+								borderBottomRightRadius: Theme.borderRadius,
+							}),
 						}}
 						{...rest}
 					>
@@ -33,8 +39,7 @@ export default function SegmentedList({ children, containerStyle, ...rest }: Seg
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		borderRadius: Theme.borderRadius,
-		overflow: 'hidden',
+		...Theme.shadow,
 	},
 	divider: {
 		width: '100%',
@@ -44,5 +49,6 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: 65,
 		backgroundColor: 'white',
+		overflow: 'hidden',
 	},
 });

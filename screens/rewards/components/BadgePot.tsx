@@ -20,7 +20,7 @@ export default function BadgePot({ image, onPress, containerStyle, imageStyle, l
 			style={{ ...styles.container, ...containerStyle }}
 			onPress={onPress}
 			disabled={!onPress}
-			activeOpacity={onPress ? 0.3 : 1}
+			activeOpacity={onPress ? Theme.activeOpacity : 1}
 		>
 			<View style={styles.imageContainer}>
 				<Image

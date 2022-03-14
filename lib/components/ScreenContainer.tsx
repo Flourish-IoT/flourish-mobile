@@ -41,6 +41,9 @@ export default function ScreenContainer({
 				marginBottom: -insets.bottom,
 				marginTop: -insets.top,
 			}),
+			...(!!onBack && {
+				paddingTop: 75,
+			}),
 			...style,
 		},
 		backButton: {

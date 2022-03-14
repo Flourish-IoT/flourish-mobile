@@ -65,6 +65,7 @@ export default function VerificationCodeField({ onInput, value, disabled = false
 						autoFocus={index === 0}
 						style={{ ...styles.input, ...(isFocused && { borderColor: Theme.colors.primary }) }}
 						keyboardType='number-pad'
+						returnKeyType='done'
 						maxLength={1}
 						onKeyPress={(e) => onKeyPress(e, index)}
 						onFocus={() => setFocusedInput(index)}

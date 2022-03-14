@@ -182,21 +182,19 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				onClose={() => setSelectedDate(-1)}
 				title={format(addDays(new Date(selectedDate), 1), 'MMMM do')} // Add 1 day because new Date() thinks day 01 is the 2nd of a month
 				content={
-					<>
-						{selectedDateTasks.length > 0 ? (
-							selectedDateTasks.map((t, index, { length }) => (
-								<TaskCard
-									key={String(index + t.id)}
-									task={t}
-									containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
-								/>
-							))
-						) : (
-							<View style={{ height: '50%' }}>
-								<Empty animation='relax' text='No tasks on this date.' />
-							</View>
-						)}
-					</>
+					selectedDateTasks.length > 0 ? (
+						selectedDateTasks.map((t, index, { length }) => (
+							<TaskCard
+								key={String(index + t.id)}
+								task={t}
+								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+							/>
+						))
+					) : (
+						<View style={{ height: '50%' }}>
+							<Empty animation='relax' text='No tasks on this date.' />
+						</View>
+					)
 				}
 			/>
 		</ScreenContainer>

@@ -14,6 +14,7 @@ import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import SinglePlantStack from './SinglePlant';
 import SearchField from '../../lib/components/SearchField';
 import { filterData } from '../../lib/utils/helper';
+import PreSearchGraphic from './components/PreSearchGraphic';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -25,6 +26,10 @@ export function GardenList({ navigation }: GardenScreenProps) {
 	const [viewMode, setViewMode] = useState<ViewMode>('Carousel');
 	const { data: plants, isLoading: plantsIsLoading, isError: plantsIsError } = usePlants('me');
 	const [searchQuery, setSearchQuery] = useState('');
+	const [searchFocused, setSearchFocused] = useState(false);
+
+	const showSearchGraphic = searchFocused;
+	const showSearchResults = searchQuery.trim().length !== 0;
 
 	const onPlantSelect = (plant: Plant) => {
 		navigation.navigate('SinglePlantStack', { plant });
@@ -37,27 +42,33 @@ export function GardenList({ navigation }: GardenScreenProps) {
 	return (
 		<ScreenContainer scrolls>
 			<View style={styles.filterContainer}>
-				<SearchField onQuery={setSearchQuery} />
+				<SearchField
+					onQuery={setSearchQuery}
+					onFocus={() => setSearchFocused(true)}
+					onBlur={() => setSearchFocused(false)}
+				/>
 			</View>
 
-			<TouchableOpacity style={styles.segmentBtn} onPress={toggleView}>
-				<View
-					style={{
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'white',
-					}}
-				>
-					<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
-				</View>
-				<View
-					style={{
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'white',
-					}}
-				>
-					<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
-				</View>
-			</TouchableOpacity>
+			{!showSearchGraphic && !showSearchResults && (
+				<TouchableOpacity style={styles.segmentBtn} onPress={toggleView}>
+					<View
+						style={{
+							...styles.segmentBtnContent,
+							backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'white',
+						}}
+					>
+						<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
+					</View>
+					<View
+						style={{
+							...styles.segmentBtnContent,
+							backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'white',
+						}}
+					>
+						<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
+					</View>
+				</TouchableOpacity>
+			)}
 
 			<View style={styles.viewContainer}>
 				{plantsIsLoading ? (
@@ -74,8 +85,10 @@ export function GardenList({ navigation }: GardenScreenProps) {
 								: 'No plants found with the current filters.'
 						}
 					/>
-				) : viewMode === 'Carousel' ? (
-					<CarouselView navigation={navigation} plants={filterData(plants, searchQuery)} onPress={onPlantSelect} />
+				) : viewMode === 'Carousel' && !showSearchGraphic && !showSearchResults ? (
+					<CarouselView navigation={navigation} plants={plants} onPress={onPlantSelect} />
+				) : !showSearchResults ? (
+					<PreSearchGraphic containerStyle={styles.preSearchState} />
 				) : (
 					<GridView plants={filterData(plants, searchQuery)} onPress={onPlantSelect} />
 				)}
@@ -121,5 +134,8 @@ const styles = StyleSheet.create({
 	viewContainer: {
 		width: '100%',
 		overflow: 'visible',
+	},
+	preSearchState: {
+		marginTop: 100,
 	},
 });

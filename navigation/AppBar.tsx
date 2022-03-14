@@ -25,7 +25,7 @@ interface ScreenIconProps extends SvgProps {
 }
 
 const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
-	const focusColor = (focused: boolean) => (focused ? 'white' : Theme.colors.faded);
+	const focusColor = (focused: boolean) => (focused ? 'white' : Theme.colors.primary);
 
 	switch (icon) {
 		case 'Profile':
@@ -33,7 +33,7 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 		case 'Courses':
 			return <GradCap fill={focusColor(focused)} />;
 		case 'Garden':
-			return <Plant fill={focused ? 'white' : Theme.colors.primary} width={35} />;
+			return <Plant fill={focusColor(focused)} width={35} />;
 		case 'Calendar':
 			return <Calendar fill={focusColor(focused)} />;
 		case 'Rewards':
