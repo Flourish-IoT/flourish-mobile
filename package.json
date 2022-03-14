@@ -2,7 +2,7 @@
 	"main": "node_modules/expo/AppEntry.js",
 	"private": true,
 	"name": "flourish",
-	"version": "1.7.2",
+	"version": "1.7.3",
 	"author": "The Flourish Team",
 	"license": "ISC",
 	"homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
