@@ -158,9 +158,7 @@ export const useAllPlantData = () => {
 			).then((allData) => {
 				allData.forEach((plantData, index) => {
 					const queryKey = ['plants', plants[index].id, 'data'];
-					if (!!queryClient.getQueryData(queryKey)) {
-						queryClient.setQueryData<PlantMetrics>(queryKey, () => plantData);
-					}
+					queryClient.setQueryData<PlantMetrics>(queryKey, () => plantData);
 				});
 				return allData;
 			});
