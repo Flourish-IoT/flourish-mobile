@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
-import { useShowHumidity } from '../../../data/user';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
 import MeasurementGauge from '../../../lib/icons/MeasurementGauge';
@@ -40,10 +39,7 @@ interface MetricVisualProps {
 }
 
 export default function MetricVisual({ mode, metricType, plantId, onPress, containerStyle }: MetricVisualProps) {
-	const { data: showHumidity, isLoading: showHumidityIsLoading } = useShowHumidity();
 	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
-
-	if (metricType === 'Humidity' && (showHumidityIsLoading || !showHumidity)) return null;
 
 	let raw: number;
 	let range: MetricRange;

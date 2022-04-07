@@ -238,17 +238,3 @@ export const useUser = (userId: number) => {
 		return response.data;
 	});
 };
-
-export const useShowHumidity = () => {
-	const { data: user } = useMe();
-
-	return useQuery(
-		['showHumidity'],
-		async () => {
-			return user.preferences.confidence_rating === 3;
-		},
-		{
-			enabled: !!user,
-		}
-	);
-};

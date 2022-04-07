@@ -222,7 +222,7 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 			await verifyEmail.mutateAsync({ email, code });
 			navigation.reset({
 				index: 0,
-				routes: [{ name: 'RateExpertise' }],
+				routes: [{ name: 'HomeStack' }],
 			});
 		} catch (error) {
 			alert(`Error: ${error}`);
@@ -275,81 +275,6 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 	);
 };
 
-const RateExpertiseStep = ({ navigation }: StepProps) => {
-	const finishAccountSetup = useFinishAccountSetup();
-	const [userRating, setUserRating] = useState<ConfidenceRating>(1);
-	const [skip, setSkip] = useState(false);
-	const ratings: ConfidenceRating[] = [1, 2, 3];
-
-	const onSkipPress = () => {
-		setSkip(true);
-		proceed();
-	};
-
-	const proceed = async () => {
-		try {
-			await finishAccountSetup.mutateAsync(
-				skip
-					? undefined
-					: {
-							image: undefined,
-							preferences: {
-								confidence_rating: userRating,
-								unit_preference: 'Fahrenheit',
-							},
-					  }
-			);
-			navigation.reset({
-				index: 0,
-				routes: [{ name: 'HomeStack' }],
-			});
-		} catch (error) {
-			alert(`Error: ${error}`);
-		}
-	};
-
-	const formIsLoading = finishAccountSetup.isLoading;
-
-	return (
-		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between', backgroundColor: 'white' }}>
-			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
-				How would you rate your confidence in caring for your plants?
-			</Typography>
-			<Confidence rating={userRating} style={{ marginBottom: Theme.spacing.md }} />
-			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
-				{getConfidenceText(userRating)}
-			</Typography>
-			<View
-				style={{
-					height: 50,
-					width: '100%',
-					flexDirection: 'row',
-					justifyContent: 'space-between',
-					marginBottom: Theme.spacing.md,
-				}}
-			>
-				{ratings.map((r, index) => (
-					<RadioButton key={index + r} isSelected={userRating === r} onPress={() => setUserRating(r)} />
-				))}
-			</View>
-			<Button
-				variant='primary'
-				title='Submit'
-				onPress={proceed}
-				loading={formIsLoading}
-				buttonStyle={{ marginBottom: Theme.spacing.md }}
-			/>
-			<Button
-				variant='text'
-				title='Skip for now'
-				onPress={onSkipPress}
-				loading={formIsLoading}
-				buttonStyle={{ marginBottom: Theme.spacing.md }}
-			/>
-		</ScreenContainer>
-	);
-};
-
 export default function SignUpStack() {
 	return (
 		<Stack.Navigator
@@ -362,7 +287,6 @@ export default function SignUpStack() {
 		>
 			<Stack.Screen name={'ContinueWithService'} component={ContinueWithServiceStep} />
 			<Stack.Screen name={'EmailVerification'} component={EmailVerificationStep} />
-			<Stack.Screen name={'RateExpertise'} component={RateExpertiseStep} />
 		</Stack.Navigator>
 	);
 }
