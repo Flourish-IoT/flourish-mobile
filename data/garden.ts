@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { AxiosInstance, mockEndpoint } from './api';
 import { useMe } from './user';
 
@@ -137,4 +137,36 @@ export const usePlantData = (plantId: number) => {
 		mockEndpoint(200).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
 		return AxiosInstance.get<PlantMetrics>(query).then(({ data }) => ({ ...data, time: new Date(data.time) }));
 	});
+};
+
+export const useAllPlantData = () => {
+	const queryClient = useQueryClient();
+	const { data: plants } = usePlants('me');
+
+	return useQuery(
+		['plants', 'all', 'data'],
+		() => {
+			Promise.all(
+				plants.map(({ id: plantId }) => {
+					const query = `/plants/${plantId}/data`;
+					mockEndpoint(200).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
+					return AxiosInstance.get<PlantMetrics>(query).then(({ data }) => ({
+						...data,
+						time: new Date(data.time),
+					}));
+				})
+			).then((allData) => {
+				allData.forEach((plantData, index) => {
+					const queryKey = ['plants', plants[index].id, 'data'];
+					if (!!queryClient.getQueryData(queryKey)) {
+						queryClient.setQueryData<PlantMetrics>(queryKey, () => plantData);
+					}
+				});
+				return allData;
+			});
+		},
+		{
+			enabled: !!plants,
+		}
+	);
 };
