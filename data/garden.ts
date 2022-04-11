@@ -1,5 +1,6 @@
-import { useQuery, useQueryClient } from 'react-query';
-import { AxiosInstance, mockEndpoint } from './api';
+import axios from 'axios';
+import { useQuery } from 'react-query';
+import { ApiUrl } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -17,71 +18,19 @@ export interface Plant {
 	commonName: string;
 	scientificName: string;
 	image?: string;
+	targetValueRatings: {
+		light: MetricRange;
+		temperature: MetricRange;
+		humidity: MetricRange;
+		soilMoisture: MetricRange;
+	};
+	rawUnits: {
+		light: number;
+		temperature: number;
+		humidity: number;
+		soilMoisture: number;
+	};
 }
-
-const tempMyPlants: Plant[] = [
-	{
-		id: 1,
-		name: 'Edward',
-		commonName: 'Heartleaf Philodendron',
-		scientificName: 'Philodendron Hederaceum',
-		image: 'https://cityfloralgreenhouse.com/wp-content/uploads/2021/02/photo-1600411833196-7c1f6b1a8b90.jpg',
-	},
-	{
-		id: 2,
-		name: 'Lucifern',
-		commonName: 'Asparagus Fern',
-		scientificName: 'Sprengeri Compacta',
-		image: 'https://www.monrovia.com/media/amasty/blog/1024x577_dwarf_asparagus_fern.jpg',
-	},
-	{
-		id: 3,
-		name: 'MoMo',
-		commonName: 'Monstera',
-		scientificName: 'Monstera Deliciosa',
-		image: 'https://i.pinimg.com/originals/7b/6f/02/7b6f0284cb2e6f92467371ec9fadfa04.jpg',
-	},
-	{
-		id: 4,
-		name: 'Boo',
-		commonName: 'Bamboo',
-		scientificName: 'Bambusoideae',
-		image: 'https://empire-s3-production.bobvila.com/slides/26616/vertical_slide_wide/plants-without-soil-lucky-bamboo.jpg?1532362527',
-	},
-];
-
-export const usePlants = (userId: number | 'me') => {
-	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
-
-	return useQuery(
-		['users', userId, 'plants'],
-		async () => {
-			const query = `/users/${userId}/plants`;
-			mockEndpoint(200).onGet(query).replyOnce<Plant[]>(200, tempMyPlants);
-			return AxiosInstance.get<Plant[]>(query).then((res) => res.data);
-		},
-		{
-			enabled: !!user,
-		}
-	);
-};
-
-export const useSinglePlant = (userId: number | 'me', plantId: number) => {
-	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
-	const { data: plants } = usePlants(userId);
-
-	return useQuery(
-		['users', userId, 'plants', plantId],
-		async () => {
-			return plants.find((p) => p.id === plantId);
-		},
-		{
-			enabled: !!user && !!plants,
-		}
-	);
-};
 
 export interface PlantMetrics {
 	deviceId: number;
@@ -103,68 +52,47 @@ export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 
 
 export type MetricRange = 1 | 2 | 3 | 4 | 5;
 
-export function tempMyPlantData(): PlantMetrics {
-	return {
-		deviceId: 1,
-		time: new Date(),
-		soilMoisture: {
-			raw: 600,
-			// @ts-ignore
-			range: Math.floor(Math.random() * 5) + 1,
-		},
-		light: {
-			raw: 35000,
-			// @ts-ignore
-			range: Math.floor(Math.random() * 5) + 1,
-		},
-		temperature: {
-			raw: 70,
-			// @ts-ignore
-			range: Math.floor(Math.random() * 5) + 1,
-		},
-		humidity: {
-			raw: 20,
-			// @ts-ignore
-			range: Math.floor(Math.random() * 5) + 1,
-		},
-		additional: {},
-	};
-}
-
-export const usePlantData = (plantId: number) => {
-	return useQuery(['plants', plantId, 'data'], () => {
-		const query = `/plants/${plantId}/data`;
-		mockEndpoint(200).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
-		return AxiosInstance.get<PlantMetrics>(query).then(({ data }) => ({ ...data, time: new Date(data.time) }));
-	});
-};
-
-export const useAllPlantData = () => {
-	const queryClient = useQueryClient();
-	const { data: plants } = usePlants('me');
+export const usePlants = (userId: number | 'me') => {
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
 
 	return useQuery(
-		['plants', 'all', 'data'],
-		() => {
-			Promise.all(
-				plants.map(({ id: plantId }) => {
-					const query = `/plants/${plantId}/data`;
-					mockEndpoint(200).onGet(query).replyOnce<PlantMetrics>(200, tempMyPlantData());
-					return AxiosInstance.get<PlantMetrics>(query).then(({ data }) => ({
-						...data,
-						time: new Date(data.time),
-					}));
-				})
-			).then((allData) => {
-				allData.forEach((plantData, index) => {
-					const queryKey = ['plants', plants[index].id, 'data'];
-					queryClient.setQueryData<PlantMetrics>(queryKey, () => plantData);
-				});
-				return allData;
-			});
+		['users', userId, 'plants'],
+		async () => {
+			const query = `${ApiUrl}/users/${userId}/plants`;
+			const data = (await axios.get<Plant[]>(query)).data;
+			return data.map((p) => ({
+				...p,
+				rawUnits: {
+					soilMoisture: 600,
+					light: 35000,
+					temperature: 70,
+					humidity: 20,
+				},
+				targetValueRatings: {
+					...p.targetValueRatings,
+					light: p.targetValueRatings.light ?? 4,
+				},
+			}));
 		},
 		{
-			enabled: !!plants,
+			enabled: !!user,
+		}
+	);
+};
+
+export const useSinglePlant = (userId: number | 'me', plantId: number) => {
+	const { data: user } = useMe();
+	if (userId === 'me') userId = user?.id;
+	const { data: plants } = usePlants(userId);
+
+	return useQuery(
+		['users', userId, 'plants', plantId],
+		async () => {
+			return plants.find((p) => p.id === plantId);
+		},
+		{
+			enabled: !!user && !!plants,
 		}
 	);
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
-import { PlantMetric, usePlantData } from '../../data/garden';
+import { PlantMetric, useSinglePlant } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
 import ScreenContainer from '../../lib/components/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
@@ -26,20 +26,20 @@ interface SingleMetricScreenRouteProps {
 
 export default function SingleMetricScreen({ navigation, route }: SingleMetricScreenProps) {
 	const { plantId, type } = route.params as SingleMetricScreenRouteProps;
-	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
+	const { data: plant, isLoading: plantDataIsLoading } = useSinglePlant('me', plantId);
 
 	if (plantDataIsLoading) return <Loading animation='rings' size='lg' />;
 
 	const getData = () => {
 		switch (type) {
 			case 'Water':
-				return plantData.soilMoisture;
+				return { range: plant.targetValueRatings.soilMoisture, raw: plant.rawUnits.soilMoisture };
 			case 'Sunlight':
-				return plantData.light;
+				return { range: plant.targetValueRatings.light, raw: plant.rawUnits.light };
 			case 'Temperature':
-				return plantData.temperature;
+				return { range: plant.targetValueRatings.temperature, raw: plant.rawUnits.temperature };
 			case 'Humidity':
-				return plantData.humidity;
+				return { range: plant.targetValueRatings.humidity, raw: plant.rawUnits.humidity };
 		}
 	};
 

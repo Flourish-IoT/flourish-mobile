@@ -9,7 +9,7 @@ export const ApiUrl = 'http://3.83.190.154:5000/v1';
 // TODO: Don't use this once auth is implemented
 export const AxiosInstance = axios.create({
 	baseURL: ApiUrl,
-	timeout: 1000 * 60 * 0.5, // 30s
+	timeout: 1000 * 60 * 0.25, // 15s
 });
 
 export const mockEndpoint = (delay?: number) => {

@@ -1,13 +1,13 @@
-import React, { PropsWithChildren, useLayoutEffect } from 'react';
-import { useAllPlantData } from '../data/garden';
+import React, { PropsWithChildren, useEffect } from 'react';
+import { usePlants } from '../data/garden';
 
 export default function RefetchProvider({ children }: PropsWithChildren<unknown>) {
-	const { refetch: plantData } = useAllPlantData();
+	const { refetch: plants } = usePlants('me');
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		setInterval(() => {
-			[plantData].forEach((refetch) => refetch());
-		}, 1000 * 60 * 0.5);
+			plants();
+		}, 1000 * 60 * 0.25);
 	}, []);
 
 	return <>{children}</>;

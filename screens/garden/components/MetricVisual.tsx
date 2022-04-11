@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
+import { MetricRange, PlantMetric, useSinglePlant } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
 import MeasurementGauge from '../../../lib/icons/MeasurementGauge';
@@ -39,27 +39,29 @@ interface MetricVisualProps {
 }
 
 export default function MetricVisual({ mode, metricType, plantId, onPress, containerStyle }: MetricVisualProps) {
-	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
+	const { data: plant, isLoading: plantDataIsLoading } = useSinglePlant('me', plantId);
+
+	if (plantDataIsLoading) return null;
 
 	let raw: number;
 	let range: MetricRange;
 
 	switch (metricType) {
 		case 'Water':
-			raw = plantData?.soilMoisture?.raw;
-			range = plantData?.soilMoisture?.range;
+			raw = plant.rawUnits.soilMoisture;
+			range = plant.targetValueRatings.soilMoisture;
 			break;
 		case 'Sunlight':
-			raw = plantData?.light?.raw;
-			range = plantData?.light?.range;
+			raw = plant.rawUnits.light;
+			range = plant.targetValueRatings.light;
 			break;
 		case 'Temperature':
-			raw = plantData?.temperature?.raw;
-			range = plantData?.temperature?.range;
+			raw = plant.rawUnits.temperature;
+			range = plant.targetValueRatings.temperature;
 			break;
 		case 'Humidity':
-			raw = plantData?.humidity?.raw;
-			range = plantData?.humidity?.range;
+			raw = plant.rawUnits.humidity;
+			range = plant.targetValueRatings.humidity;
 			break;
 	}
 
