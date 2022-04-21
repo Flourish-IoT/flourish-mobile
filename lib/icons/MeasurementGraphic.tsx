@@ -69,6 +69,7 @@ export default function MeasurementGraphic({ type, range, ...rest }: Measurement
 						</Svg>
 					);
 				case undefined:
+				default:
 					return (
 						<Svg width='36' height='47' viewBox='0 0 36 47' fill='none' {...rest}>
 							<Path
@@ -158,6 +159,7 @@ export default function MeasurementGraphic({ type, range, ...rest }: Measurement
 						</Svg>
 					);
 				case undefined:
+				default:
 					return (
 						<Svg width='37' height='53' viewBox='0 0 37 53' fill='none' {...rest}>
 							<Path
@@ -235,6 +237,7 @@ export default function MeasurementGraphic({ type, range, ...rest }: Measurement
 						</Svg>
 					);
 				case undefined:
+				default:
 					return (
 						<Svg width='59' height='59' viewBox='0 0 59 59' fill='none' {...rest}>
 							<Path
@@ -306,6 +309,7 @@ export default function MeasurementGraphic({ type, range, ...rest }: Measurement
 						</Svg>
 					);
 				case undefined:
+				default:
 					return (
 						<Svg width='59' height='59' viewBox='0 0 59 59' fill='none' {...rest}>
 							<Path

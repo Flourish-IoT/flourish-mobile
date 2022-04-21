@@ -71,7 +71,10 @@ export const usePlants = (userId: number | 'me') => {
 				},
 				targetValueRatings: {
 					...p.targetValueRatings,
-					light: p.targetValueRatings.light ?? 4,
+					soilMoisture: p.targetValueRatings.light ?? 4,
+					light: p.targetValueRatings.light ?? 2,
+					temperature: p.targetValueRatings.light ?? 3,
+					humidity: p.targetValueRatings.light ?? 1,
 				},
 			}));
 		},
