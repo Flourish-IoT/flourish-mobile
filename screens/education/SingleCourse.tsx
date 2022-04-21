@@ -133,7 +133,6 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 							<CourseCard
 								key={String(index + lc.id)}
 								cardData={lc}
-								type='Course'
 								containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 								onPress={() => navigation.navigate('SingleCourse', { courseId: lc.id })}
 							/>

@@ -1,28 +1,27 @@
 import { useQuery } from 'react-query';
 import { OurFontName } from '../providers/Theme';
 import { AxiosInstance, mockEndpoint } from './api';
+import { PlantType, usePlants, usePlantTypes } from './garden';
+import { useMe } from './user';
 
 export const educationTags = ['Watering', 'Prune', 'Repot', 'Propogation'] as const;
 export type EducationTag = typeof educationTags[number];
 
-export interface FeaturedPlant {
-	id: number;
-	name: string;
-	image: string | undefined;
-}
-
 export const useFeaturedPlants = () => {
-	return useQuery(['education', 'featured-plants'], () => {
-		const query = `/education/featured-plants`;
-		mockEndpoint(200)
-			.onGet(query)
-			.replyOnce<FeaturedPlant[]>(200, [
-				{ id: 1, name: 'Monstera', image: undefined },
-				{ id: 2, name: 'Philodendron', image: undefined },
-				{ id: 3, name: 'Bamboo', image: undefined },
-			]);
-		return AxiosInstance.get<FeaturedPlant[]>(query).then((res) => res.data);
-	});
+	const { data: user } = useMe();
+
+	const { data: plantTypes } = usePlantTypes();
+	const { data: usersPlants } = usePlants('me');
+
+	return useQuery(
+		['education', 'featured-plants'],
+		() => {
+			return plantTypes.filter((p) => !usersPlants.map((uP) => uP.id).includes(p.id));
+		},
+		{
+			enabled: !!user && !!usersPlants && !!plantTypes,
+		}
+	);
 };
 
 export interface Course {
@@ -183,14 +182,14 @@ export const useLearningCourses = () => {
 					id: 1,
 					name: 'Learn the Plant Basics: Light, Water, Soil, etc.',
 					tags: ['Watering', 'Prune', 'Repot', 'Propogation'],
-					image: undefined,
+					image: 'https://i0.wp.com/post.greatist.com/wp-content/uploads/sites/2/2019/05/Gardening-01.png?w=1155&h=646',
 					data: tempLearningCourse,
 				},
 				{
 					id: 2,
 					name: '3 Superpowers: Prune, Repot, and Propagate',
 					tags: ['Prune', 'Repot', 'Propogation'],
-					image: undefined,
+					image: 'https://www.modandmint.com/wp-content/uploads/2020/04/prune-propagate-fishbone-cactus-b.jpg',
 					data: tempLearningCourse,
 				},
 			]);

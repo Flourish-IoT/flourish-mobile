@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Image, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
-import { FeaturedPlant } from '../../../data/education';
+import { PlantType } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
 import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface FeaturedPlantProps {
-	plant: FeaturedPlant;
+	plant: PlantType;
 	containerStyle?: ViewStyle;
 	onPress: () => void;
 }
@@ -17,7 +17,7 @@ export default function FeaturedPlantCard({ plant, onPress, containerStyle }: Fe
 			<Image style={styles.image} source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} />
 			<View style={styles.titleContainer}>
 				<Typography variant='paragraph' style={styles.titleText}>
-					{plant.name}
+					{plant.commonName}
 				</Typography>
 			</View>
 		</TouchableOpacity>
