@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { TextInput } from 'react-native-paper';
-import { View, Keyboard, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName, getServiceColor } from '../../lib/utils/helper';
 import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
-import { useFinishAccountSetup, useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
-import RadioButton from '../../lib/components/styled/RadioButton';
-import Confidence from '../../lib/icons/Confidence';
-import { getConfidenceText, ConfidenceRating } from '../../data/user';
+import { useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import StyledTextInput from '../../lib/components/styled/TextInput';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Button from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Tos from './components/Tos';
 import VerificationCodeField from '../../lib/components/VerificationCodeField';
-
-const Stack = createStackNavigator();
 
 export const services = ['Apple', 'Facebook', 'Google', 'Email'] as const;
 export type Service = typeof services[number];
@@ -274,6 +269,8 @@ const EmailVerificationStep = ({ route, navigation }: StepProps) => {
 		</ScreenContainer>
 	);
 };
+
+const Stack = createStackNavigator();
 
 export default function SignUpStack() {
 	return (

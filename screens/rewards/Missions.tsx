@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import TopTabContainer from '../../lib/components/TopTabContainer';
+import TopTabContainer from '../../lib/components/layout/TopTabContainer';
 import { Mission, useAvailableMissions, useClaimMission } from '../../data/rewards';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';

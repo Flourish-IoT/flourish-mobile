@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import { useLearningCourses } from '../../data/education';
 import Loading from '../../lib/components/Loading';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { Theme } from '../../providers/Theme';
 import ModalBackButton from '../../lib/components/ModalBackButton';
 import { getPlaceHolder, padString } from '../../lib/utils/helper';

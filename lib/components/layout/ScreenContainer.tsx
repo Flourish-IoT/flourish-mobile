@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, SafeAreaView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { appBarCenterBtnSize } from '../../navigation/AppBar';
-import { Theme } from '../../providers/Theme';
-import Chevron from '../icons/Chevron';
+import { appBarCenterBtnSize } from '../../../navigation/AppBar';
+import { Theme } from '../../../providers/Theme';
+import Chevron from '../../icons/Chevron';
 
 interface ScreenContainerProps {
 	children?: ReactNode;

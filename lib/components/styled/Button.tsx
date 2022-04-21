@@ -88,6 +88,9 @@ export default function StyledButton({
 		},
 	});
 
+	// @ts-ignore: fontWeight is a valid property
+	const isBold = textStyle?.fontWeight === 'bold';
+
 	return (
 		<TouchableOpacity {...rest} onPress={onPress} style={style.button} disabled={disabled}>
 			{loading ? (
@@ -95,7 +98,7 @@ export default function StyledButton({
 			) : icon ? (
 				icon
 			) : (
-				<Typography variant={variant === 'primary' ? 'h3bold' : 'body'} style={style.text}>
+				<Typography variant={variant === 'primary' || isBold ? 'h3bold' : 'body'} style={style.text}>
 					{title}
 				</Typography>
 			)}

@@ -11,10 +11,10 @@ import { Task, useTasks } from '../../data/calendar';
 import TaskCard from './components/TaskCard';
 import ChipFilter from '../../lib/components/ChipFilter';
 import Empty from '../../lib/components/Empty';
-import StyledModal from '../../lib/components/styled/Modal';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import StyledModal from '../../lib/components/layout/Modal';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { Theme } from '../../providers/Theme';
-import StyledAccordion from '../../lib/components/styled/Accordion';
+import StyledAccordion from '../../lib/components/layout/Accordion';
 import DropDown from '../../lib/components/DropDown';
 import {
 	format,

@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { appBarCenterBtnSize } from '../../navigation/AppBar';
-import { Theme } from '../../providers/Theme';
+import { appBarCenterBtnSize } from '../../../navigation/AppBar';
+import { Theme } from '../../../providers/Theme';
 
 interface TopTabContainerProps {
 	children?: ReactNode;

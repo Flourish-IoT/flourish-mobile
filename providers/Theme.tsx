@@ -101,7 +101,7 @@ const OurFonts: OurFontsProps = {
 		fontFamily: 'Lato-Regular',
 		fontWeight: 'normal',
 		fontSize: 14,
-		color: '#799E76',
+		color: '#6D8C70',
 	},
 };
 
@@ -218,15 +218,15 @@ export const Theme: OurThemeProps = {
 		},
 	},
 	colors: {
-		primary: '#799E76', // Primary color for your app, usually your brand color
+		primary: '#6D8C70', // Primary color for your app, usually your brand color
 		passing: '#00A083',
-		faded: '#C2D9D2',
+		faded: '#DCE6DB',
 		pot: '#B78952',
 		accent: '#9A532F', // Secondary color for your app which complements the primary color
 		background: '#F5F7FB', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards
 		text: '#022229', // Text color for content
-		disabled: '#C2D9D2', // Color for disabled elements
+		disabled: '#DCE6DB', // Color for disabled elements
 		placeholder: '#143F4970', // Color for placeholder text, such as input placeholder
 		backdrop: DefaultTheme.colors.backdrop, // Color for backdrops of various components such as modals
 		onSurface: DefaultTheme.colors.onSurface, // Background color for toast notifications

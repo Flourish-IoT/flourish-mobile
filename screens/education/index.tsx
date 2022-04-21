@@ -7,7 +7,7 @@ import { educationTags, useFeaturedPlants, useLearningCourses, useQuickTutorials
 import ChipFilter from '../../lib/components/ChipFilter';
 import Empty from '../../lib/components/Empty';
 import Loading from '../../lib/components/Loading';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import SearchField from '../../lib/components/SearchField';
 import StyledButton from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';

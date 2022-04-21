@@ -2,7 +2,7 @@ import { StyledProgressBar } from '../../lib/components/styled/ProgressBar';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useMe } from '../../data/user';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import React from 'react';
 import { StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 import { Theme } from '../../providers/Theme';

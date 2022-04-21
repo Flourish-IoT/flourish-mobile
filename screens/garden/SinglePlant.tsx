@@ -4,7 +4,7 @@ import React, { useLayoutEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Plant, plantMetrics } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import Typography from '../../lib/components/styled/Typography';
 import { getPlaceHolder } from '../../lib/utils/helper';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';

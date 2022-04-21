@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
 import { PlantMetric, useSinglePlant } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Typography from '../../lib/components/styled/Typography';

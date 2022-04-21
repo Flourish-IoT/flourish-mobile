@@ -4,12 +4,15 @@ import { ApiUrl, AxiosInstance, mockEndpoint } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
-	sensorId: number;
-	plant: Plant;
-	soilMoisture: number;
-	temperature: number;
-	humidity: number;
-	lux: number;
+	id: number;
+	model: string;
+	deviceType: string;
+	deviceState: string;
+	userId: number;
+	name: string;
+	ip: string;
+	apiVersion: string;
+	softwareVersion: string;
 }
 
 export interface Plant {

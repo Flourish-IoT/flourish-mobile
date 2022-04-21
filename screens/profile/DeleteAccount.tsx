@@ -5,8 +5,8 @@ import TextInput from '../../lib/components/styled/TextInput';
 import { useDeleteAccount } from '../../data/user';
 import { AppName } from '../../lib/utils/helper';
 import { Theme } from '../../providers/Theme';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Button from '../../lib/components/styled/Button';
 
 interface DeleteAccountScreenProps {

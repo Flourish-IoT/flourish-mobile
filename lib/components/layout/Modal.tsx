@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 import Modal from 'react-native-modal';
 import { Theme } from '../../../providers/Theme';
-import Typography from './Typography';
+import Typography from '../styled/Typography';
 
 interface ModalProps {
 	visible: boolean;

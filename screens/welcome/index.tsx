@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Logo from '../../lib/icons/Logo';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import Button from '../../lib/components/styled/Button';
 import { Theme } from '../../providers/Theme';
-import CurvedContainer from './components/CurvedContainer';
+import CurvedContainer from '../../lib/components/layout/CurvedContainer';
 import Typography from '../../lib/components/styled/Typography';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 

@@ -3,8 +3,8 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import TextInput from '../../lib/components/styled/TextInput';
 import { useChangePassword } from '../../data/user';
 import { isValidPassword } from '../../lib/utils/validation';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Button from '../../lib/components/styled/Button';
 import { StyleSheet } from 'react-native';
 

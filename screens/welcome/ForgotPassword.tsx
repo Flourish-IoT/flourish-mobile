@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { useResetPassword, useSendResetPasswordEmail, useVerifyResetPasswordEmail } from '../../data/user';
 import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import TextInput from '../../lib/components/styled/TextInput';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Typography from '../../lib/components/styled/Typography';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Button from '../../lib/components/styled/Button';
 import VerificationCodeField from '../../lib/components/VerificationCodeField';
 

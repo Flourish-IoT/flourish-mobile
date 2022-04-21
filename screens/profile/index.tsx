@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { ParamListBase } from '@react-navigation/routers';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { TextInput } from 'react-native-paper';
 import { Theme, GlobalStackNavOptions } from '../../providers/Theme';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,7 +14,7 @@ import { useChangeEmail, useChangeUsername, useExportData, useMe } from '../../d
 import Loading from '../../lib/components/Loading';
 import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
 import Button from '../../lib/components/styled/Button';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Typography from '../../lib/components/styled/Typography';
 import ProfilePicture from './components/ProfilePicture';
 

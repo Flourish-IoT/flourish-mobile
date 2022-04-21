@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import Grid from '../../lib/icons/Grid';
+import { StyleSheet, View } from 'react-native';
 import { Plant, usePlants } from '../../data/garden';
 import Loading from '../../lib/components/Loading';
 import Empty from '../../lib/components/Empty';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import CarouselIcon from '../../lib/icons/Carousel';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import CarouselView from './components/CarouselView';
 import GridView from './components/GridView';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -15,6 +13,9 @@ import SinglePlantStack from './SinglePlant';
 import SearchField from '../../lib/components/SearchField';
 import { filterData } from '../../lib/utils/helper';
 import PreSearchGraphic from './components/PreSearchGraphic';
+import ViewModeToggle from './components/ViewModeToggle';
+import StyledButton from '../../lib/components/styled/Button';
+import ConnectDeviceStack from '../pairing/device';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -50,24 +51,16 @@ export function GardenList({ navigation }: GardenScreenProps) {
 			</View>
 
 			{!showSearchGraphic && !showSearchResults && (
-				<TouchableOpacity style={styles.segmentBtn} onPress={toggleView}>
-					<View
-						style={{
-							...styles.segmentBtnContent,
-							backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'white',
-						}}
-					>
-						<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
-					</View>
-					<View
-						style={{
-							...styles.segmentBtnContent,
-							backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'white',
-						}}
-					>
-						<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
-					</View>
-				</TouchableOpacity>
+				<View style={styles.controlsTBar}>
+					<View style={{ width: styles.addButton.width }} />
+					<ViewModeToggle viewMode={viewMode} onPress={toggleView} containerStyle={styles.viewModeButton} />
+					<StyledButton
+						variant='primary'
+						title='+'
+						buttonStyle={styles.addButton}
+						onPress={() => navigation.navigate('ConnectDeviceStack')}
+					/>
+				</View>
 			)}
 
 			<View style={styles.viewContainer}>
@@ -108,6 +101,7 @@ export default function GardenScreenStack() {
 				component={SinglePlantStack}
 				options={{ presentation: 'modal', headerLeft: null }}
 			/>
+			<Stack.Screen name='ConnectDeviceStack' component={ConnectDeviceStack} />
 		</Stack.Navigator>
 	);
 }
@@ -117,19 +111,15 @@ const styles = StyleSheet.create({
 		width: '100%',
 		marginBottom: Theme.spacing.md,
 	},
-	segmentBtn: {
+	controlsTBar: {
+		width: '100%',
 		flexDirection: 'row',
-		borderRadius: 50,
-		borderStyle: 'solid',
-		borderColor: Theme.colors.primary,
-		borderWidth: Theme.borderWidth,
-		overflow: 'hidden',
+		justifyContent: 'space-between',
 	},
-	segmentBtnContent: {
-		width: 50,
+	viewModeButton: {},
+	addButton: {
 		height: 30,
-		margin: 0,
-		...Theme.util.flexCenter,
+		width: 80,
 	},
 	viewContainer: {
 		width: '100%',
