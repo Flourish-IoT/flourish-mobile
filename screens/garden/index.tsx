@@ -87,7 +87,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 					/>
 				) : viewMode === 'Carousel' && !showSearchGraphic && !showSearchResults ? (
 					<CarouselView navigation={navigation} plants={plants} onPress={onPlantSelect} />
-				) : !showSearchResults ? (
+				) : showSearchGraphic && !showSearchResults ? (
 					<PreSearchGraphic containerStyle={styles.preSearchState} />
 				) : (
 					<GridView plants={filterData(plants, searchQuery)} onPress={onPlantSelect} />
