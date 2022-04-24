@@ -1,10 +1,9 @@
 import { MetricRange, PlantMetric } from '../../data/garden';
 import { Theme } from '../../providers/Theme';
 import { Service } from '../../screens/welcome/SignUp';
+import AppConfig from '../../app.config';
 
-const AppConfig = require('../../app.json');
-
-export const AppName = AppConfig.expo.name;
+export const AppName = AppConfig.name;
 
 export const getServiceColor = (service: Service) => {
 	switch (service) {
