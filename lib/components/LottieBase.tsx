@@ -3,6 +3,11 @@ import { View, ViewStyle } from 'react-native';
 import { Text } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { LottieSize, Theme } from '../../providers/Theme';
+import MagnifyingGlass from '../assets/lottie/magnifyingGlass.json';
+import Rings from '../assets/lottie/rings.json';
+import Growing from '../assets/lottie/growing.json';
+import Error from '../assets/lottie/error.json';
+import Relax from '../assets/lottie/relax.json';
 
 interface LottieBaseParams {
 	animation?: LottieName;
@@ -14,19 +19,17 @@ interface LottieBaseParams {
 type LottieName = 'magnifyingGlass' | 'rings' | 'growing' | 'error' | 'relax';
 
 export const getLottie = (name: LottieName) => {
-	const lottieLocation = '../assets/lottie';
-
 	switch (name) {
 		case 'magnifyingGlass':
-			return require(`${lottieLocation}/magnifyingGlass.json`);
+			return MagnifyingGlass;
 		case 'rings':
-			return require(`${lottieLocation}/rings.json`);
+			return Rings;
 		case 'growing':
-			return require(`${lottieLocation}/growing.json`);
+			return Growing;
 		case 'error':
-			return require(`${lottieLocation}/error.json`);
+			return Error;
 		case 'relax':
-			return require(`${lottieLocation}/relax.json`);
+			return Relax;
 	}
 };
 
