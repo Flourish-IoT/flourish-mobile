@@ -21,7 +21,7 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 	const { id, plantId, datetime, title, description, complete } = task;
 	const isLate = isPast(datetime) && !complete;
 
-	const { image: plantImage } = plants.find((p) => p.id === plantId);
+	const plantImage = plants.find((p) => p.id === plantId)?.image;
 
 	const getDateText = () => {
 		if (isBefore(datetime, subDays(new Date(), 2))) {
