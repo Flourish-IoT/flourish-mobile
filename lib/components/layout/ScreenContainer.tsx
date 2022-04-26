@@ -59,7 +59,11 @@ export default function ScreenContainer({
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			{scrolls ? (
-				<ScrollView contentContainerStyle={{ ...styles.container }} bounces={bounces}>
+				<ScrollView
+					contentContainerStyle={{ ...styles.container }}
+					bounces={bounces}
+					showsVerticalScrollIndicator={false}
+				>
 					{!!onBack && <BackBtn />}
 					{children}
 				</ScrollView>

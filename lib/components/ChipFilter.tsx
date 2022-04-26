@@ -51,7 +51,7 @@ export default function ChipFilter({
 	showAllOption && (items = [{ [displayKey]: 'All', [valueKey]: -1 }, ...items]);
 
 	return (
-		<ScrollView horizontal style={{ ...styles.container, ...containerStyle }}>
+		<ScrollView horizontal style={{ ...styles.container, ...containerStyle }} showsHorizontalScrollIndicator={false}>
 			{items.map((item, index) => {
 				const isSelected = selectedItems.some((sItem) => sItem === item[valueKey]);
 				return (

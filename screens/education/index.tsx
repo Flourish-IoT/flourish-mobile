@@ -80,7 +80,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				<StyledButton disabled={quickTutorials.length === 0} variant='text' title='View All' />
 			</View>
 
-			<ScrollView style={styles.scrollContainer} horizontal>
+			<ScrollView style={styles.scrollContainer} horizontal showsHorizontalScrollIndicator={false}>
 				{quickTutorialsIsLoading ? (
 					<Loading animation='rings' />
 				) : quickTutorialsIsError ? (
@@ -103,7 +103,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				<StyledButton disabled={learningCourses.length === 0} variant='text' title='View All' />
 			</View>
 
-			<ScrollView style={styles.scrollContainer} horizontal>
+			<ScrollView style={styles.scrollContainer} horizontal showsHorizontalScrollIndicator={false}>
 				{learningCoursesIsLoading ? (
 					<Loading animation='rings' />
 				) : learningCoursesIsError ? (
@@ -127,7 +127,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				<StyledButton disabled={featuredPlants.length === 0} variant='text' title='View All' />
 			</View>
 
-			<ScrollView style={{ ...styles.scrollContainer, marginBottom: 0 }} horizontal>
+			<ScrollView style={{ ...styles.scrollContainer, marginBottom: 0 }} horizontal showsHorizontalScrollIndicator={false}>
 				{featuredPlantsIsLoading ? (
 					<Loading animation='rings' />
 				) : featuredPlantsIsError ? (

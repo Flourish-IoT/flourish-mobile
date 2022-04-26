@@ -86,12 +86,9 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 					chartConfig={{
 						backgroundGradientFromOpacity: 0,
 						backgroundGradientToOpacity: 0,
-
 						fillShadowGradientOpacity: 1,
-						color: () => `#015669`,
-						//015669 -> 038780
+						color: () => '#015669',
 						labelColor: () => Theme.colors.text,
-
 						barPercentage: 0.5,
 						barRadius: 5,
 						decimalPlaces: 0,
