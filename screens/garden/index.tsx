@@ -16,6 +16,7 @@ import PreSearchGraphic from './components/PreSearchGraphic';
 import ViewModeToggle from './components/ViewModeToggle';
 import StyledButton from '../../lib/components/styled/Button';
 import ConnectDeviceStack from '../pairing/device';
+import AddPlantStack from '../pairing/plant';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -102,6 +103,7 @@ export default function GardenScreenStack() {
 				options={{ presentation: 'modal', headerLeft: null }}
 			/>
 			<Stack.Screen name='ConnectDeviceStack' component={ConnectDeviceStack} />
+			<Stack.Screen name='AddPlantStack' component={AddPlantStack} />
 		</Stack.Navigator>
 	);
 }

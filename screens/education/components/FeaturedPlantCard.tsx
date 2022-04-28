@@ -17,7 +17,7 @@ export default function FeaturedPlantCard({ plant, onPress, containerStyle }: Fe
 			<Image style={styles.image} source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} />
 			<View style={styles.titleContainer}>
 				<Typography variant='paragraph' style={styles.titleText}>
-					{plant.commonName}
+					{plant.scientificName}
 				</Typography>
 			</View>
 		</TouchableOpacity>

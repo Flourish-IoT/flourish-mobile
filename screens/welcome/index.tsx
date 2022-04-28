@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import Button from '../../lib/components/styled/Button';
 import { Theme } from '../../providers/Theme';
-import CurvedContainer from '../../lib/components/layout/CurvedContainer';
+import CurvedContainer, { TopToCurvedContainer } from '../../lib/components/layout/CurvedContainer';
 import Typography from '../../lib/components/styled/Typography';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -16,12 +16,12 @@ interface WelcomeScreenProps {
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 	return (
 		<ScreenContainer appBarPadding={false} safePadding={false} style={styles.screenContainer}>
-			<View style={{ flex: 1, justifyContent: 'center' }}>
+			<TopToCurvedContainer containerStyle={{}}>
 				<Logo style={{ height: 250, width: 250 }} />
 				<Typography variant='h3bold' style={{ textAlign: 'center', color: 'white' }}>
 					Plant care made easy.
 				</Typography>
-			</View>
+			</TopToCurvedContainer>
 			<CurvedContainer>
 				<Button
 					variant='primary'

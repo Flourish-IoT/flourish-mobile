@@ -10,7 +10,8 @@ import Humidity from '../assets/lottie/humidity.json';
 
 interface TemperatureGaugeProps {
 	type: PlantMetric;
-	value: MetricRange;
+	newValue: MetricRange;
+	plantId: number;
 }
 
 const gaugeFrames = {
@@ -24,6 +25,7 @@ const gaugeFrames = {
 	'3-4': [99, 112],
 	'3-5': [113, 126],
 	'4-5': [127, 140],
+	noData: [0, 0],
 };
 
 const getAnimation = (type: PlantMetric) => {
@@ -39,29 +41,33 @@ const getAnimation = (type: PlantMetric) => {
 	}
 };
 
-export default function AnimatedGauge({ type, value }: TemperatureGaugeProps) {
-	const [oldValue, setOld] = useState<MetricRange>(1);
+export default function AnimatedGauge({ type, newValue, plantId }: TemperatureGaugeProps) {
+	const [lastValue, setLastValue] = useState<MetricRange>(1);
 	const [animation, setAnimation] = useState<AnimatedLottieView>();
 
 	useEffect(() => {
 		if (!animation) return;
 
-		const inReverse = value < oldValue;
-		const range = gaugeFrames[inReverse ? value + '-' + oldValue : oldValue + '-' + value];
+		const inReverse = newValue < lastValue;
+		let range = gaugeFrames[inReverse ? newValue + '-' + lastValue : lastValue + '-' + newValue];
 
-		if (!range) return;
+		if (!range) {
+			animation.play(gaugeFrames.noData[0], gaugeFrames.noData[1]);
+			setLastValue(1);
+			return;
+		}
 
 		animation.play(range[inReverse ? 1 : 0], range[inReverse ? 0 : 1]);
-		setOld(value);
-	}, [value]);
+		setLastValue(newValue);
+	}, [animation, newValue]);
 
 	return (
 		<LottieView
 			ref={setAnimation}
-			style={{ width: Theme.lottie.width.md }}
+			style={{ width: Theme.lottie.width.sm }}
 			resizeMode='cover'
 			source={getAnimation(type)}
-			autoPlay
+			autoPlay={false}
 			loop={false}
 		/>
 	);

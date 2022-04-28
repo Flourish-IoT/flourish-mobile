@@ -10,9 +10,18 @@ interface SearchFieldProps {
 	onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 	containerStyle?: StyleProp<TextStyle>;
 	inputStyle?: StyleProp<TextStyle>;
+	disabled?: boolean;
 }
 
-export default function SearchField({ onQuery, containerStyle, inputStyle, onBlur, onFocus, ...rest }: SearchFieldProps) {
+export default function SearchField({
+	onQuery,
+	containerStyle,
+	inputStyle,
+	onBlur,
+	onFocus,
+	disabled = false,
+	...rest
+}: SearchFieldProps) {
 	const styles = StyleSheet.create({
 		container: {
 			...Theme.shadow,
@@ -37,6 +46,7 @@ export default function SearchField({ onQuery, containerStyle, inputStyle, onBlu
 				left={<TextInput.Icon name='magnify' color={Theme.colors.primary} />}
 				onBlur={onBlur}
 				onFocus={onFocus}
+				disabled={disabled}
 				{...rest}
 			/>
 		</View>

@@ -8,7 +8,7 @@ import PotFullSize, { PotBaseSvgProps } from '../../../lib/icons/PotFullSize';
 
 interface PlantProps {
 	viewMode: ViewMode;
-	image?: string;
+	image: string | null;
 	title?: string;
 	subtitle?: string;
 	onPress?: () => void;

@@ -8,7 +8,7 @@ export interface Mission {
 	description: string;
 	level: number;
 	points: number;
-	image?: string;
+	image: string | null;
 	progress: number; // 0-100 (represents a %)
 	claimed: boolean;
 }
@@ -17,7 +17,7 @@ export const tempMyMissions: Mission[] = [
 	{
 		id: 1,
 		title: 'The Journey Begins',
-		image: undefined,
+		image: null,
 		description: 'Add your first plant to a collection!',
 		level: 1,
 		points: 100,
@@ -27,7 +27,7 @@ export const tempMyMissions: Mission[] = [
 	{
 		id: 2,
 		title: 'Monstera Monster',
-		image: undefined,
+		image: null,
 		description: 'Keep your Monstera alive for at least 30 days',
 		level: 1,
 		points: 1000,
@@ -37,7 +37,7 @@ export const tempMyMissions: Mission[] = [
 	{
 		id: 35,
 		title: 'Fern-It-Up',
-		image: undefined,
+		image: null,
 		description: 'Add 5 indoor plants to your home collection.',
 		level: 1,
 		points: 250,
@@ -47,7 +47,7 @@ export const tempMyMissions: Mission[] = [
 	{
 		id: 4,
 		title: 'Water, water, water!',
-		image: undefined,
+		image: null,
 		description: "Don't lose your watering streak for your plants.",
 		level: 2,
 		points: 800,

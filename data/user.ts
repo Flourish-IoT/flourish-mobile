@@ -4,17 +4,6 @@ import { AxiosInstance, mockEndpoint } from './api';
 import { getUserId, setUserId, logOut } from './auth';
 import { tempMyMissions } from './rewards';
 
-export const getConfidenceText = (rating: ConfidenceRating) => {
-	switch (rating) {
-		case 1:
-			return 'Low';
-		case 2:
-			return 'Medium';
-		case 3:
-			return 'High';
-	}
-};
-
 export const useChangeUsername = () => {
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
@@ -183,12 +172,11 @@ export type UnitPreference = 'Fahrenheit' | 'Celsius';
 export type ConfidenceRating = 1 | 2 | 3;
 
 export interface User {
-	// NOTE: Update the type omits for type FinishAccountParams if you add/remove any fields from User
 	id: number;
 	email: string;
 	username: string;
 	preferences: UserPreferences;
-	image: string | undefined;
+	image: string | null;
 	xp: number;
 }
 
@@ -198,10 +186,10 @@ export interface UserPreferences {
 }
 
 export const tempMyUser: User = {
-	id: 1,
+	id: 3,
 	email: 'janedoe123@gmail.com',
 	username: 'Jane Doe',
-	image: undefined,
+	image: null,
 	xp: getXpReqForLevel(1) + tempMyMissions[0].points,
 	preferences: {
 		unit_preference: 'Fahrenheit',
@@ -210,10 +198,10 @@ export const tempMyUser: User = {
 };
 
 export const tempOtherUser: User = {
-	id: 2,
+	id: 4,
 	email: 'johnsmith321@gmail.com',
 	username: 'John Smith',
-	image: undefined,
+	image: null,
 	xp: 200,
 	preferences: {
 		unit_preference: 'Fahrenheit',
@@ -226,15 +214,13 @@ export const useMe = () => {
 		const userId = await getUserId();
 
 		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempMyUser);
-		const response = await AxiosInstance.get<User>(`/users/${userId}`);
-		return response.data;
+		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
 	});
 };
 
 export const useUser = (userId: number) => {
 	return useQuery(['get', 'users', userId], async () => {
 		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempOtherUser);
-		const response = await AxiosInstance.get<User>(`/users/${userId}`);
-		return response.data;
+		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
 	});
 };

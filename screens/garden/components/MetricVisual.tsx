@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions, ViewStyle } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { MetricRange, PlantMetric, useSinglePlant } from '../../../data/garden';
+import AnimatedGauge from '../../../lib/components/AnimatedGauge';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
-import MeasurementGauge from '../../../lib/icons/MeasurementGauge';
-import MeasurementGraphic from '../../../lib/icons/MeasurementGraphic';
 import Sunlight from '../../../lib/icons/Sunlight';
 import Temperature from '../../../lib/icons/Temperature';
 import WaterDrop from '../../../lib/icons/WaterDrop';
@@ -39,29 +38,30 @@ interface MetricVisualProps {
 }
 
 export default function MetricVisual({ mode, metricType, plantId, onPress, containerStyle }: MetricVisualProps) {
-	const { data: plant, isLoading: plantDataIsLoading } = useSinglePlant('me', plantId);
+	const { data: plant, isLoading: plantIsLoading } = useSinglePlant('me', plantId);
 
-	if (plantDataIsLoading) return null;
+	if (plantIsLoading || !plant) return null;
+	const { sensorData, gaugeRatings } = plant;
 
-	let raw: number;
-	let range: MetricRange;
+	let sensorValue: number;
+	let gaugeValue: MetricRange;
 
 	switch (metricType) {
 		case 'Water':
-			raw = plant.rawUnits.soilMoisture;
-			range = plant.targetValueRatings.soilMoisture;
+			sensorValue = sensorData.soilMoisture;
+			gaugeValue = gaugeRatings.soilMoisture;
 			break;
 		case 'Sunlight':
-			raw = plant.rawUnits.light;
-			range = plant.targetValueRatings.light;
+			sensorValue = sensorData.light;
+			gaugeValue = gaugeRatings.light;
 			break;
 		case 'Temperature':
-			raw = plant.rawUnits.temperature;
-			range = plant.targetValueRatings.temperature;
+			sensorValue = sensorData.temperature;
+			gaugeValue = gaugeRatings.temperature;
 			break;
 		case 'Humidity':
-			raw = plant.rawUnits.humidity;
-			range = plant.targetValueRatings.humidity;
+			sensorValue = sensorData.humidity;
+			gaugeValue = gaugeRatings.humidity;
 			break;
 	}
 
@@ -87,33 +87,23 @@ export default function MetricVisual({ mode, metricType, plantId, onPress, conta
 			flex: 1,
 			paddingLeft: Theme.spacing.sm,
 		},
-		graphic: {
-			...(mode === 'block' && {
-				position: 'absolute',
-				bottom: 0,
-				left: '50%',
-				transform: [{ translateX: -35 }],
-			}),
-		},
-		gauge: {},
 	});
 
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
 			<View style={styles.iconContainer}>
-				<MeasurementGauge range={range} style={styles.gauge} />
-				<MeasurementGraphic type={metricType} range={range} width='100%' style={styles.graphic} />
+				<AnimatedGauge plantId={plant.id} type={metricType} newValue={gaugeValue} />
 			</View>
 			{mode === 'listItem' && (
 				<View style={styles.textContainer}>
 					<Typography variant='body' style={{ fontWeight: 'bold' }}>
 						{getFullMetricName(metricType)}
 						{': '}
-						<Typography variant='h3bold' style={{ color: getMetricGaugeColor(range) }}>
-							{getMetricRangeDescription(range)}
+						<Typography variant='h3bold' style={{ color: getMetricGaugeColor(gaugeValue) }}>
+							{getMetricRangeDescription(gaugeValue)}
 						</Typography>
 					</Typography>
-					<Typography variant='placeholder'>{raw}</Typography>
+					<Typography variant='placeholder'>{sensorValue}</Typography>
 				</View>
 			)}
 			{mode === 'listItem' && !!onPress && <Chevron direction='right' withBackground />}

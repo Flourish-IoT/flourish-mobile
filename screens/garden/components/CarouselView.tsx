@@ -28,19 +28,19 @@ export default function CarouselView({ navigation, plants, onPress, containerSty
 			<View style={styles.carouselContainer}>
 				<Carousel
 					data={plants}
+					onSnapToItem={(index) => setSelectedPlant(plants[index])}
+					sliderWidth={Dimensions.get('window').width}
+					itemWidth={Dimensions.get('window').width - Theme.spacing.md * 16}
+					firstItem={firstItemIndex}
 					renderItem={({ item: plant }: CarouselRendererProps) => (
 						<PlantPot
 							viewMode={'Carousel'}
 							image={plant.image}
 							title={plant.name}
-							subtitle={plant.commonName}
+							subtitle={plant.scientificName}
 							onPress={() => onPress(plant)}
 						/>
 					)}
-					onSnapToItem={(index) => setSelectedPlant(plants[index])}
-					sliderWidth={Dimensions.get('window').width}
-					itemWidth={Dimensions.get('window').width - Theme.spacing.md * 16}
-					firstItem={firstItemIndex}
 				/>
 			</View>
 			<View style={styles.metricBlocksContainer}>

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { OurFontName } from '../providers/Theme';
 import { AxiosInstance, mockEndpoint } from './api';
-import { PlantType, usePlants, usePlantTypes } from './garden';
+import { usePlants, usePlantTypes } from './garden';
 import { useMe } from './user';
 
 export const educationTags = ['Watering', 'Prune', 'Repot', 'Propogation'] as const;
@@ -28,7 +28,7 @@ export interface Course {
 	id: number;
 	name: string;
 	tags: EducationTag[];
-	image: string | undefined;
+	image: string | null;
 	data?: CourseNode[];
 }
 
@@ -173,7 +173,7 @@ export const tempLearningCourse: CourseNode[] = [
 ];
 
 export const useLearningCourses = () => {
-	return useQuery(['education', 'learning-course'], () => {
+	return useQuery(['education', 'learning-course'], async () => {
 		const query = `/education/learning-course`;
 		mockEndpoint(200)
 			.onGet(query)
@@ -193,7 +193,7 @@ export const useLearningCourses = () => {
 					data: tempLearningCourse,
 				},
 			]);
-		return AxiosInstance.get<Course[]>(query).then((res) => res.data);
+		return (await AxiosInstance.get<Course[]>(query)).data;
 	});
 };
 
@@ -205,7 +205,7 @@ export interface Tutorial {
 }
 
 export const useQuickTutorials = () => {
-	return useQuery(['education', 'quick-tutorial'], () => {
+	return useQuery(['education', 'quick-tutorial'], async () => {
 		const query = `/education/quick-tutorial`;
 		mockEndpoint(200)
 			.onGet(query)
@@ -223,6 +223,6 @@ export const useQuickTutorials = () => {
 					link: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
 				},
 			]);
-		return AxiosInstance.get<Tutorial[]>(query).then((res) => res.data);
+		return (await AxiosInstance.get<Tutorial[]>(query)).data;
 	});
 };

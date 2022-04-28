@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import ScreenContainer from '../../../lib/components/layout/ScreenContainer';
 import Button from '../../../lib/components/styled/Button';
 import { GlobalStackNavOptions, Theme } from '../../../providers/Theme';
 import Typography from '../../../lib/components/styled/Typography';
-import CurvedContainer from '../../../lib/components/layout/CurvedContainer';
+import CurvedContainer, { TopToCurvedContainer } from '../../../lib/components/layout/CurvedContainer';
 import PotPlantAndSensor from '../../../lib/icons/PotPlantAndSensor';
 import { createStackNavigator } from '@react-navigation/stack';
 import CenterMe from '../../../lib/components/CenterMe';
 import BluetoothScanning from '../../../lib/icons/BluetoothScanning';
 import BluetoothScanningModal from './BluetoothScanningModal';
 
-interface WelcomeScreenProps {
+interface ConnectDeviceStackProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
@@ -24,10 +24,10 @@ interface StepProps {
 const IntroStep = ({ navigation }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<View style={{ flex: 1, justifyContent: 'center' }}>
+			<TopToCurvedContainer>
 				<PotPlantAndSensor />
-			</View>
-			<CurvedContainer style={styles.curvedContainer}>
+			</TopToCurvedContainer>
+			<CurvedContainer containerStyle={styles.curvedContainer}>
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Turn your Sensor device on and place it in your plant's pot, so that the stake is fully planted into the soil.
 				</Typography>
@@ -39,7 +39,7 @@ const IntroStep = ({ navigation }: StepProps) => {
 					For further instructions, see the manual
 				</Typography>
 				<CenterMe horizontal>
-					<Button variant='primary' onPress={() => navigation.navigate('PairingStep')} title='Next' />
+					<Button variant='primary' title='Next' onPress={() => navigation.navigate('PairingStep')} />
 				</CenterMe>
 			</CurvedContainer>
 		</ScreenContainer>
@@ -56,14 +56,16 @@ const PairingStep = ({ navigation }: StepProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<View style={{ flex: 1, justifyContent: 'center' }}>
+			<TopToCurvedContainer>
 				<BluetoothScanning />
-			</View>
+			</TopToCurvedContainer>
 			<CurvedContainer>
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md, textAlign: 'center' }}>
 					Make sure your bluetooth is on so we can connect to your device.
 				</Typography>
-				<Button variant='primary' onPress={() => setShowScanningModal(true)} title='Next' />
+				<CenterMe horizontal>
+					<Button variant='primary' onPress={() => setShowScanningModal(true)} title='Next' />
+				</CenterMe>
 			</CurvedContainer>
 
 			{showScanningModal && <BluetoothScanningModal onPaired={onPaired} onClose={() => setShowScanningModal(false)} />}
@@ -74,10 +76,10 @@ const PairingStep = ({ navigation }: StepProps) => {
 const SuccessStep = ({ navigation }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<View style={{ flex: 1, justifyContent: 'center' }}>
+			<TopToCurvedContainer>
 				<PotPlantAndSensor />
-			</View>
-			<CurvedContainer style={styles.curvedContainer}>
+			</TopToCurvedContainer>
+			<CurvedContainer containerStyle={styles.curvedContainer}>
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Congrats! Your Sensor has been successfully connected to the app!
 				</Typography>
@@ -85,7 +87,7 @@ const SuccessStep = ({ navigation }: StepProps) => {
 					Please take a few moments to add some information about your plant.
 				</Typography>
 				<CenterMe horizontal>
-					<Button variant='primary' onPress={() => navigation.navigate('')} title='Set Up Plant' />
+					<Button variant='primary' onPress={() => navigation.navigate('AddPlantStack')} title='Set Up Plant' />
 				</CenterMe>
 			</CurvedContainer>
 		</ScreenContainer>
@@ -94,7 +96,7 @@ const SuccessStep = ({ navigation }: StepProps) => {
 
 const Stack = createStackNavigator();
 
-export default function ConnectDeviceStack({ navigation }: WelcomeScreenProps) {
+export default function ConnectDeviceStack({ navigation }: ConnectDeviceStackProps) {
 	return (
 		<Stack.Navigator
 			initialRouteName='IntroStep'
@@ -105,16 +107,15 @@ export default function ConnectDeviceStack({ navigation }: WelcomeScreenProps) {
 				},
 			}}
 		>
-			<Stack.Screen name={'IntroStep'} component={IntroStep} />
-			<Stack.Screen name={'PairingStep'} component={PairingStep} />
-			<Stack.Screen name={'SuccessStep'} component={SuccessStep} />
+			<Stack.Screen name='IntroStep' component={IntroStep} />
+			<Stack.Screen name='PairingStep' component={PairingStep} />
+			<Stack.Screen name='SuccessStep' component={SuccessStep} />
 		</Stack.Navigator>
 	);
 }
 
 const styles = StyleSheet.create({
 	screenContainer: {
-		justifyContent: 'center',
 		backgroundColor: Theme.colors.background,
 	},
 	curvedContainer: {

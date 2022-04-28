@@ -7,7 +7,7 @@ export default function RefetchProvider({ children }: PropsWithChildren<unknown>
 	useEffect(() => {
 		setInterval(() => {
 			plants();
-		}, 1000 * 60 * 0.25);
+		}, 1000 * 5);
 	}, []);
 
 	return <>{children}</>;
