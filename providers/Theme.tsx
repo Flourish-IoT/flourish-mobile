@@ -127,6 +127,7 @@ interface OurThemeProps extends ReactNativePaper.Theme {
 	borderWidth: number;
 	borderRadius: number;
 	activeOpacity: number;
+	disabledOpacity: number;
 	spacing: {
 		xs: number;
 		sm: number;
@@ -164,6 +165,7 @@ export const Theme: OurThemeProps = {
 	borderWidth: 2,
 	borderRadius: 10, // Common border radius
 	activeOpacity: 0.2, // The opacity while holding down on touchable elements, usually used when required to be defined
+	disabledOpacity: 0.4, // The opacity of disabled elements
 	spacing: {
 		xs: 4,
 		sm: 8,

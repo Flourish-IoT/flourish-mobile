@@ -48,20 +48,20 @@ export default function MetricVisual({ mode, metricType, plantId, onPress, conta
 
 	switch (metricType) {
 		case 'Water':
-			sensorValue = sensorData.soilMoisture;
-			gaugeValue = gaugeRatings.soilMoisture;
+			sensorValue = sensorData?.soilMoisture;
+			gaugeValue = gaugeRatings?.soilMoisture;
 			break;
 		case 'Sunlight':
-			sensorValue = sensorData.light;
-			gaugeValue = gaugeRatings.light;
+			sensorValue = sensorData?.light;
+			gaugeValue = gaugeRatings?.light;
 			break;
 		case 'Temperature':
-			sensorValue = sensorData.temperature;
-			gaugeValue = gaugeRatings.temperature;
+			sensorValue = sensorData?.temperature;
+			gaugeValue = gaugeRatings?.temperature;
 			break;
 		case 'Humidity':
-			sensorValue = sensorData.humidity;
-			gaugeValue = gaugeRatings.humidity;
+			sensorValue = sensorData?.humidity;
+			gaugeValue = gaugeRatings?.humidity;
 			break;
 	}
 

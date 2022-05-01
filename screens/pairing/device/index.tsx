@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import ScreenContainer from '../../../lib/components/layout/ScreenContainer';
 import Button from '../../../lib/components/styled/Button';
@@ -11,6 +11,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CenterMe from '../../../lib/components/CenterMe';
 import BluetoothScanning from '../../../lib/icons/BluetoothScanning';
 import BluetoothScanningModal from './BluetoothScanningModal';
+import { Sensor, useAddDevice } from '../../../data/garden';
 
 interface ConnectDeviceStackProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -24,7 +25,7 @@ interface StepProps {
 const IntroStep = ({ navigation }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<TopToCurvedContainer>
+			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
 				<PotPlantAndSensor />
 			</TopToCurvedContainer>
 			<CurvedContainer containerStyle={styles.curvedContainer}>
@@ -48,15 +49,22 @@ const IntroStep = ({ navigation }: StepProps) => {
 
 const PairingStep = ({ navigation }: StepProps) => {
 	const [showScanningModal, setShowScanningModal] = useState(false);
+	const addDevice = useAddDevice();
 
-	const onPaired = () => {
-		setShowScanningModal(false);
-		navigation.navigate('SuccessStep');
+	const onPaired = async (sensor: Sensor) => {
+		try {
+			await addDevice.mutateAsync(sensor);
+
+			setShowScanningModal(false);
+			navigation.navigate('SuccessStep', { deviceId: sensor.id });
+		} catch (error) {
+			Alert.alert('Failed to add device...', error);
+		}
 	};
 
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<TopToCurvedContainer>
+			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
 				<BluetoothScanning />
 			</TopToCurvedContainer>
 			<CurvedContainer>
@@ -73,10 +81,16 @@ const PairingStep = ({ navigation }: StepProps) => {
 	);
 };
 
-const SuccessStep = ({ navigation }: StepProps) => {
+interface SuccessStepRouteParams {
+	deviceId: number;
+}
+
+const SuccessStep = ({ navigation, route }: StepProps) => {
+	const { deviceId } = route.params as SuccessStepRouteParams;
+
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<TopToCurvedContainer>
+			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
 				<PotPlantAndSensor />
 			</TopToCurvedContainer>
 			<CurvedContainer containerStyle={styles.curvedContainer}>
@@ -87,7 +101,11 @@ const SuccessStep = ({ navigation }: StepProps) => {
 					Please take a few moments to add some information about your plant.
 				</Typography>
 				<CenterMe horizontal>
-					<Button variant='primary' onPress={() => navigation.navigate('AddPlantStack')} title='Set Up Plant' />
+					<Button
+						variant='primary'
+						onPress={() => navigation.navigate('AddPlantStack', { deviceId })}
+						title='Set Up Plant'
+					/>
 				</CenterMe>
 			</CurvedContainer>
 		</ScreenContainer>

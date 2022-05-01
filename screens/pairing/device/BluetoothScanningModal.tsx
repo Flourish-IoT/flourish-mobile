@@ -9,13 +9,13 @@ import Typography from '../../../lib/components/styled/Typography';
 import { Theme } from '../../../providers/Theme';
 
 interface BluetoothScanningModalProps {
-	onPaired: () => void;
+	onPaired: (sensor: Sensor) => void;
 	onClose: () => void;
 }
 
 const sensors: Sensor[] = [
 	{
-		id: 1,
+		id: 9,
 		model: 'Flourish Device',
 		deviceType: 'Sensor',
 		deviceState: 'Connected',
@@ -36,7 +36,7 @@ export default function BluetoothScanningModal({ onPaired, onClose }: BluetoothS
 			},
 			{
 				text: 'OK',
-				onPress: onPaired,
+				onPress: () => onPaired(sensor),
 			},
 		]);
 	};
@@ -53,11 +53,11 @@ export default function BluetoothScanningModal({ onPaired, onClose }: BluetoothS
 							<View key={s.id} style={styles.option}>
 								<StyledButton
 									variant='text'
+									title={s.name}
 									textStyle={{
 										color: 'black',
 										marginVertical: 24,
 									}}
-									title={s.name}
 									onPress={() => startPairing(s)}
 								/>
 							</View>

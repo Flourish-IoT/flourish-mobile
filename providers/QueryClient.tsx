@@ -8,7 +8,7 @@ export default function QueryProvider({ children }: PropsWithChildren<unknown>) 
 			new QueryClient({
 				defaultOptions: {
 					queries: {
-						staleTime: 5000, // ten minutes
+						staleTime: 1000 * 60 * 10, // ten minutes
 					},
 				},
 				queryCache: new QueryCache({

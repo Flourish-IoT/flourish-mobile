@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { ApiUrl, AxiosInstance } from './api';
 import { useMe } from './user';
 
@@ -39,10 +39,6 @@ export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 
 
 export type MetricRange = 1 | 2 | 3 | 4 | 5;
 
-export function randomMetricRange(): MetricRange {
-	return Math.floor(Math.random() * (5 - 1 + 1) + 1) as MetricRange;
-}
-
 export const usePlants = (userId: number | 'me') => {
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
@@ -54,18 +50,8 @@ export const usePlants = (userId: number | 'me') => {
 			const query = `${ApiUrl}/users/${userId}/plants`;
 			const plants = (await axios.get<Plant[]>(query)).data;
 
-			return plants.map((p, index) => {
-				const plant = {
-					...p,
-					gaugeRatings: {
-						light: randomMetricRange(),
-						temperature: randomMetricRange(),
-						humidity: randomMetricRange(),
-						soilMoisture: randomMetricRange(),
-					},
-				};
-
-				const singlePlantQuery = ['users', userId, 'plants', p.id];
+			return plants.map((plant, index) => {
+				const singlePlantQuery = ['users', userId, 'plants', plant.id];
 				if (!!queryClient.getQueryData(singlePlantQuery)) {
 					queryClient.setQueryData(singlePlantQuery, plant);
 				}
@@ -128,8 +114,65 @@ export interface PlantType {
 }
 
 export const usePlantTypes = () => {
+	const queryClient = useQueryClient();
+
 	return useQuery(['garden', 'plant-types'], async () => {
 		const query = '/plant_types';
-		return (await AxiosInstance.get<PlantType[]>(query)).data;
+		const plants = (await axios.get<PlantType[]>(ApiUrl + query)).data;
+
+		plants.forEach((p) => queryClient.setQueryData(['garden', 'plant-types', p.id], p));
+
+		return plants;
+	});
+};
+
+export const useSinglePlantType = (plantTypeId: number) => {
+	const queryClient = useQueryClient();
+
+	return useQuery(['garden', 'plant-types', plantTypeId], async () => {
+		const query = `/plant_types/${plantTypeId}`;
+		const plant = (await AxiosInstance.get<PlantType>(query)).data;
+
+		if (!!queryClient.getQueryData<PlantType[]>(['garden', 'plant-types'])) {
+			queryClient.setQueryData<PlantType[]>(['garden', 'plant-types'], (oldData) => {
+				return [...oldData.filter((p) => p.id !== plantTypeId), plant];
+			});
+		}
+
+		return plant;
+	});
+};
+
+export const useAddDevice = () => {
+	const { data: user } = useMe();
+
+	return useMutation(async (sensor: Sensor) => {
+		const query = `/users/${user.id}/devices`;
+
+		const res = await AxiosInstance.post<string>(query, {
+			deviceType: sensor.deviceType,
+			model: sensor.model,
+			name: sensor.name,
+			apiVersion: sensor.apiVersion,
+			softwareVersion: sensor.softwareVersion,
+		});
+		console.log('ADD DEVICE RES.DATA', res.data);
+		return res.data;
+	});
+};
+
+interface AddPlantParams {
+	name: string;
+	plantTypeId: number;
+	deviceId: number;
+	image: string | null;
+}
+
+export const useAddPlant = () => {
+	return useMutation(async (params: AddPlantParams) => {
+		const query = '/plants';
+		const res = await AxiosInstance.post<string>(query, { params });
+		console.log('ADD PLANT RES.DATA', res.data);
+		return res.data;
 	});
 };

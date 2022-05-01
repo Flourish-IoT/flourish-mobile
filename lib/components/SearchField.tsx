@@ -24,6 +24,7 @@ export default function SearchField({
 }: SearchFieldProps) {
 	const styles = StyleSheet.create({
 		container: {
+			opacity: disabled ? Theme.disabledOpacity : 1,
 			...Theme.shadow,
 			...(containerStyle as object),
 		},

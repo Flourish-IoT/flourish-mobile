@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Logo from '../../lib/icons/Logo';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
@@ -16,7 +16,7 @@ interface WelcomeScreenProps {
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 	return (
 		<ScreenContainer appBarPadding={false} safePadding={false} style={styles.screenContainer}>
-			<TopToCurvedContainer containerStyle={{}}>
+			<TopToCurvedContainer containerStyle={{ alignItems: 'center', paddingTop: 100 }}>
 				<Logo style={{ height: 250, width: 250 }} />
 				<Typography variant='h3bold' style={{ textAlign: 'center', color: 'white' }}>
 					Plant care made easy.
