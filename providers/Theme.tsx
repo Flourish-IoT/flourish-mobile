@@ -11,6 +11,7 @@ import SplashScreen from '../screens/welcome/Splash';
 interface OurColorsProps extends ReactNativePaper.ThemeColors {
 	// Custom colors types here
 	passing: string;
+	darkBrown: string;
 	faded: string;
 	pot: string;
 	warning: string;
@@ -224,6 +225,7 @@ export const Theme: OurThemeProps = {
 		passing: '#00A083',
 		faded: '#DCE6DB',
 		pot: '#B78952',
+		darkBrown: '#613722',
 		accent: '#9A532F', // Secondary color for your app which complements the primary color
 		background: '#F5F7FB', // Background color for pages, such as lists
 		surface: DefaultTheme.colors.surface, // Background color for elements containing content, such as cards

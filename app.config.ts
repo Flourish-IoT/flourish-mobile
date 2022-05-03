@@ -13,7 +13,7 @@ export default {
 	splash: {
 		image: './lib/assets/splash.png',
 		resizeMode: 'contain',
-		backgroundColor: '#9A532F',
+		backgroundColor: '#F5F7FB',
 	},
 	plugins: ['sentry-expo'],
 	ios: {
@@ -30,7 +30,7 @@ export default {
 	android: {
 		adaptiveIcon: {
 			foregroundImage: './lib/assets/adaptive-icon.png',
-			backgroundColor: '#9A532F',
+			backgroundColor: '#F5F7FB',
 		},
 	},
 	hooks: {

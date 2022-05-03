@@ -45,6 +45,6 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 const styles = StyleSheet.create({
 	screenContainer: {
 		justifyContent: 'center',
-		backgroundColor: Theme.colors.accent,
+		backgroundColor: Theme.colors.darkBrown,
 	},
 });
