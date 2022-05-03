@@ -1,12 +1,12 @@
 import React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
-import { MetricRange, PlantMetric } from '../../data/garden';
+import { GaugeValue, PlantMetric } from '../../data/garden';
 
 export type MeasurementsIconVariant = 'face' | 'plain';
 
 export interface MeasurementGraphicProps extends SvgProps {
 	type: PlantMetric;
-	range: MetricRange | undefined;
+	range: GaugeValue | undefined;
 }
 
 export default function MeasurementGraphic({ type, range, ...rest }: MeasurementGraphicProps) {

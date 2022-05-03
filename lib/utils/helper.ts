@@ -1,4 +1,4 @@
-import { MetricRange, PlantMetric } from '../../data/garden';
+import { GaugeValue, PlantMetric } from '../../data/garden';
 import { Theme } from '../../providers/Theme';
 import { Service } from '../../screens/welcome/SignUp';
 import AppConfig from '../../app.config';
@@ -71,7 +71,7 @@ export const getFullMetricName = (metric: PlantMetric) => {
 	}
 };
 
-export const getMetricRangeDescription = (metric: MetricRange) => {
+export const getMetricRangeDescription = (metric: GaugeValue) => {
 	switch (metric) {
 		case 1:
 			return 'Very Low';
@@ -86,7 +86,7 @@ export const getMetricRangeDescription = (metric: MetricRange) => {
 	}
 };
 
-export const getMetricGaugeColor = (metric: MetricRange) => {
+export const getMetricGaugeColor = (metric: GaugeValue) => {
 	switch (metric) {
 		case 1:
 		case 5:

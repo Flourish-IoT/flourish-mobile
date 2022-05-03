@@ -20,10 +20,10 @@ export interface Plant {
 	name: string;
 	image: string | null;
 	gaugeRatings: {
-		light: MetricRange;
-		temperature: MetricRange;
-		humidity: MetricRange;
-		soilMoisture: MetricRange;
+		light: GaugeValue;
+		temperature: GaugeValue;
+		humidity: GaugeValue;
+		soilMoisture: GaugeValue;
 	};
 	sensorData: {
 		timestamp: string;
@@ -37,7 +37,7 @@ export interface Plant {
 export type PlantMetric = 'Water' | 'Sunlight' | 'Temperature' | 'Humidity';
 export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 'Humidity'];
 
-export type MetricRange = 1 | 2 | 3 | 4 | 5;
+export type GaugeValue = 1 | 2 | 3 | 4 | 5;
 
 export const usePlants = (userId: number | 'me') => {
 	const queryClient = useQueryClient();
@@ -149,14 +149,14 @@ export const useAddDevice = () => {
 	return useMutation(async (sensor: Sensor) => {
 		const query = `/users/${user.id}/devices`;
 
-		const res = await AxiosInstance.post<string>(query, {
+		const res = await axios.post<string>(ApiUrl + query, {
 			deviceType: sensor.deviceType,
 			model: sensor.model,
 			name: sensor.name,
 			apiVersion: sensor.apiVersion,
 			softwareVersion: sensor.softwareVersion,
 		});
-		console.log('ADD DEVICE RES.DATA', res.data);
+
 		return res.data;
 	});
 };
@@ -171,8 +171,7 @@ interface AddPlantParams {
 export const useAddPlant = () => {
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		const res = await AxiosInstance.post<string>(query, { params });
-		console.log('ADD PLANT RES.DATA', res.data);
+		const res = await axios.post<string>(ApiUrl + query, { params });
 		return res.data;
 	});
 };
