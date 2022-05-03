@@ -33,13 +33,13 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 	const getData = () => {
 		switch (type) {
 			case 'Water':
-				return { range: plant.gaugeRatings.soilMoisture, raw: plant.sensorData.soilMoisture };
+				return { range: plant?.gaugeRatings?.soilMoisture, raw: plant?.sensorData?.soilMoisture };
 			case 'Sunlight':
-				return { range: plant.gaugeRatings.light, raw: plant.sensorData.light };
+				return { range: plant?.gaugeRatings?.light, raw: plant?.sensorData?.light };
 			case 'Temperature':
-				return { range: plant.gaugeRatings.temperature, raw: plant.sensorData.temperature };
+				return { range: plant?.gaugeRatings?.temperature, raw: plant?.sensorData?.temperature };
 			case 'Humidity':
-				return { range: plant.gaugeRatings.humidity, raw: plant.sensorData.humidity };
+				return { range: plant?.gaugeRatings?.humidity, raw: plant?.sensorData?.humidity };
 		}
 	};
 
