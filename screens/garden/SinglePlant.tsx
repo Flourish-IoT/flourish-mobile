@@ -33,7 +33,7 @@ export function SinglePlantIndex({ route, navigation }: SinglePlantScreenProps) 
 						{plant.name}
 					</Typography>
 					<Typography variant='placeholder' style={{ textAlign: 'center' }}>
-						{plant.scientificName}
+						{plant.plantType.scientificName}
 					</Typography>
 				</View>
 				{plantMetrics.map((m, mIndex, { length }) => (

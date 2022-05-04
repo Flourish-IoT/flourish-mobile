@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { ApiUrl, AxiosInstance } from './api';
+import { formatTemp } from '../lib/utils/helper';
+import { ApiUrl } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -19,6 +20,11 @@ export interface Plant {
 	id: number;
 	name: string;
 	image: string | null;
+	deviceId: number;
+	plantType: {
+		id: number;
+		scientificName: string;
+	};
 	gaugeRatings: {
 		light: GaugeValue;
 		temperature: GaugeValue;
@@ -27,10 +33,10 @@ export interface Plant {
 	};
 	sensorData: {
 		timestamp: string;
-		light: number;
 		temperature: number;
 		humidity: number;
 		soilMoisture: number;
+		light: number;
 	};
 }
 
@@ -49,14 +55,21 @@ export const usePlants = (userId: number | 'me') => {
 		async () => {
 			const query = `${ApiUrl}/users/${userId}/plants`;
 			const plants = (await axios.get<Plant[]>(query)).data;
+			const tempPref = user.preferences.unit_preference;
 
-			return plants.map((plant, index) => {
+			return plants.map((plant) => {
 				const singlePlantQuery = ['users', userId, 'plants', plant.id];
 				if (!!queryClient.getQueryData(singlePlantQuery)) {
 					queryClient.setQueryData(singlePlantQuery, plant);
 				}
 
-				return plant;
+				return {
+					...plant,
+					sensorData: {
+						...plant.sensorData,
+						temperature: formatTemp(tempPref, plant?.sensorData?.temperature),
+					},
+				};
 			});
 		},
 		{
@@ -65,38 +78,14 @@ export const usePlants = (userId: number | 'me') => {
 	);
 };
 
-export interface PlantInDepth extends Plant {
-	deviceId: number;
-	plantTypeId: number;
-	plantType: {
-		id: number;
-		scientificName: string;
-		minimumLight: number;
-		maximumLight: number;
-		minimumTemperature: number;
-		maximumTemperature: number;
-		minimumHumidity: number;
-		maximumHumidity: number;
-		minimumSoilMoisture: number;
-		maximumSoilMoisture: number;
-		image: string | null;
-	};
-}
-
 export const useSinglePlant = (userId: number | 'me', plantId: number) => {
 	const { data: user } = useMe();
 	if (userId === 'me') userId = user?.id;
 	const { data: plants } = usePlants(userId);
 
-	return useQuery(
-		['users', userId, 'plants', plantId],
-		async () => {
-			return plants.find((p) => p.id === plantId);
-		},
-		{
-			enabled: !!user && !!plants,
-		}
-	);
+	return useQuery(['users', userId, 'plants', plantId], () => plants.find((p) => p.id === plantId), {
+		enabled: !!user && !!plants,
+	});
 };
 
 export interface PlantType {
@@ -115,31 +104,35 @@ export interface PlantType {
 
 export const usePlantTypes = () => {
 	const queryClient = useQueryClient();
+	const { data: user } = useMe();
 
-	return useQuery(['garden', 'plant-types'], async () => {
-		const query = '/plant_types';
-		const plants = (await axios.get<PlantType[]>(ApiUrl + query)).data;
+	return useQuery(
+		['garden', 'plant-types'],
+		async () => {
+			const query = '/plant_types';
+			const plants = (await axios.get<PlantType[]>(ApiUrl + query)).data;
+			const tempPref = user.preferences.unit_preference;
 
-		plants.forEach((p) => queryClient.setQueryData(['garden', 'plant-types', p.id], p));
-
-		return plants;
-	});
+			return plants.map((p) => {
+				queryClient.setQueryData(['garden', 'plant-types', p.id], p);
+				return {
+					...p,
+					minimumTemperature: formatTemp(tempPref, p.minimumTemperature),
+					maximumTemperature: formatTemp(tempPref, p.maximumTemperature),
+				};
+			});
+		},
+		{
+			enabled: !!user,
+		}
+	);
 };
 
 export const useSinglePlantType = (plantTypeId: number) => {
-	const queryClient = useQueryClient();
+	const { data: plantTypes } = usePlantTypes();
 
-	return useQuery(['garden', 'plant-types', plantTypeId], async () => {
-		const query = `/plant_types/${plantTypeId}`;
-		const plant = (await AxiosInstance.get<PlantType>(query)).data;
-
-		if (!!queryClient.getQueryData<PlantType[]>(['garden', 'plant-types'])) {
-			queryClient.setQueryData<PlantType[]>(['garden', 'plant-types'], (oldData) => {
-				return [...oldData.filter((p) => p.id !== plantTypeId), plant];
-			});
-		}
-
-		return plant;
+	return useQuery(['garden', 'plant-types', plantTypeId], () => plantTypes.find(({ id }) => id === plantTypeId), {
+		enabled: !!plantTypes,
 	});
 };
 

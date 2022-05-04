@@ -138,7 +138,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 					featuredPlants.map((fp, index, { length }) => (
 						<FeaturedPlantCard
 							key={String(index + fp.id)}
-							plant={fp}
+							plantType={fp}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 							onPress={() => {}} // TODO: Open featured plant page
 						/>

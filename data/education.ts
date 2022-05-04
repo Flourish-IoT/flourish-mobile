@@ -15,9 +15,7 @@ export const useFeaturedPlants = () => {
 
 	return useQuery(
 		['education', 'featured-plants'],
-		() => {
-			return plantTypes.filter((p) => !usersPlants.map((uP) => uP.id).includes(p.id));
-		},
+		() => plantTypes.filter((p) => !usersPlants.map((uP) => uP.id).includes(p.id)),
 		{
 			enabled: !!user && !!usersPlants && !!plantTypes,
 		}

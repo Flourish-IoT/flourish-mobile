@@ -6,18 +6,18 @@ import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface FeaturedPlantProps {
-	plant: PlantType;
+	plantType: PlantType;
 	containerStyle?: ViewStyle;
 	onPress: () => void;
 }
 
-export default function FeaturedPlantCard({ plant, onPress, containerStyle }: FeaturedPlantProps) {
+export default function FeaturedPlantCard({ plantType, onPress, containerStyle }: FeaturedPlantProps) {
 	return (
 		<TouchableOpacity style={{ ...styles.container, ...(containerStyle as object) }} onPress={onPress}>
-			<Image style={styles.image} source={plant.image ? { uri: plant.image } : getPlaceHolder('plant')} />
+			<Image style={styles.image} source={plantType.image ? { uri: plantType.image } : getPlaceHolder('plant')} />
 			<View style={styles.titleContainer}>
 				<Typography variant='paragraph' style={styles.titleText}>
-					{plant.scientificName}
+					{plantType.scientificName}
 				</Typography>
 			</View>
 		</TouchableOpacity>

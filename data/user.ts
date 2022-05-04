@@ -212,7 +212,6 @@ export const tempOtherUser: User = {
 export const useMe = () => {
 	return useQuery(['me'], async () => {
 		const userId = await getUserId();
-
 		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempMyUser);
 		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
 	});

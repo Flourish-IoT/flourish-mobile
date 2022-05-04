@@ -9,7 +9,7 @@ import MetricVisual from './components/MetricVisual';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Typography from '../../lib/components/styled/Typography';
 import { Theme } from '../../providers/Theme';
-import { getMetricGaugeColor, getMetricRangeDescription } from '../../lib/utils/helper';
+import { getGaugeValueColor, getGaugeValuePhrase, getMetricUnitSuffix, usePlantTypeBestRange } from '../../lib/utils/helper';
 import Loading from '../../lib/components/Loading';
 
 import { BarChart } from 'react-native-chart-kit';
@@ -27,37 +27,50 @@ interface SingleMetricScreenRouteProps {
 export default function SingleMetricScreen({ navigation, route }: SingleMetricScreenProps) {
 	const { plantId, type } = route.params as SingleMetricScreenRouteProps;
 	const { data: plant, isLoading: plantDataIsLoading } = useSinglePlant('me', plantId);
+	const { data: bestRange } = usePlantTypeBestRange(plant?.plantType?.id, type);
 
 	if (plantDataIsLoading) return <Loading animation='rings' size='lg' />;
 
 	const getData = () => {
 		switch (type) {
 			case 'Water':
-				return { range: plant?.gaugeRatings?.soilMoisture, raw: plant?.sensorData?.soilMoisture };
+				return { gaugeVal: plant?.gaugeRatings?.soilMoisture, sensorVal: plant?.sensorData?.soilMoisture };
 			case 'Sunlight':
-				return { range: plant?.gaugeRatings?.light, raw: plant?.sensorData?.light };
+				return { gaugeVal: plant?.gaugeRatings?.light, sensorVal: plant?.sensorData?.light };
 			case 'Temperature':
-				return { range: plant?.gaugeRatings?.temperature, raw: plant?.sensorData?.temperature };
+				return { gaugeVal: plant?.gaugeRatings?.temperature, sensorVal: plant?.sensorData?.temperature };
 			case 'Humidity':
-				return { range: plant?.gaugeRatings?.humidity, raw: plant?.sensorData?.humidity };
+				return { gaugeVal: plant?.gaugeRatings?.humidity, sensorVal: plant?.sensorData?.humidity };
 		}
 	};
 
 	return (
-		<ScreenContainer scrolls>
+		<ScreenContainer scrolls style={styles.screenContainerStyle}>
 			<View style={styles.header}>
 				<ModalBackButton absolutePos={false} onPress={navigation.goBack} style={styles.backButton} />
 				<Typography variant='h1'>{type}</Typography>
 			</View>
 			<View style={styles.metricVisualContainer}>
-				<MetricVisual mode='block' metricType={type} plantId={plantId} containerStyle={styles.metricVisual} />
+				<MetricVisual
+					mode='block'
+					metricType={type}
+					plantId={plantId}
+					showBlockGaugePhrase={false}
+					containerStyle={styles.metricVisual}
+				/>
 				<View style={styles.metricTextContainer}>
-					<Typography variant='h1'>{getData().raw}</Typography>
-					<Typography variant='h3bold' style={{ color: getMetricGaugeColor(getData().range) }}>
-						{getMetricRangeDescription(getData().range)}
+					<Typography variant='h1'>{getData().sensorVal + getMetricUnitSuffix(type)}</Typography>
+					<Typography variant='h2' style={{ color: getGaugeValueColor(getData().gaugeVal) }}>
+						{getGaugeValuePhrase(getData().gaugeVal)}
 					</Typography>
 				</View>
 			</View>
+
+			<View style={styles.bestRangeContainer}>
+				<Typography variant='paragraph'>Best Range: </Typography>
+				<Typography variant='h3bold'>{bestRange}</Typography>
+			</View>
+
 			<View
 				style={
 					{
@@ -100,6 +113,9 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 }
 
 const styles = StyleSheet.create({
+	screenContainerStyle: {
+		backgroundColor: 'white',
+	},
 	header: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -114,9 +130,18 @@ const styles = StyleSheet.create({
 	},
 	metricVisual: {
 		transform: [{ scale: 1.5 }],
-		marginRight: Theme.spacing.md,
+		marginRight: Theme.spacing.lg,
 	},
 	metricTextContainer: {
+		...Theme.util.flexCenter,
+	},
+	bestRangeContainer: {
+		flexDirection: 'row',
+		width: '100%',
+		height: 50,
+		backgroundColor: Theme.colors.background,
+		borderRadius: Theme.borderRadius,
+		marginVertical: Theme.spacing.md,
 		...Theme.util.flexCenter,
 	},
 });

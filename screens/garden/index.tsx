@@ -17,6 +17,7 @@ import ViewModeToggle from './components/ViewModeToggle';
 import StyledButton from '../../lib/components/styled/Button';
 import ConnectDeviceStack from '../pairing/device';
 import AddPlantStack from '../pairing/plant';
+import Plus from '../../lib/icons/Plus';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -56,9 +57,9 @@ export function GardenList({ navigation }: GardenScreenProps) {
 					<View style={{ width: styles.addButton.width }} />
 					<ViewModeToggle viewMode={viewMode} onPress={toggleView} containerStyle={styles.viewModeButton} />
 					<StyledButton
-						variant='primary'
-						title='+'
+						variant='button'
 						buttonStyle={styles.addButton}
+						icon={<Plus fill='white' />}
 						onPress={() => navigation.navigate('ConnectDeviceStack')}
 					/>
 				</View>
@@ -120,8 +121,9 @@ const styles = StyleSheet.create({
 	},
 	viewModeButton: {},
 	addButton: {
-		height: 30,
-		width: 80,
+		height: 34,
+		width: 34,
+		backgroundColor: Theme.colors.cta,
 	},
 	viewContainer: {
 		width: '100%',

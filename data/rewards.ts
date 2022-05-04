@@ -81,15 +81,9 @@ export const useAvailableMissions = (userId: number | 'me') => {
 	if (userId === 'me') userId = user?.id;
 	const { data: missions } = useMissions(userId);
 
-	return useQuery(
-		['missions', 'available', userId],
-		async () => {
-			return missions.filter((a) => !a.claimed);
-		},
-		{
-			enabled: !!user && !!missions,
-		}
-	);
+	return useQuery(['missions', 'available', userId], () => missions.filter((a) => !a.claimed), {
+		enabled: !!user && !!missions,
+	});
 };
 
 export const useClaimedMissions = (userId: number | 'me') => {
@@ -97,15 +91,9 @@ export const useClaimedMissions = (userId: number | 'me') => {
 	if (userId === 'me') userId = user?.id;
 	const { data: missions } = useMissions(userId);
 
-	return useQuery(
-		['missions', 'claimed', userId],
-		async () => {
-			return missions.filter((a) => a.claimed);
-		},
-		{
-			enabled: !!user && !!missions,
-		}
-	);
+	return useQuery(['missions', 'claimed', userId], () => missions.filter((a) => a.claimed), {
+		enabled: !!user && !!missions,
+	});
 };
 
 export const useClaimMission = () => {

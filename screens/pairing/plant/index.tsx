@@ -8,7 +8,6 @@ import { GlobalStackNavOptions, Theme } from '../../../providers/Theme';
 import Typography from '../../../lib/components/styled/Typography';
 import CurvedContainer, { TopToCurvedContainer } from '../../../lib/components/layout/CurvedContainer';
 import { createStackNavigator } from '@react-navigation/stack';
-import CenterMe from '../../../lib/components/CenterMe';
 import SearchField from '../../../lib/components/SearchField';
 import { PlantType, useAddPlant, usePlantTypes, useSinglePlantType } from '../../../data/garden';
 import Loading from '../../../lib/components/Loading';
@@ -72,16 +71,12 @@ const PlantTypeStep = ({ navigation, route }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Select the type of plant that you are adding to your garden.
 				</Typography>
-				<CenterMe horizontal>
-					<Button
-						variant='primary'
-						title='Next'
-						onPress={() =>
-							navigation.navigate('NameStep', { deviceId: routeProps.deviceId, plantTypeId: selected.id })
-						}
-						disabled={!selected}
-					/>
-				</CenterMe>
+				<Button
+					variant='primary'
+					title='Next'
+					onPress={() => navigation.navigate('NameStep', { deviceId: routeProps.deviceId, plantTypeId: selected.id })}
+					disabled={!selected}
+				/>
 			</CurvedContainer>
 		</ScreenContainer>
 	);
@@ -110,20 +105,18 @@ const NameStep = ({ navigation, route }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Select the type of plant that you are adding to your garden.
 				</Typography>
-				<CenterMe horizontal>
-					<Button
-						variant='primary'
-						title='Done'
-						onPress={() => navigation.navigate('ImageStep', { plantTypeId, deviceId, name })}
-						disabled={name.trim().length === 0}
-						buttonStyle={{ marginBottom: Theme.spacing.md }}
-					/>
-					<Button
-						variant='text'
-						title="I don't want to name my plant"
-						onPress={() => navigation.navigate('ImageStep', { plantTypeId, deviceId, name: undefined })}
-					/>
-				</CenterMe>
+				<Button
+					variant='primary'
+					title='Done'
+					onPress={() => navigation.navigate('ImageStep', { plantTypeId, deviceId, name })}
+					disabled={name.trim().length === 0}
+					buttonStyle={{ marginBottom: Theme.spacing.md }}
+				/>
+				<Button
+					variant='text'
+					title="I don't want to name my plant"
+					onPress={() => navigation.navigate('ImageStep', { plantTypeId, deviceId, name: undefined })}
+				/>
 			</CurvedContainer>
 		</ScreenContainer>
 	);
@@ -210,20 +203,18 @@ const ImageStep = ({ navigation, route }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Select the type of plant that you are adding to your garden.
 				</Typography>
-				<CenterMe horizontal>
-					<Button
-						variant='primary'
-						title='Add Picture'
-						onPress={onTakePhotoPress}
-						buttonStyle={{ marginBottom: Theme.spacing.md }}
-					/>
-					<Button
-						variant='text'
-						title="I don't want to add a picture of my plant"
-						onPress={() => navigation.navigate('SuccessStep', { plantTypeId, deviceId, name, imageUri: undefined })}
-						disabled={name.trim().length === 0}
-					/>
-				</CenterMe>
+				<Button
+					variant='primary'
+					title='Add Picture'
+					onPress={onTakePhotoPress}
+					buttonStyle={{ marginBottom: Theme.spacing.md }}
+				/>
+				<Button
+					variant='text'
+					title="I don't want to add a picture of my plant"
+					onPress={() => navigation.navigate('SuccessStep', { plantTypeId, deviceId, name, imageUri: undefined })}
+					disabled={name.trim().length === 0}
+				/>
 			</CurvedContainer>
 
 			<StyledCamera
@@ -280,9 +271,7 @@ const SuccessStep = ({ navigation, route }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					Congrats! {name} has been added to your garden!
 				</Typography>
-				<CenterMe horizontal>
-					<Button variant='primary' title='Done' onPress={() => navigation.navigate('Garden')} />
-				</CenterMe>
+				<Button variant='primary' title='Done' onPress={() => navigation.navigate('Garden')} />
 			</CurvedContainer>
 		</ScreenContainer>
 	);
@@ -315,9 +304,7 @@ const styles = StyleSheet.create({
 	screenContainer: {
 		backgroundColor: Theme.colors.background,
 	},
-	curvedContainer: {
-		alignItems: 'flex-start',
-	},
+	curvedContainer: {},
 	curvedCircleStyle: {
 		left: '55%',
 	},

@@ -39,9 +39,7 @@ const IntroStep = ({ navigation }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 					For further instructions, see the manual
 				</Typography>
-				<CenterMe horizontal>
-					<Button variant='primary' title='Next' onPress={() => navigation.navigate('PairingStep')} />
-				</CenterMe>
+				<Button variant='primary' title='Next' onPress={() => navigation.navigate('PairingStep')} />
 			</CurvedContainer>
 		</ScreenContainer>
 	);
@@ -71,9 +69,7 @@ const PairingStep = ({ navigation }: StepProps) => {
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md, textAlign: 'center' }}>
 					Make sure your bluetooth is on so we can connect to your device.
 				</Typography>
-				<CenterMe horizontal>
-					<Button variant='primary' onPress={() => setShowScanningModal(true)} title='Next' />
-				</CenterMe>
+				<Button variant='primary' onPress={() => setShowScanningModal(true)} title='Next' />
 			</CurvedContainer>
 
 			{showScanningModal && <BluetoothScanningModal onPaired={onPaired} onClose={() => setShowScanningModal(false)} />}
@@ -136,7 +132,5 @@ const styles = StyleSheet.create({
 	screenContainer: {
 		backgroundColor: Theme.colors.background,
 	},
-	curvedContainer: {
-		alignItems: 'flex-start',
-	},
+	curvedContainer: {},
 });

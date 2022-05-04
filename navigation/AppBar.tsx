@@ -7,7 +7,7 @@ import Plant from '../lib/icons/Plant';
 import Profile from '../lib/icons/Profile';
 import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
-import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ViewStyle, Image, Dimensions } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import ProfileScreenStack from '../screens/profile';
 import GardenScreenStack from '../screens/garden';
@@ -42,6 +42,7 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 };
 
 export const appBarCenterBtnSize = 70;
+const dimensions = Dimensions.get('window');
 
 function OurTabBar({ state, navigation }: BottomTabBarProps) {
 	const insets = useSafeAreaInsets();
@@ -55,12 +56,17 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			height: Theme.appBarHeight + insets.bottom,
 			paddingHorizontal: Theme.spacing.md,
 			paddingBottom: insets.bottom,
-			backgroundColor: 'white',
 			borderTopWidth: 0,
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
 			...Theme.shadow,
+		},
+		appBarBg: {
+			position: 'absolute',
+			transform: [{ scale: 1 / 3 }],
+			bottom: -144,
+			left: -1350,
 		},
 		appBarBtnOuter: {
 			flex: 1,
@@ -73,6 +79,8 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 
 	return (
 		<View style={styles.appBar}>
+			<Image style={styles.appBarBg} source={require('../lib/assets/appBarBg.png')} />
+
 			{state.routes.map(({ name }, index) => {
 				const isFocused = state.index === index;
 				const isCenterBtn = name === 'Garden';

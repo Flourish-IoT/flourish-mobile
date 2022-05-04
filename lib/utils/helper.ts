@@ -1,7 +1,9 @@
-import { GaugeValue, PlantMetric } from '../../data/garden';
+import { GaugeValue, PlantMetric, useSinglePlantType } from '../../data/garden';
 import { Theme } from '../../providers/Theme';
 import { Service } from '../../screens/welcome/SignUp';
 import AppConfig from '../../app.config';
+import { useQuery, useQueryClient } from 'react-query';
+import { UnitPreference, useMe, User } from '../../data/user';
 
 export const AppName = AppConfig.name;
 
@@ -42,6 +44,11 @@ export const getMonthName = (month: number) => {
 	return monthNames[month];
 };
 
+export const formatTemp = (tempUnitPref: UnitPreference, num: number) => {
+	const converted = tempUnitPref && tempUnitPref === 'Fahrenheit' ? (num * 9) / 5 + 32 : num;
+	return Math.round((converted + Number.EPSILON) * 100) / 100;
+};
+
 export function filterData<T>(data: T[], query: string) {
 	if (query.trim().length === 0) return data;
 
@@ -62,17 +69,72 @@ export function filterData<T>(data: T[], query: string) {
 	return data.filter((d) => (query && query.length > 0 ? getObjectValues(d).includes(normalize(query)) : true));
 }
 
-export const getFullMetricName = (metric: PlantMetric) => {
-	switch (metric) {
+export const getFullMetricName = (metricType: PlantMetric) => {
+	switch (metricType) {
 		case 'Water':
 			return 'Soil Moisture';
 		default:
-			return metric;
+			return metricType;
 	}
 };
 
-export const getMetricRangeDescription = (metric: GaugeValue) => {
-	switch (metric) {
+export const getMetricUnitSuffix = (metricType: PlantMetric) => {
+	const queryClient = useQueryClient();
+	const user = queryClient?.getQueryData<User>(['me']);
+	const tempUnitPref = user?.preferences?.unit_preference;
+
+	switch (metricType) {
+		case 'Water':
+		case 'Humidity':
+			return '%';
+		case 'Sunlight':
+			return 'k lux';
+		case 'Temperature':
+			return `°${tempUnitPref[0] ?? ''}`;
+	}
+};
+
+export const usePlantTypeBestRange = (plantTypeId: number, metricType: PlantMetric) => {
+	const { data: plantType } = useSinglePlantType(plantTypeId);
+	const { data: user } = useMe();
+	const suffix = getMetricUnitSuffix(metricType);
+
+	return useQuery(
+		['garden', 'plant-types', plantTypeId, 'best-range', metricType],
+		async () => {
+			let minMetric: number;
+			let maxMetric: number;
+
+			switch (metricType) {
+				case 'Humidity':
+					minMetric = plantType.minimumHumidity;
+					maxMetric = plantType.maximumHumidity;
+					break;
+				case 'Water':
+					minMetric = plantType.minimumSoilMoisture;
+					maxMetric = plantType.maximumSoilMoisture;
+					break;
+				case 'Temperature':
+					const unitPref = user.preferences.unit_preference;
+					minMetric = formatTemp(unitPref, plantType.minimumTemperature);
+					maxMetric = formatTemp(unitPref, plantType.maximumTemperature);
+					break;
+				case 'Sunlight':
+					minMetric = plantType.minimumLight;
+					maxMetric = plantType.maximumLight;
+					break;
+			}
+
+			return `${minMetric + suffix} - ${maxMetric + suffix}`;
+		},
+		{
+			enabled: !!user && !!plantType && !!plantTypeId && !!metricType,
+		}
+	);
+};
+
+export const getGaugeValuePhrase = (gaugeValue: GaugeValue) => {
+	switch (gaugeValue) {
 		case 1:
 			return 'Very Low';
 		case 2:
@@ -86,8 +148,65 @@ export const getMetricRangeDescription = (metric: GaugeValue) => {
 	}
 };
 
-export const getMetricGaugeColor = (metric: GaugeValue) => {
-	switch (metric) {
+export const getMetricSuggestion = (metricType: PlantMetric, gaugeValue: GaugeValue, plantName: string) => {
+	switch (metricType) {
+		case 'Water':
+			switch (gaugeValue) {
+				case 1:
+					return `${plantName} desperately needs watering.`;
+				case 2:
+					return `${plantName} could use a little more water.`;
+				case 3:
+					return `You don't need to water ${plantName} at this time.`;
+				case 4:
+					return `${plantName} has a little more water than needed.`;
+				case 5:
+					return `${plantName} may be over-watered.`;
+			}
+		case 'Humidity':
+			switch (gaugeValue) {
+				case 1:
+					return `${plantName} needs more Humidity.`;
+				case 2:
+					return `Consider raising the Humidity around ${plantName}.`;
+				case 3:
+					return `${plantName} has the ideal amount of Humidity.`;
+				case 4:
+					return `Consider lowering the Humidity around ${plantName}.`;
+				case 5:
+					return `There's too much Humidity around ${plantName}.`;
+			}
+		case 'Sunlight':
+			switch (gaugeValue) {
+				case 1:
+					return `${plantName} desperately needs more sunlight.`;
+				case 2:
+					return `Consider placing ${plantName} closer to a window.`;
+				case 3:
+					return `${plantName} has the ideal amount of Sunlight.`;
+				case 4:
+					return `Consider moving ${plantName} a little farther away from the light.`;
+				case 5:
+					return `${plantName} is receiving too much Sunlight.`;
+			}
+		case 'Temperature':
+			switch (gaugeValue) {
+				case 1:
+					return `${plantName} is too cold.`;
+				case 2:
+					return `Consider raising the temperature for ${plantName}.`;
+				case 3:
+					return `${plantName} is in the ideal Temperature.`;
+				case 4:
+					return `Consider lowering the temperature for ${plantName}.`;
+				case 5:
+					return `${plantName} is too hot.`;
+			}
+	}
+};
+
+export const getGaugeValueColor = (gaugeValue: GaugeValue) => {
+	switch (gaugeValue) {
 		case 1:
 		case 5:
 			return Theme.colors.error;

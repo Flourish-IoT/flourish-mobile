@@ -22,7 +22,7 @@ export default function GridView({ plants, onPress, style }: GridViewProps) {
 						key={index + p.id}
 						image={p.image}
 						title={p.name}
-						subtitle={p.scientificName}
+						subtitle={p.plantType.scientificName}
 						onPress={() => onPress(p)}
 						containerStyle={{
 							marginVertical: isInLastRow ? 0 : Theme.spacing.xl,

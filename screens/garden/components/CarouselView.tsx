@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Dimensions, StyleSheet, View, ViewStyle } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Plant, plantMetrics } from '../../../data/garden';
+import Typography from '../../../lib/components/styled/Typography';
 import { Theme } from '../../../providers/Theme';
 import MetricVisual from './MetricVisual';
 import PlantPot from './PlantPot';
@@ -33,16 +34,16 @@ export default function CarouselView({ navigation, plants, onPress, containerSty
 					itemWidth={Dimensions.get('window').width - Theme.spacing.md * 16}
 					firstItem={firstItemIndex}
 					renderItem={({ item: plant }: CarouselRendererProps) => (
-						<PlantPot
-							viewMode={'Carousel'}
-							image={plant.image}
-							title={plant.name}
-							subtitle={plant.scientificName}
-							onPress={() => onPress(plant)}
-						/>
+						<PlantPot viewMode={'Carousel'} image={plant.image} onPress={() => onPress(plant)} />
 					)}
 				/>
 			</View>
+
+			<View style={styles.nameContainer}>
+				<Typography variant='h1'>{selectedPlant.name}</Typography>
+				<Typography variant='subHeader'>{selectedPlant.plantType.scientificName}</Typography>
+			</View>
+
 			<View style={styles.metricBlocksContainer}>
 				{plantMetrics.map((m, index) => (
 					<View key={index + m} style={styles.metricBlock}>
@@ -70,17 +71,21 @@ const styles = StyleSheet.create({
 		overflow: 'visible',
 		marginVertical: Theme.spacing.screenContainer,
 	},
+	carouselContainer: {
+		width: '100%',
+		overflow: 'visible',
+		marginLeft: -Theme.spacing.screenContainer,
+		marginBottom: Theme.spacing.md,
+	},
+	nameContainer: {
+		alignItems: 'center',
+		marginBottom: Theme.spacing.md,
+	},
 	metricBlocksContainer: {
 		width: '100%',
 		flexDirection: 'row',
 		justifyContent: 'center',
 		flexWrap: 'wrap',
-	},
-	carouselContainer: {
-		width: '100%',
-		overflow: 'visible',
-		marginLeft: -Theme.spacing.screenContainer,
-		marginBottom: Theme.spacing.screenContainer,
 	},
 	metricBlock: {
 		width: '50%',

@@ -1,21 +1,32 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { Plant, PlantMetric, useSinglePlant } from '../../../data/garden';
+import { GaugeValue, Plant, PlantMetric, useSinglePlant, useSinglePlantType } from '../../../data/garden';
 import AnimatedGauge from '../../../lib/components/AnimatedGauge';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
-import { getFullMetricName, getMetricGaugeColor, getMetricRangeDescription } from '../../../lib/utils/helper';
+import {
+	getFullMetricName,
+	getGaugeValueColor,
+	getGaugeValuePhrase,
+	getMetricSuggestion,
+	getMetricUnitSuffix,
+	usePlantTypeBestRange,
+} from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 
 interface MetricVisualProps {
 	mode: 'block' | 'listItem';
+	showBlockGaugePhrase?: boolean;
 	metricType: PlantMetric;
 	plantId: number;
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
 }
 
-const getSensorAndGaugeVals = (plant: Plant, metricType: PlantMetric) => {
+const getSensorAndGaugeVals = (
+	plant: Plant,
+	metricType: PlantMetric
+): { sensorValue: number | undefined; gaugeValue: GaugeValue | undefined } => {
 	const sensorData = plant?.sensorData;
 	const gaugeRatings = plant?.gaugeRatings;
 
@@ -31,8 +42,16 @@ const getSensorAndGaugeVals = (plant: Plant, metricType: PlantMetric) => {
 	}
 };
 
-export default function MetricVisual({ mode, metricType, plantId, onPress, containerStyle }: MetricVisualProps) {
+export default function MetricVisual({
+	mode,
+	showBlockGaugePhrase = true,
+	metricType,
+	plantId,
+	onPress,
+	containerStyle,
+}: MetricVisualProps) {
 	const { data: plant, isLoading: plantIsLoading } = useSinglePlant('me', plantId);
+	const { data: bestRange } = usePlantTypeBestRange(plant?.plantType?.id, metricType);
 	const { sensorValue, gaugeValue } = getSensorAndGaugeVals(plant, metricType);
 
 	if (plantIsLoading || !plant) return null;
@@ -57,28 +76,43 @@ export default function MetricVisual({ mode, metricType, plantId, onPress, conta
 		},
 		textContainer: {
 			flex: 1,
-			paddingLeft: Theme.spacing.sm,
+			paddingHorizontal: Theme.spacing.sm,
 		},
 	});
 
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
-			<View style={styles.iconContainer}>
-				<AnimatedGauge type={metricType} newValue={gaugeValue} />
+			<View style={{ width: 90, alignItems: 'center' }}>
+				<View style={styles.iconContainer}>
+					<AnimatedGauge type={metricType} newValue={gaugeValue} />
+				</View>
+				{mode === 'block' && showBlockGaugePhrase && (
+					<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
+						{getGaugeValuePhrase(gaugeValue)}
+					</Typography>
+				)}
+				{mode === 'listItem' && (
+					<Typography variant='h3bold' style={{ width: '100%', textAlign: 'center' }}>
+						{sensorValue + getMetricUnitSuffix(metricType)}
+					</Typography>
+				)}
 			</View>
 			{mode === 'listItem' && (
-				<View style={styles.textContainer}>
-					<Typography variant='body' style={{ fontWeight: 'bold' }}>
-						{getFullMetricName(metricType)}
-						{': '}
-						<Typography variant='h3bold' style={{ color: getMetricGaugeColor(gaugeValue) }}>
-							{getMetricRangeDescription(gaugeValue)}
+				<>
+					<View style={styles.textContainer}>
+						<Typography variant='body' style={{ fontWeight: 'bold' }}>
+							{getFullMetricName(metricType)}
+							{': '}
+							<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
+								{getGaugeValuePhrase(gaugeValue)}
+							</Typography>
 						</Typography>
-					</Typography>
-					<Typography variant='placeholder'>{sensorValue}</Typography>
-				</View>
+						{!!bestRange && <Typography variant='placeholder'>Best Range: {bestRange}</Typography>}
+						<Typography variant='paragraph'>{getMetricSuggestion(metricType, gaugeValue, plant.name)}</Typography>
+					</View>
+					{!!onPress && <Chevron direction='right' withBackground />}
+				</>
 			)}
-			{mode === 'listItem' && !!onPress && <Chevron direction='right' withBackground />}
 		</TouchableOpacity>
 	);
 }
