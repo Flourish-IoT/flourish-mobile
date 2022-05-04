@@ -2,7 +2,7 @@
 	"main": "node_modules/expo/AppEntry.js",
 	"private": true,
 	"name": "flourish",
-	"version": "1.8.1",
+	"version": "1.9.2",
 	"author": "The Flourish Team",
 	"license": "ISC",
 	"homepage": "https://github.com/Flourish-IoT/flourish-mobile#readme",
@@ -22,9 +22,10 @@
 	},
 	"dependencies": {
 		"@react-native-async-storage/async-storage": "~1.15.0",
+		"@react-native-community/masked-view": "^0.1.11",
 		"@react-navigation/bottom-tabs": "^6.0.9",
 		"@react-navigation/material-top-tabs": "^6.1.1",
-		"@react-navigation/native": "^6.0.6",
+		"@react-navigation/native": "^6.0.10",
 		"@react-navigation/stack": "^6.0.11",
 		"@sentry/react-native": "^3.4.1",
 		"@use-expo/font": "^2.0.0",
@@ -55,6 +56,7 @@
 		"react-native-paper": "^4.9.2",
 		"react-native-reanimated": "~2.3.1",
 		"react-native-safe-area-context": "3.3.2",
+		"react-native-screens": "~3.10.1",
 		"react-native-snap-carousel": "^3.9.1",
 		"react-native-svg": "12.1.1",
 		"react-native-tab-view": "^3.1.1",
@@ -62,7 +64,8 @@
 		"react-native-web": "0.17.1",
 		"react-native-webview": "11.15.0",
 		"react-query": "^3.33.1",
-		"sentry-expo": "^4.0.0"
+		"sentry-expo": "^4.0.0",
+		"@react-native-masked-view/masked-view": "0.2.6"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",

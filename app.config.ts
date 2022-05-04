@@ -2,7 +2,7 @@ export default {
 	name: 'Flourish',
 	slug: 'Flourish',
 	owner: 'hmh84',
-	version: '1.8.1',
+	version: '1.9.2',
 	orientation: 'portrait',
 	icon: './lib/assets/icon.png',
 	platforms: ['ios', 'android'],
@@ -15,7 +15,18 @@ export default {
 		resizeMode: 'contain',
 		backgroundColor: '#F5F7FB',
 	},
-	plugins: ['sentry-expo'],
+	plugins: [
+		'sentry-expo',
+		[
+			'expo-image-picker',
+			{
+				photosPermission:
+					'The app accesses your photos to let you set your profile picture and add pictures of your plants.',
+				cameraPermission:
+					'The app accesses your camera to let you set your profile picture and add pictures of your plants.',
+			},
+		],
+	],
 	ios: {
 		supportsTablet: false,
 		bundleIdentifier: 'com.dev.flourish',
@@ -38,9 +49,9 @@ export default {
 			{
 				file: 'sentry-expo/upload-sourcemaps',
 				config: {
-					organization: process.env.SENTRY_PROJECT_NAME,
-					project: process.env.SENTRY_ORG_NAME,
-					authToken: process.env.SENTRY_AUTH,
+					organization: 'flourish-mobile',
+					project: 'flourish-mobile',
+					authToken: '26afe15d9db34a3fbe764c68f124407e54c6633090984ff499402751d67e67fd',
 				},
 			},
 		],
