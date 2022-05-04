@@ -18,7 +18,7 @@ export const initializeSentry = () => {
 			debug: true,
 			ignoreErrors: ['Network request failed'],
 			enableAutoSessionTracking: true,
-			release: Updates.releaseChannel || 'development',
+			release: Updates.releaseChannel,
 		});
 	} else {
 		Sentry.Native.captureMessage('No Sentry key provided; skipping initialization');
