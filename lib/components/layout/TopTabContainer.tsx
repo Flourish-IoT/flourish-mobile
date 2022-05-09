@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { appBarCenterBtnSize } from '../../../navigation/AppBar';
 import { Theme } from '../../../providers/Theme';
 
 interface TopTabContainerProps {
@@ -19,12 +18,7 @@ export default function TopTabContainer({ children, scrolls = false, bounces = t
 		container: {
 			alignItems: 'center',
 			padding: Theme.spacing.screenContainer,
-			paddingBottom:
-				Theme.spacing.screenContainer +
-				insets.bottom +
-				Theme.appBarHeight +
-				appBarCenterBtnSize / 2 +
-				missingBottomPadding,
+			paddingBottom: Theme.spacing.screenContainer + insets.bottom + Theme.appBarHeight + missingBottomPadding,
 			...style,
 		},
 	});

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Calendar from '../lib/icons/Calendar';
@@ -41,82 +41,97 @@ const ScreenIcon = ({ icon, focused }: ScreenIconProps) => {
 	}
 };
 
-export const appBarCenterBtnSize = 70;
 const dimensions = Dimensions.get('window');
+const centerBtnSize = 70;
+const appBarBgCurveWidth = 106;
 
 function OurTabBar({ state, navigation }: BottomTabBarProps) {
+	const imageRef = useRef<Image>();
 	const insets = useSafeAreaInsets();
 
 	const styles = StyleSheet.create({
-		appBar: {
+		appBarBtnContainer: {
 			position: 'absolute',
 			bottom: 0,
 			left: 0,
 			right: 0,
-			height: Theme.appBarHeight + insets.bottom,
+			height: Theme.appBarHeight,
 			paddingHorizontal: Theme.spacing.md,
-			paddingBottom: insets.bottom,
+			paddingBottom: insets.bottom / 2,
 			borderTopWidth: 0,
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
+		},
+		appBarBtn: {
+			width: 50,
+			height: 45,
+			borderRadius: Theme.borderRadius,
+			...Theme.util.flexCenter,
+		},
+		centerBtn: {
+			borderRadius: centerBtnSize / 2,
+			width: centerBtnSize,
+			height: centerBtnSize,
+			transform: [{ translateY: -(Theme.appBarHeight / 3) - 5 }, { translateX: 1.5 }],
+			...Theme.util.flexCenter,
 			...Theme.shadow,
 		},
-		appBarBg: {
+		appBarBgContainer: {
 			position: 'absolute',
-			transform: [{ scale: 1 / 3 }],
-			bottom: -144,
-			left: -1350,
-		},
-		appBarBtnOuter: {
-			flex: 1,
-			height: '100%',
+			width: dimensions.width,
+			height: Theme.appBarHeight,
+			bottom: 0,
+			left: 0,
 			flexDirection: 'row',
-			justifyContent: 'space-around',
-			alignItems: 'center',
+			...Theme.shadow,
+		},
+		appBarBgSides: {
+			backgroundColor: 'white',
+			height: '100%',
+			flex: 1,
+		},
+		appBarBgDip: {
+			width: appBarBgCurveWidth,
+			height: '100%',
 		},
 	});
 
 	return (
-		<View style={styles.appBar}>
-			<Image style={styles.appBarBg} source={require('../lib/assets/appBarBg.png')} />
+		<>
+			<View style={styles.appBarBgContainer}>
+				<View style={styles.appBarBgSides} />
+				<Image ref={imageRef} style={styles.appBarBgDip} source={require('../lib/assets/appBarBgCurve.png')} />
+				<View style={styles.appBarBgSides} />
+			</View>
+			<View style={styles.appBarBtnContainer}>
+				{state.routes.map(({ name }, index) => {
+					const isFocused = state.index === index;
+					const isCenterBtn = name === 'Garden';
 
-			{state.routes.map(({ name }, index) => {
-				const isFocused = state.index === index;
-				const isCenterBtn = name === 'Garden';
+					const appBarBtnStyle: ViewStyle = {
+						backgroundColor: isFocused ? Theme.colors.primary : 'transparent',
+						...styles.appBarBtn,
+					};
 
-				const appBarBtnInner: ViewStyle = {
-					...Theme.util.flexCenter,
-					width: '75%',
-					height: undefined,
-					aspectRatio: 1.1 / 1,
-					borderRadius: Theme.borderRadius,
-					backgroundColor: isFocused ? Theme.colors.primary : 'transparent',
-				};
+					const centerBtnStyle: ViewStyle = {
+						backgroundColor: isFocused ? Theme.colors.primary : 'white',
+						...styles.centerBtn,
+					};
 
-				const centerBtnStyle: ViewStyle = {
-					borderRadius: 100,
-					width: appBarCenterBtnSize,
-					height: appBarCenterBtnSize,
-					transform: [{ translateY: -Theme.appBarHeight / 2 }],
-					backgroundColor: isFocused ? Theme.colors.primary : 'white',
-					...Theme.shadow,
-				};
-
-				return (
-					<TouchableOpacity
-						activeOpacity={1}
-						key={index + name}
-						onPress={() => navigation.navigate(name)}
-						style={isCenterBtn ? { ...styles.appBarBtnOuter, ...centerBtnStyle } : styles.appBarBtnOuter}
-					>
-						<View style={!isCenterBtn && appBarBtnInner}>
+					return (
+						<TouchableOpacity
+							activeOpacity={1}
+							key={index + name}
+							onPress={() => navigation.navigate(name)}
+							style={isCenterBtn ? centerBtnStyle : appBarBtnStyle}
+						>
 							<ScreenIcon icon={name as AppBarRoute} focused={isFocused} />
-						</View>
-					</TouchableOpacity>
-				);
-			})}
-		</View>
+						</TouchableOpacity>
+					);
+				})}
+			</View>
+		</>
 	);
 }
 

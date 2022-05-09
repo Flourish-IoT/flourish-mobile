@@ -175,7 +175,7 @@ export const Theme: OurThemeProps = {
 		xl: 32,
 		screenContainer: 16,
 	},
-	appBarHeight: 60,
+	appBarHeight: 80,
 	shadow: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 0.25 },

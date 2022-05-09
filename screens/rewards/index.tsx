@@ -14,12 +14,6 @@ import Loading from '../../lib/components/animations/Loading';
 import { getRewardsProgress, getUserLevelName } from '../../lib/utils/helper';
 import StyledAvatar from '../../lib/components/styled/Avatar';
 
-interface RewardsScreenProps {
-	navigation: NavigationProp<ParamListBase>;
-}
-
-const Tab = createMaterialTopTabNavigator();
-
 export const TopTabBar = ({ state, navigation }) => {
 	const styles = StyleSheet.create({
 		tabBar: {
@@ -61,6 +55,12 @@ export const TopTabBar = ({ state, navigation }) => {
 		</View>
 	);
 };
+
+interface RewardsScreenProps {
+	navigation: NavigationProp<ParamListBase>;
+}
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 	const insets = useSafeAreaInsets();

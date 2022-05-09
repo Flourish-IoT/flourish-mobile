@@ -8,15 +8,6 @@ export interface StyledDividerProps {
 
 export default function StyledDivider({ text, style }: StyledDividerProps) {
 	return <View style={{ ...styles.line, ...style }} />;
-	// return !!text ? (
-	// 	<View style={styles.container}>
-	// 		<View style={styles.line} />
-	// 		<Typography variant='body'>{text}</Typography>
-	// 		<View style={styles.line} />
-	// 	</View>
-	// ) : (
-	// 	<View style={styles.line} />
-	// );
 }
 
 const styles = StyleSheet.create({

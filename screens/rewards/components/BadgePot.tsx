@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Image, ViewStyle, View } from 'react-native';
-import { Mission } from '../../../data/rewards';
 import Typography from '../../../lib/components/styled/Typography';
 import PotHalfSize from '../../../lib/icons/PotHalfSize';
 import { getPlaceHolder } from '../../../lib/utils/helper';

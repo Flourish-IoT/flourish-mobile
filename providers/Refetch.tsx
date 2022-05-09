@@ -5,8 +5,9 @@ export default function RefetchProvider({ children }: PropsWithChildren<unknown>
 	const { refetch: plants } = usePlants('me');
 
 	useEffect(() => {
+		if (__DEV__) return;
 		setInterval(() => {
-			// plants();
+			plants();
 		}, 1000 * 5);
 	}, []);
 

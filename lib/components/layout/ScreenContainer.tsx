@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { ScrollView, ViewStyle, SafeAreaView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { appBarCenterBtnSize } from '../../../navigation/AppBar';
 import { Theme } from '../../../providers/Theme';
 import Chevron from '../../icons/Chevron';
 
@@ -31,7 +30,7 @@ export default function ScreenContainer({
 			alignItems: 'center',
 			overflow: 'visible',
 			padding: Theme.spacing.screenContainer,
-			paddingBottom: insets.bottom + (appBarPadding ? Theme.appBarHeight + appBarCenterBtnSize / 2 : 0),
+			paddingBottom: insets.bottom + (appBarPadding ? Theme.appBarHeight : 0),
 			...(!safePadding && {
 				padding: 0,
 				paddingBottom: 0,
