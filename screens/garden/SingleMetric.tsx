@@ -10,7 +10,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import Typography from '../../lib/components/styled/Typography';
 import { Theme } from '../../providers/Theme';
 import { getGaugeValueColor, getGaugeValuePhrase, getMetricUnitSuffix, usePlantTypeBestRange } from '../../lib/utils/helper';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 
 import { BarChart } from 'react-native-chart-kit';
 

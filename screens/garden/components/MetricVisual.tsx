@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { GaugeValue, Plant, PlantMetric, useSinglePlant, useSinglePlantType } from '../../../data/garden';
-import AnimatedGauge from '../../../lib/components/AnimatedGauge';
+import AnimatedGauge from '../../../lib/components/animations/AnimatedGauge';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
 import {

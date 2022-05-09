@@ -11,7 +11,7 @@ import ChangePasswordScreen from './ChangePassword';
 import DeleteAccountScreen from './DeleteAccount';
 import StyledTextInput from '../../lib/components/styled/TextInput';
 import { useChangeEmail, useChangeUsername, useExportData, useMe } from '../../data/user';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
 import Button from '../../lib/components/styled/Button';
 import SegmentedList from '../../lib/components/layout/SegmentedList';

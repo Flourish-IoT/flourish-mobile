@@ -3,7 +3,7 @@ import { View, StyleSheet, ViewStyle } from 'react-native';
 import { Mission } from '../../data/rewards';
 import { useMe } from '../../data/user';
 import { EvilIcons } from '@expo/vector-icons';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 import StyledButton from '../../lib/components/styled/Button';
 import Typography from '../../lib/components/styled/Typography';
 import { getRewardsProgress } from '../../lib/utils/helper';

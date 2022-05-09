@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MissionsTab from './Missions';
 import BadgesTab from './Badges';
 import Typography from '../../lib/components/styled/Typography';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 import { getRewardsProgress, getUserLevelName } from '../../lib/utils/helper';
 import StyledAvatar from '../../lib/components/styled/Avatar';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
-import { LottieSize } from '../../providers/Theme';
-import LottieBase from './LottieBase';
+import { LottieSize } from '../../../providers/Theme';
+import LottieBase from '../LottieBase';
 
 interface EmptyParams {
 	animation?: 'error' | 'magnifyingGlass' | 'relax';

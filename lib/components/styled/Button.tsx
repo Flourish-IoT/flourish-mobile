@@ -3,7 +3,7 @@ import { StyleSheet, TextStyle } from 'react-native';
 import { Animated, StyleProp, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Theme } from '../../../providers/Theme';
-import Loading from '../Loading';
+import Loading from '../animations/Loading';
 import Typography from './Typography';
 
 interface StyledButtonProps {

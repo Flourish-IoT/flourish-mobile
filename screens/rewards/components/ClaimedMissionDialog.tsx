@@ -3,6 +3,7 @@ import { StyleSheet, View, Animated, Dimensions } from 'react-native';
 import { Portal } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Mission } from '../../../data/rewards';
+import Confetti from '../../../lib/components/animations/Confetti';
 import StyledButton from '../../../lib/components/styled/Button';
 import Typography from '../../../lib/components/styled/Typography';
 import { padString } from '../../../lib/utils/helper';
@@ -14,7 +15,8 @@ interface ClaimedMissionDialogProps {
 	onClose: () => void;
 }
 
-const startPos = Dimensions.get('window').height;
+const dimensions = Dimensions.get('window');
+const startPos = dimensions.height;
 
 export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissionDialogProps) {
 	const insets = useSafeAreaInsets();
@@ -77,10 +79,18 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 		spacer: {
 			marginBottom: 50,
 		},
+		confetti: {
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			transform: [{ scale: 1.25 }],
+		},
 	});
 
 	return (
 		<Portal>
+			<Confetti style={styles.confetti} />
 			<View style={{ ...styles.modal, backgroundColor: '#000000' + padString(String(fadeAnim), 'left', 2, '0') }}>
 				<Animated.View style={[styles.contentContainer, { transform: [{ translateY: springAnim }] }]}>
 					<Typography variant='h1' style={styles.text}>

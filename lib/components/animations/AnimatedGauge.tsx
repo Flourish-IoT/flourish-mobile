@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import LottieView from 'lottie-react-native';
-import { Theme } from '../../providers/Theme';
+import { Theme } from '../../../providers/Theme';
 import AnimatedLottieView from 'lottie-react-native';
-import { GaugeValue, PlantMetric } from '../../data/garden';
-import Water from '../assets/lottie/water.json';
-import Sunlight from '../assets/lottie/sunlight.json';
-import Temperature from '../assets/lottie/temperature.json';
-import Humidity from '../assets/lottie/humidity.json';
+import { GaugeValue, PlantMetric } from '../../../data/garden';
+import { getLottie } from '../LottieBase';
 
 interface TemperatureGaugeProps {
 	type: PlantMetric;
@@ -31,19 +28,6 @@ const gaugeFrames = {
 	'5-5': [140, 140],
 };
 
-const getAnimation = (type: PlantMetric) => {
-	switch (type) {
-		case 'Water':
-			return Water;
-		case 'Sunlight':
-			return Sunlight;
-		case 'Temperature':
-			return Temperature;
-		case 'Humidity':
-			return Humidity;
-	}
-};
-
 export default function AnimatedGauge({ type, newValue }: TemperatureGaugeProps) {
 	const [lastValue, setLastValue] = useState<GaugeValue>(1);
 	const [animation, setAnimation] = useState<AnimatedLottieView>();
@@ -63,7 +47,8 @@ export default function AnimatedGauge({ type, newValue }: TemperatureGaugeProps)
 			ref={setAnimation}
 			style={{ width: Theme.lottie.width.sm }}
 			resizeMode='cover'
-			source={getAnimation(type)}
+			// @ts-ignore
+			source={getLottie(type)}
 			autoPlay={false}
 			loop={false}
 		/>

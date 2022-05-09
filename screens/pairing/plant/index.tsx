@@ -10,8 +10,8 @@ import CurvedContainer, { TopToCurvedContainer } from '../../../lib/components/l
 import { createStackNavigator } from '@react-navigation/stack';
 import SearchField from '../../../lib/components/SearchField';
 import { PlantType, useAddPlant, usePlantTypes, useSinglePlantType } from '../../../data/garden';
-import Loading from '../../../lib/components/Loading';
-import Empty from '../../../lib/components/Empty';
+import Loading from '../../../lib/components/animations/Loading';
+import Empty from '../../../lib/components/animations/Empty';
 import { AppName, filterData, getPlaceHolder } from '../../../lib/utils/helper';
 import PlantTypeCard from './PlantTypeCard';
 import { TouchableOpacity } from 'react-native-gesture-handler';
