@@ -55,7 +55,7 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 		potBaseText: {
 			position: 'absolute',
 			bottom: 0,
-			width: '80%',
+			width: '70%',
 			height: 93.8,
 			...Theme.util.flexCenter,
 		},

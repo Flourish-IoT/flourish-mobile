@@ -13,21 +13,23 @@ interface GridViewProps {
 export default function GridView({ plants, onPress, style }: GridViewProps) {
 	return (
 		<View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', ...style }}>
-			{plants.map((p, index, { length }) => {
-				const isInLastRow = index === length - 1 || index === length - 2;
+			{plants.map((p, index) => {
+				const isFirstRow = index === 0 || index === 1;
 
 				return (
-					<PlantPot
-						viewMode={'Grid'}
-						key={index + p.id}
-						image={p.image}
-						title={p.name}
-						subtitle={p.plantType.scientificName}
-						onPress={() => onPress(p)}
-						containerStyle={{
-							marginVertical: isInLastRow ? 0 : Theme.spacing.xl,
-						}}
-					/>
+					<View key={index + p.id} style={{ width: '50%' }}>
+						<PlantPot
+							viewMode={'Grid'}
+							image={p.image}
+							title={p.name}
+							subtitle={p.plantType.scientificName}
+							onPress={() => onPress(p)}
+							containerStyle={{
+								width: '100%',
+								marginTop: isFirstRow ? 0 : Theme.spacing.xl,
+							}}
+						/>
+					</View>
 				);
 			})}
 		</View>

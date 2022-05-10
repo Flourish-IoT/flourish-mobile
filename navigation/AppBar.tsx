@@ -56,7 +56,7 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 			left: 0,
 			right: 0,
 			height: Theme.appBarHeight,
-			paddingHorizontal: Theme.spacing.md,
+			paddingHorizontal: Theme.spacing.lg,
 			paddingBottom: insets.bottom / 2,
 			borderTopWidth: 0,
 			flexDirection: 'row',
