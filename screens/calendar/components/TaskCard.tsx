@@ -21,7 +21,10 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 		container: {
 			backgroundColor: 'white',
 			flexDirection: 'row',
+			alignItems: 'flex-start',
 			width: '100%',
+			height: 'auto',
+			maxHeight: 100,
 			borderLeftWidth: Theme.spacing.md,
 			borderColor: Theme.colors.primary,
 			borderRadius: Theme.borderRadius,
@@ -30,13 +33,15 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 		textContainer: {
 			flex: 1,
 			justifyContent: 'center',
+			paddingVertical: Theme.spacing.sm,
+			paddingRight: Theme.spacing.sm,
 		},
 		due: {
 			...(isLate && { color: Theme.colors.error }),
 		},
 		icon: {
-			height: 70,
 			width: 40,
+			paddingTop: Theme.spacing.md,
 		},
 	});
 
