@@ -13,6 +13,7 @@ import Water from '../assets/lottie/water.json';
 import Sunlight from '../assets/lottie/sunlight.json';
 import Temperature from '../assets/lottie/temperature.json';
 import Humidity from '../assets/lottie/humidity.json';
+import Bluetooth from '../assets/lottie/bluetooth.json';
 
 interface LottieBaseParams {
 	animation?: LottieName;
@@ -21,7 +22,7 @@ interface LottieBaseParams {
 	size?: LottieSize;
 }
 
-type LottieName = 'magnifyingGlass' | 'rings' | 'error' | 'relax' | 'confetti' | PlantMetric;
+type LottieName = 'magnifyingGlass' | 'rings' | 'error' | 'relax' | 'confetti' | 'bluetooth' | PlantMetric;
 
 export const getLottie = (name: LottieName) => {
 	switch (name) {
@@ -43,6 +44,8 @@ export const getLottie = (name: LottieName) => {
 			return Temperature;
 		case 'Humidity':
 			return Humidity;
+		case 'bluetooth':
+			return Bluetooth;
 	}
 };
 

@@ -9,9 +9,9 @@ import CurvedContainer, { TopToCurvedContainer } from '../../../lib/components/l
 import PotPlantAndSensor from '../../../lib/icons/PotPlantAndSensor';
 import { createStackNavigator } from '@react-navigation/stack';
 import CenterMe from '../../../lib/components/CenterMe';
-import BluetoothScanning from '../../../lib/icons/BluetoothScanning';
 import BluetoothScanningModal from './BluetoothScanningModal';
 import { Sensor, useAddDevice } from '../../../data/garden';
+import BluetoothScanning from '../../../lib/components/animations/BluetoothScanning';
 
 interface ConnectDeviceStackProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -63,7 +63,7 @@ const PairingStep = ({ navigation }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
 			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
-				<BluetoothScanning />
+				<BluetoothScanning style={{ height: '100%' }} />
 			</TopToCurvedContainer>
 			<CurvedContainer>
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md, textAlign: 'center' }}>
