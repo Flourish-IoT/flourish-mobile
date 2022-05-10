@@ -184,7 +184,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 			{selectedInterval === 'Month' && (
 				<>
-					<Typography variant='h3bold'>
+					<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 						{format(addDays(new Date(selectedDate), 1), 'MMMM do')}
 						{/* Add 1 day because new Date() thinks day 01 is the 2nd of a month */}
 					</Typography>
@@ -197,7 +197,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 							/>
 						))
 					) : (
-						<View style={{ width: '100%', height: '50%' }}>
+						<View style={{ width: '100%' }}>
 							<Empty animation='relax' text='No tasks on this date.' size='lg' />
 						</View>
 					)}
