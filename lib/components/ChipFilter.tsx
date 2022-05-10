@@ -74,12 +74,16 @@ export default function ChipFilter({
 	);
 }
 
+const containerHeight = 32;
+
 const styles = StyleSheet.create({
 	container: {
+		height: containerHeight,
 		flexDirection: 'row',
 		overflow: 'visible',
 	},
 	chipContainer: {
+		height: containerHeight,
 		marginHorizontal: Theme.spacing.xs,
 	},
 	textStyle: {

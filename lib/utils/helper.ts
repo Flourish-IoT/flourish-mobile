@@ -4,6 +4,7 @@ import { Service } from '../../screens/welcome/SignUp';
 import AppConfig from '../../app.config';
 import { useQuery, useQueryClient } from 'react-query';
 import { UnitPreference, useMe, User } from '../../data/user';
+import { isBefore, subDays, format, isYesterday, isToday, isTomorrow, isAfter, addDays, addWeeks } from 'date-fns';
 
 export const AppName = AppConfig.name;
 
@@ -280,4 +281,20 @@ export const getPlaceHolder = (fileName: 'plant' | 'preSearchState') => {
 export const arrayHasInCommon = (arr1: any[], arr2: any[]) => {
 	if (arr1.length === 0 || arr2.length === 0) return false;
 	return arr1.some((item) => arr2.includes(item));
+};
+
+export const getCloseDateText = (dateTime: Date) => {
+	if (isBefore(dateTime, subDays(new Date(), 2))) {
+		return format(dateTime, 'MM/dd/yy');
+	} else if (isYesterday(dateTime)) {
+		return 'Yesterday';
+	} else if (isToday(dateTime)) {
+		return 'Today';
+	} else if (isTomorrow(dateTime)) {
+		return 'Tomorrow';
+	} else if (isAfter(dateTime, addDays(new Date(), 2)) && isBefore(dateTime, addWeeks(new Date(), 1))) {
+		return format(dateTime, 'MM-dd');
+	} else {
+		return format(dateTime, 'EEEE');
+	}
 };

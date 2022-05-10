@@ -29,20 +29,21 @@ import {
 	startOfWeek,
 	isSameDay,
 } from 'date-fns';
+import Typography from '../../lib/components/styled/Typography';
 
 interface CalendarScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
-export type CalendarView = 'Month' | 'Week';
-const calendarViews: CalendarView[] = ['Month', 'Week'];
+export const calendarViews = ['Month', 'Week', 'List'] as const;
+export type CalendarView = typeof calendarViews[number];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 	const { data: tasks, isLoading: tasksIsLoading } = useTasks('me');
 
 	const [selectedInterval, setSelectedInterval] = useState<CalendarView>(calendarViews[0]);
-	const [selectedDate, setSelectedDate] = useState<string | -1>(-1); // -1 meaning none
+	const [selectedDate, setSelectedDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
 	const [calendarYear, setCalendarYear] = useState(format(new Date(), 'yyyy'));
 	const [calendarMonth, setCalendarMonth] = useState(format(new Date(), 'MM'));
 	const [firstInCalendarWeek, setFirstInCalendarWeek] = useState(startOfWeek(new Date()));
@@ -60,14 +61,14 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		{}
 	);
 
-	// If a date is selected, add it to the marked dates obj
-	selectedDate !== -1 &&
-		(highlighted[selectedDate] = {
-			...highlighted[selectedDate],
-			selected: true,
-			selectedColor: Theme.colors.primary,
-			dotColor: 'white',
-		});
+	// Add the selected date to the marked dates obj
+	highlighted[selectedDate] = {
+		...highlighted[selectedDate],
+		selected: true,
+		selectedColor: Theme.colors.primary,
+		dotColor: 'white',
+	};
+
 	// Add permanent highlight to today's date
 	const todayFormatted = format(new Date(), 'yyyy-MM-dd');
 	selectedDate !== todayFormatted &&
@@ -126,24 +127,28 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				containerStyle={{ marginVertical: Theme.spacing.md }}
 			/>
 
-			<Calendar
-				style={styles.calendarStyle}
-				theme={{ calendarBackground: 'transparent' }}
-				onDayPress={(day) => {
-					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
-				}}
-				onMonthChange={(month) => {
-					setCalendarYear(String(month.year));
-					setCalendarMonth(padString(month.month, 'left', 2, '0'));
-				}}
-				renderArrow={(direction) => <Chevron direction={direction} />}
-				onPressArrowLeft={(subtractMonth) => subtractMonth()}
-				onPressArrowRight={(addMonth) => addMonth()}
-				enableSwipeMonths={true}
-				markedDates={highlighted}
-			/>
+			{selectedInterval === 'Month' && (
+				<Calendar
+					renderArrow={(direction) => <Chevron direction={direction} />}
+					enableSwipeMonths={true}
+					markedDates={highlighted}
+					style={styles.calendarStyle}
+					theme={{ calendarBackground: 'transparent' }}
+					onPressArrowLeft={(subtractMonth) => subtractMonth()}
+					onPressArrowRight={(addMonth) => addMonth()}
+					onDayPress={(day) => {
+						if (day.dateString === selectedDate) return;
+						console.log(day.dateString);
+						setSelectedDate(day.dateString);
+					}}
+					onMonthChange={(month) => {
+						setCalendarYear(String(month.year));
+						setCalendarMonth(padString(month.month, 'left', 2, '0'));
+					}}
+				/>
+			)}
 
-			{lateTasks.length > 0 && (
+			{selectedInterval === 'List' && lateTasks.length > 0 && (
 				<StyledAccordion
 					title='Late Tasks'
 					titleStyle={{ color: Theme.colors.error }}
@@ -160,29 +165,31 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				</StyledAccordion>
 			)}
 
-			<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
-				{upcomingTasks.length > 0 ? (
-					upcomingTasks.map((t, index, { length }) => (
-						<TaskCard
-							key={String(index + t.id)}
-							task={t}
-							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
-						/>
-					))
-				) : (
-					<View style={{ height: 100 }}>
-						<Empty animation='relax' text='No upcoming tasks!' />
-					</View>
-				)}
-			</StyledAccordion>
+			{selectedInterval === 'List' && (
+				<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
+					{upcomingTasks.length > 0 ? (
+						upcomingTasks.map((t, index, { length }) => (
+							<TaskCard
+								key={String(index + t.id)}
+								task={t}
+								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+							/>
+						))
+					) : (
+						<View style={{ height: 100 }}>
+							<Empty animation='relax' text='No upcoming tasks!' />
+						</View>
+					)}
+				</StyledAccordion>
+			)}
 
-			<StyledModal
-				height='50%'
-				visible={selectedDate !== -1}
-				onClose={() => setSelectedDate(-1)}
-				title={format(addDays(new Date(selectedDate), 1), 'MMMM do')} // Add 1 day because new Date() thinks day 01 is the 2nd of a month
-				content={
-					selectedDateTasks.length > 0 ? (
+			{selectedInterval === 'Month' && (
+				<>
+					<Typography variant='h3bold'>
+						{format(addDays(new Date(selectedDate), 1), 'MMMM do')}
+						{/* Add 1 day because new Date() thinks day 01 is the 2nd of a month */}
+					</Typography>
+					{selectedDateTasks.length > 0 ? (
 						selectedDateTasks.map((t, index, { length }) => (
 							<TaskCard
 								key={String(index + t.id)}
@@ -191,12 +198,12 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 							/>
 						))
 					) : (
-						<View style={{ height: '50%' }}>
-							<Empty animation='relax' text='No tasks on this date.' />
+						<View style={{ width: '100%', height: '50%' }}>
+							<Empty animation='relax' text='No tasks on this date.' size='lg' />
 						</View>
-					)
-				}
-			/>
+					)}
+				</>
+			)}
 		</ScreenContainer>
 	);
 }
@@ -206,7 +213,6 @@ const styles = StyleSheet.create({
 		alignItems: 'flex-start',
 	},
 	calendarStyle: {
-		// TODO: Figure out why '100%' doesn't work
 		width: Dimensions.get('window').width - Theme.spacing.md * 2,
 		backgroundColor: 'transparent',
 		marginBottom: Theme.spacing.md,
