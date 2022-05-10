@@ -138,7 +138,6 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 					onPressArrowRight={(addMonth) => addMonth()}
 					onDayPress={(day) => {
 						if (day.dateString === selectedDate) return;
-						console.log(day.dateString);
 						setSelectedDate(day.dateString);
 					}}
 					onMonthChange={(month) => {
