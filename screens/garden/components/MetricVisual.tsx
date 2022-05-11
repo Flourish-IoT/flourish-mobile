@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { GaugeValue, Plant, PlantMetric, useSinglePlant, useSinglePlantType } from '../../../data/garden';
+import { GaugeValue, Plant, PlantMetric, useSinglePlant } from '../../../data/garden';
 import AnimatedGauge from '../../../lib/components/animations/AnimatedGauge';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
@@ -21,6 +21,7 @@ interface MetricVisualProps {
 	plantId: number;
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
+	innerContainerStyle?: ViewStyle;
 }
 
 const getSensorAndGaugeVals = (
@@ -49,6 +50,7 @@ export default function MetricVisual({
 	plantId,
 	onPress,
 	containerStyle,
+	innerContainerStyle,
 }: MetricVisualProps) {
 	const { data: plant, isLoading: plantIsLoading } = useSinglePlant('me', plantId);
 	const { data: bestRange } = usePlantTypeBestRange(plant?.plantType?.id, metricType);
@@ -59,7 +61,7 @@ export default function MetricVisual({
 	const styles = StyleSheet.create({
 		container: {
 			backgroundColor: mode === 'block' ? 'transparent' : Theme.colors.background,
-			width: mode === 'block' ? 100 : '100%',
+			width: '100%',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
@@ -69,10 +71,15 @@ export default function MetricVisual({
 		},
 		iconContainer: {
 			height: mode === 'block' ? 80 : undefined,
-			width: 70,
+			width: '100%',
 			alignItems: 'center',
 			justifyContent: 'space-between',
 			...(mode === 'listItem' && Theme.util.flexCenter),
+		},
+		innerContainer: {
+			width: mode === 'block' ? '100%' : 90,
+			alignItems: 'center',
+			...innerContainerStyle,
 		},
 		textContainer: {
 			flex: 1,
@@ -82,7 +89,7 @@ export default function MetricVisual({
 
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
-			<View style={{ width: 90, alignItems: 'center' }}>
+			<View style={styles.innerContainer}>
 				<View style={styles.iconContainer}>
 					<AnimatedGauge type={metricType} newValue={gaugeValue} />
 				</View>

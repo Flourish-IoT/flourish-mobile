@@ -46,6 +46,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 		<ScreenContainer scrolls>
 			<View style={styles.filterContainer}>
 				<SearchField
+					placeholder='Search in my garden...'
 					onQuery={setSearchQuery}
 					onFocus={() => setSearchFocused(true)}
 					onBlur={() => setSearchFocused(false)}

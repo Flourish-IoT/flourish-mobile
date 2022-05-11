@@ -19,7 +19,6 @@ export default function GridView({ plants, onPress, style }: GridViewProps) {
 				return (
 					<View key={index + p.id} style={{ width: '50%' }}>
 						<PlantPot
-							viewMode={'Grid'}
 							image={p.image}
 							title={p.name}
 							subtitle={p.plantType.scientificName}

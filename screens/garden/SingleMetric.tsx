@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
-import { PlantMetric, useSinglePlant } from '../../data/garden';
+import { Plant, PlantMetric, useSinglePlant } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
@@ -31,18 +31,7 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 
 	if (plantDataIsLoading) return <Loading animation='rings' size='lg' />;
 
-	const getData = () => {
-		switch (type) {
-			case 'Water':
-				return { gaugeVal: plant?.gaugeRatings?.soilMoisture, sensorVal: plant?.sensorData?.soilMoisture };
-			case 'Sunlight':
-				return { gaugeVal: plant?.gaugeRatings?.light, sensorVal: plant?.sensorData?.light };
-			case 'Temperature':
-				return { gaugeVal: plant?.gaugeRatings?.temperature, sensorVal: plant?.sensorData?.temperature };
-			case 'Humidity':
-				return { gaugeVal: plant?.gaugeRatings?.humidity, sensorVal: plant?.sensorData?.humidity };
-		}
-	};
+	const data = getData(type, plant);
 
 	return (
 		<ScreenContainer scrolls style={styles.screenContainerStyle}>
@@ -59,9 +48,9 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 					containerStyle={styles.metricVisual}
 				/>
 				<View style={styles.metricTextContainer}>
-					<Typography variant='h1'>{getData().sensorVal + getMetricUnitSuffix(type)}</Typography>
-					<Typography variant='h2' style={{ color: getGaugeValueColor(getData().gaugeVal) }}>
-						{getGaugeValuePhrase(getData().gaugeVal)}
+					<Typography variant='h1'>{data.sensorVal + getMetricUnitSuffix(type)}</Typography>
+					<Typography variant='h2' style={{ color: getGaugeValueColor(data.gaugeVal) }}>
+						{getGaugeValuePhrase(data.gaugeVal)}
 					</Typography>
 				</View>
 			</View>
@@ -129,7 +118,7 @@ const styles = StyleSheet.create({
 		marginBottom: Theme.spacing.lg,
 	},
 	metricVisual: {
-		transform: [{ scale: 1.5 }],
+		width: 90,
 		marginRight: Theme.spacing.lg,
 	},
 	metricTextContainer: {
@@ -145,3 +134,31 @@ const styles = StyleSheet.create({
 		...Theme.util.flexCenter,
 	},
 });
+
+const getData = (type: PlantMetric, plant: Plant) => {
+	const gaugeRatings = plant.gaugeRatings;
+	const sensorData = plant.sensorData;
+
+	switch (type) {
+		case 'Water':
+			return {
+				gaugeVal: gaugeRatings?.soilMoisture,
+				sensorVal: sensorData?.soilMoisture,
+			};
+		case 'Sunlight':
+			return {
+				gaugeVal: gaugeRatings?.light,
+				sensorVal: sensorData?.light,
+			};
+		case 'Temperature':
+			return {
+				gaugeVal: gaugeRatings?.temperature,
+				sensorVal: sensorData?.temperature,
+			};
+		case 'Humidity':
+			return {
+				gaugeVal: gaugeRatings?.humidity,
+				sensorVal: sensorData?.humidity,
+			};
+	}
+};

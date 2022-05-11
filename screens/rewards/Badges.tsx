@@ -7,7 +7,7 @@ import Loading from '../../lib/components/animations/Loading';
 import { chunkArray } from '../../lib/utils/helper';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
-import BadgePot from './components/BadgePot';
+import PlantPot from '../garden/components/PlantPot';
 
 interface BadgesTabProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -64,7 +64,7 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 				chunks.map((chunk, chunkIndex) => (
 					<View key={chunkIndex} style={{ ...styles.shelf, ...(chunkIndex === 0 && { paddingTop: 0 }) }}>
 						{chunk.map((b, aIndex) => (
-							<BadgePot
+							<PlantPot
 								key={String(aIndex + b.id)}
 								image={b.image}
 								onPress={() => onBadgePress(b)}
@@ -89,15 +89,14 @@ const styles = StyleSheet.create({
 	shelf: {
 		width: '100%',
 		height: 150,
-		paddingHorizontal: Theme.spacing.md,
-		paddingTop: Theme.spacing.md,
-		borderBottomWidth: 10,
 		borderColor: Theme.colors.primary,
+		borderBottomWidth: 10,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		alignItems: 'flex-end',
 	},
 	badge: {
-		transform: [{ translateY: 5.5 }], // FIX: Gap between pot and shelf
+		width: '25%',
+		transform: [{ translateY: 230 / 4 - 4 }], // FIX: -4 for gap between pot and shelf
 	},
 });

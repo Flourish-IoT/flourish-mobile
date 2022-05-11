@@ -1,62 +1,36 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { ViewMode } from '..';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Typography from '../../../lib/components/styled/Typography';
-import { getPlaceHolder } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
-import PotFullSize, { PotBaseSvgProps } from '../../../lib/icons/PotFullSize';
+import NewPot from '../../../lib/icons/NewPot';
+import { SvgProps } from 'react-native-svg';
 
 interface PlantProps {
-	viewMode: ViewMode;
 	image: string | null;
 	title?: string;
 	subtitle?: string;
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
-	svgProps?: PotBaseSvgProps;
+	svgProps?: SvgProps;
 }
 
-export default function PlantPot({ viewMode, image, title, subtitle, onPress, containerStyle, svgProps }: PlantProps) {
+export default function PlantPot({ image, title, subtitle, onPress, containerStyle, svgProps }: PlantProps) {
 	const svgStyle = svgProps?.style;
 
 	const styles = StyleSheet.create({
 		touchContainer: {
-			width: viewMode === 'Carousel' ? '100%' : '50%',
+			width: '100%',
 			...containerStyle,
 		},
-		container: {
-			width: '100%',
-			...Theme.util.flexCenter,
-		},
-		imageContainer: {
-			width: '80%',
-			height: undefined,
-			aspectRatio: 1 / 1,
-			borderWidth:
-				Theme.borderWidth *
-				// Fixes the gap for the img overlap fix
-				1.1,
-			borderBottomWidth: 0,
-			borderColor: Theme.colors.accent,
-			borderTopLeftRadius: Theme.borderRadius,
-			borderTopRightRadius: Theme.borderRadius,
-			overflow: 'hidden',
-		},
-		image: {
-			width: '100%',
-			height: '100%',
-			// Fixes img overlap
-			borderTopLeftRadius: Theme.borderRadius,
-			borderTopRightRadius: Theme.borderRadius,
-		},
 		potBaseGraphic: {
-			...(svgStyle ?? ({} as object)),
+			...((svgStyle as object) ?? {}),
 		},
-		potBaseText: {
+		textContainer: {
 			position: 'absolute',
 			bottom: 0,
-			width: '70%',
-			height: 93.8,
+			width: '100%',
+			paddingHorizontal: '6.25%',
+			height: '43.75%',
 			...Theme.util.flexCenter,
 		},
 		text: {
@@ -68,22 +42,21 @@ export default function PlantPot({ viewMode, image, title, subtitle, onPress, co
 
 	return (
 		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!!onPress ? Theme.activeOpacity : 1}>
-			<View style={styles.container}>
-				<View style={styles.imageContainer}>
-					<Image style={styles.image} source={!!image ? { uri: image } : getPlaceHolder('plant')} />
-				</View>
-				<PotFullSize width='100%' style={styles.potBaseGraphic} {...svgProps} />
-				{(title || subtitle) && (
-					<View style={styles.potBaseText}>
+			<NewPot width='100%' style={styles.potBaseGraphic} imgLink={image} {...svgProps} />
+			{(!!title || !!subtitle) && (
+				<View style={styles.textContainer}>
+					{!!title && (
 						<Typography variant='h3bold' style={styles.text}>
 							{title}
 						</Typography>
+					)}
+					{!!subtitle && (
 						<Typography variant='body' style={styles.text}>
 							{subtitle}
 						</Typography>
-					</View>
-				)}
-			</View>
+					)}
+				</View>
+			)}
 		</TouchableOpacity>
 	);
 }

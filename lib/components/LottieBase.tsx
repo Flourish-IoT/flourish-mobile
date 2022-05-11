@@ -17,6 +17,7 @@ import Bluetooth from '../assets/lottie/bluetooth.json';
 
 interface LottieBaseParams {
 	animation?: LottieName;
+	loop?: boolean;
 	text?: string;
 	style?: ViewStyle;
 	size?: LottieSize;
@@ -49,7 +50,7 @@ export const getLottie = (name: LottieName) => {
 	}
 };
 
-export default function LottieBase({ animation, text, size = 'md', style }: LottieBaseParams) {
+export default function LottieBase({ animation, loop = true, text, size = 'md', style }: LottieBaseParams) {
 	return (
 		<View style={{ ...Theme.lottie.wrapper, ...style }}>
 			{!!animation && (
@@ -59,7 +60,7 @@ export default function LottieBase({ animation, text, size = 'md', style }: Lott
 					// @ts-ignore This is always an animation type
 					source={getLottie(animation)}
 					autoPlay
-					loop
+					loop={loop}
 				/>
 			)}
 			{!!text && (

@@ -6,9 +6,8 @@ import { Mission } from '../../../data/rewards';
 import Confetti from '../../../lib/components/animations/Confetti';
 import StyledButton from '../../../lib/components/styled/Button';
 import Typography from '../../../lib/components/styled/Typography';
-import { padString } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
-import BadgePot from './BadgePot';
+import PlantPot from '../../garden/components/PlantPot';
 
 interface ClaimedMissionDialogProps {
 	mission: Mission;
@@ -22,7 +21,6 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 	const insets = useSafeAreaInsets();
 
 	const springAnim = useRef(new Animated.Value(startPos)).current;
-	const fadeAnim = useRef(new Animated.Value(startPos)).current;
 
 	const slide = (direction: 'up' | 'down') => {
 		Animated.spring(springAnim, {
@@ -31,21 +29,12 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 		}).start();
 	};
 
-	const fade = (mode: 'in' | 'out') => {
-		Animated.spring(fadeAnim, {
-			toValue: mode === 'in' ? 50 : 0,
-			useNativeDriver: true,
-		}).start();
-	};
-
 	const onClosePress = () => {
 		slide('down');
-		fade('out');
 		setTimeout(onClose, 500);
 	};
 
 	useLayoutEffect(() => {
-		fade('in');
 		slide('up');
 	}, []);
 
@@ -70,14 +59,8 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 			alignItems: 'center',
 			...Theme.shadow,
 		},
-		badgePot: {
-			transform: [{ scale: 2 }, { translateY: 20 }],
-		},
 		text: {
 			color: Theme.colors.primary,
-		},
-		spacer: {
-			marginBottom: 50,
 		},
 		confetti: {
 			position: 'absolute',
@@ -91,13 +74,12 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 	return (
 		<Portal>
 			<Confetti style={styles.confetti} />
-			<View style={{ ...styles.modal, backgroundColor: '#000000' + padString(String(fadeAnim), 'left', 2, '0') }}>
+			<View style={{ ...styles.modal, backgroundColor: Theme.colors.backdrop }}>
 				<Animated.View style={[styles.contentContainer, { transform: [{ translateY: springAnim }] }]}>
 					<Typography variant='h1' style={styles.text}>
 						MISSION COMPLETE
 					</Typography>
-					<BadgePot image={mission.image} containerStyle={styles.badgePot} />
-					<View style={styles.spacer} />
+					<PlantPot image={mission.image} />
 					<Typography variant='body' style={styles.text}>
 						+{mission.points} points
 					</Typography>

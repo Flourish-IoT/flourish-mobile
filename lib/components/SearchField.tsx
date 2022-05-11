@@ -11,6 +11,7 @@ interface SearchFieldProps {
 	containerStyle?: StyleProp<TextStyle>;
 	inputStyle?: StyleProp<TextStyle>;
 	disabled?: boolean;
+	placeholder?: string;
 }
 
 export default function SearchField({
@@ -20,6 +21,7 @@ export default function SearchField({
 	onBlur,
 	onFocus,
 	disabled = false,
+	placeholder = 'Search',
 	...rest
 }: SearchFieldProps) {
 	const styles = StyleSheet.create({
@@ -43,7 +45,7 @@ export default function SearchField({
 			<StyledTextInput
 				style={styles.input}
 				onChangeText={onQuery}
-				placeholder='Search'
+				placeholder={placeholder}
 				left={<TextInput.Icon name='magnify' color={Theme.colors.primary} />}
 				onBlur={onBlur}
 				onFocus={onFocus}

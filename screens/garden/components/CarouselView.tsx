@@ -34,7 +34,12 @@ export default function CarouselView({ navigation, plants, onPress, containerSty
 					itemWidth={Dimensions.get('window').width - Theme.spacing.md * 16}
 					firstItem={firstItemIndex}
 					renderItem={({ item: plant }: CarouselRendererProps) => (
-						<PlantPot viewMode={'Carousel'} image={plant.image} onPress={() => onPress(plant)} />
+						<PlantPot
+							image={plant.image}
+							onPress={() => onPress(plant)}
+							title={plant.name}
+							subtitle={plant.plantType.scientificName}
+						/>
 					)}
 				/>
 			</View>

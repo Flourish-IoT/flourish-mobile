@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { Mission } from '../../data/rewards';
-import { useMe } from '../../data/user';
+import { Mission } from '../../../data/rewards';
+import { useMe } from '../../../data/user';
 import { EvilIcons } from '@expo/vector-icons';
-import Loading from '../../lib/components/animations/Loading';
-import StyledButton from '../../lib/components/styled/Button';
-import Typography from '../../lib/components/styled/Typography';
-import { getRewardsProgress } from '../../lib/utils/helper';
-import { Theme } from '../../providers/Theme';
-import BadgePot from './components/BadgePot';
-import { StyledProgressBar } from '../../lib/components/styled/ProgressBar';
-import StyledDivider from '../../lib/components/styled/Divider';
+import Loading from '../../../lib/components/animations/Loading';
+import StyledButton from '../../../lib/components/styled/Button';
+import Typography from '../../../lib/components/styled/Typography';
+import { getRewardsProgress } from '../../../lib/utils/helper';
+import { Theme } from '../../../providers/Theme';
+import { StyledProgressBar } from '../../../lib/components/styled/ProgressBar';
+import StyledDivider from '../../../lib/components/styled/Divider';
+import PlantPot from '../../garden/components/PlantPot';
 
 interface MissionListItemProps {
 	mission: Mission;
@@ -34,12 +34,14 @@ export default function MissionListItem({ mission, onClaim, isLoading, container
 			<View style={styles.topSection}>
 				{/* LEFT */}
 				<View style={styles.topLeftContainer}>
-					<BadgePot
-						image={mission.image}
-						level={mission.level}
-						containerStyle={styles.badge}
-						imageStyle={{ width: '100%' }}
-					/>
+					<>
+						<PlantPot image={image} containerStyle={styles.badge} />
+						{!!level && (
+							<View style={styles.labelContainer}>
+								<Typography variant='body'>Lvl {level}</Typography>
+							</View>
+						)}
+					</>
 				</View>
 				{/* RIGHT */}
 				<View style={styles.topRightContainer}>
@@ -89,8 +91,19 @@ const styles = StyleSheet.create({
 		height: '100%',
 	},
 	badge: {
-		width: '100%',
-		justifyContent: 'center',
+		width: '80%',
+	},
+	labelContainer: {
+		position: 'absolute',
+		bottom: '15%',
+		right: '-10%',
+		paddingHorizontal: Theme.spacing.sm,
+		paddingVertical: Theme.spacing.xs,
+		backgroundColor: 'white',
+		borderRadius: 50,
+		alignSelf: 'flex-end',
+		...Theme.util.flexCenter,
+		...Theme.shadow,
 	},
 	topRightContainer: {
 		paddingVertical: 20,

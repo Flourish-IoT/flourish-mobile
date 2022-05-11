@@ -5,7 +5,7 @@ import { Mission, useAvailableMissions, useClaimMission } from '../../data/rewar
 import Loading from '../../lib/components/animations/Loading';
 import Empty from '../../lib/components/animations/Empty';
 import { Theme } from '../../providers/Theme';
-import MissionListItem from './MissionListItem';
+import MissionListItem from './components/MissionListItem';
 import { useMe } from '../../data/user';
 import { Alert } from 'react-native';
 import { getRewardsProgress } from '../../lib/utils/helper';
