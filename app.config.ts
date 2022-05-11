@@ -2,7 +2,7 @@ export default {
 	name: 'Flourish',
 	slug: 'Flourish',
 	owner: 'hmh84',
-	version: '1.9.2',
+	version: '1.9.5',
 	orientation: 'portrait',
 	icon: './lib/assets/icon.png',
 	platforms: ['ios', 'android'],
