@@ -168,6 +168,20 @@ export const useDeleteAccount = () => {
 	);
 };
 
+export interface PushNotificatonParams{
+	token : string
+}
+
+export const useSendPushNotificationsToken = () => {
+	const { data: user } = useMe();
+
+	return useMutation(async (params: PushNotificatonParams) => {
+		const query = `/users/${user.id}/pushNotificationToken`;
+		mockEndpoint(200).onGet(query).replyOnce<string>(200, 'OK');
+		return AxiosInstance.get<string>(query);
+	});
+}
+
 export type UnitPreference = 'Fahrenheit' | 'Celsius';
 export type ConfidenceRating = 1 | 2 | 3;
 

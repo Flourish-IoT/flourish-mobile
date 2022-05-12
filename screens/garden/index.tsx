@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { StyleSheet, View } from 'react-native';
 import { Plant, usePlants } from '../../data/garden';
@@ -41,6 +41,8 @@ export function GardenList({ navigation }: GardenScreenProps) {
 	const toggleView = () => {
 		setViewMode(viewMode === 'Carousel' ? 'Grid' : 'Carousel');
 	};
+
+	
 
 	return (
 		<ScreenContainer scrolls>

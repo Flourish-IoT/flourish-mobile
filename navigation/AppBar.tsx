@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Calendar from '../lib/icons/Calendar';
@@ -7,13 +7,16 @@ import Plant from '../lib/icons/Plant';
 import Profile from '../lib/icons/Profile';
 import Trophy from '../lib/icons/Trophy';
 import { Theme } from '../providers/Theme';
-import { TouchableOpacity, View, StyleSheet, ViewStyle, Image, Dimensions } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ViewStyle, Image, Dimensions, Alert, Linking } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import ProfileScreenStack from '../screens/profile';
 import GardenScreenStack from '../screens/garden';
 import CalendarScreen from '../screens/calendar';
 import RewardsScreen from '../screens/rewards';
 import EducationScreenStack from '../screens/education';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { useSendPushNotificationsToken } from '../data/user';
 
 const Tab = createBottomTabNavigator();
 
@@ -121,6 +124,46 @@ function OurTabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 export default function AppBarStack() {
+
+	const sendPushNotificationsToken = useSendPushNotificationsToken()
+
+	const registerForPushNotificationsAsync = async () => {
+		console.log("TEST TEST TEST");
+		if (Device.isDevice) {
+			console.log("here1");
+			const { status: existingStatus } = await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
+			if (existingStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+			if (finalStatus !== 'granted') {
+				Alert.alert(
+					"No Notification Permission Granted",
+					"Please go to settings and grant notification permissions manually",
+					[
+					  { text: "Cancel", onPress: () => console.log("Notification Permissions not granted by user") },
+					  { text: "Allow", onPress: () => Linking.openURL("app-settings:") },
+					],
+					{ cancelable: false }
+				  );
+				  return;
+			}
+			const token = (await Notifications.getExpoPushTokenAsync()).data;
+			try {
+				await sendPushNotificationsToken.mutateAsync({ token });
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			alert('Must use physical device for Push Notifications');
+		}
+	}
+
+	useEffect(() => {
+		registerForPushNotificationsAsync();
+	}, []);
+
 	return (
 		<Tab.Navigator
 			screenOptions={{ headerShown: false }}
