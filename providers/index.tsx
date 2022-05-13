@@ -9,17 +9,20 @@ import { ToastProvider } from 'react-native-toast-notifications';
 import { LogBox } from 'react-native';
 import { useIsLoggedIn } from '../data/auth';
 import SplashScreen from '../screens/welcome/Splash';
+import PermissionsProvider from './Permissions';
 
 LogBox.ignoreLogs(['Require cycle:']);
 
-interface FetchProviders extends PropsWithChildren<unknown> {
-	isLoggedIn: boolean;
-}
+const LoggedInProviders = ({ children }: PropsWithChildren<unknown>) => {
+	const { isLoading: isLoggedInIsLoading, data: isLoggedIn } = useIsLoggedIn();
 
-const FetchProviders = ({ isLoggedIn, children }: FetchProviders) => {
+	if (isLoggedInIsLoading) return <SplashScreen />;
+
 	return isLoggedIn ? (
 		<PreloadProvider>
-			<RefetchProvider>{children}</RefetchProvider>
+			<RefetchProvider>
+				<PermissionsProvider>{children}</PermissionsProvider>
+			</RefetchProvider>
 		</PreloadProvider>
 	) : (
 		<>{children}</>
@@ -27,19 +30,15 @@ const FetchProviders = ({ isLoggedIn, children }: FetchProviders) => {
 };
 
 export default function AppProviders({ children }: PropsWithChildren<unknown>) {
-	const { isLoading: isLoggedInIsLoading, data: isLoggedIn } = useIsLoggedIn();
-
-	if (isLoggedInIsLoading) return <SplashScreen />;
-
 	return (
 		<SentryProvider>
 			<AxiosProvider>
 				<QueryProvider>
-					<FetchProviders isLoggedIn={isLoggedIn}>
+					<LoggedInProviders>
 						<ThemeProvider>
 							<ToastProvider>{children}</ToastProvider>
 						</ThemeProvider>
-					</FetchProviders>
+					</LoggedInProviders>
 				</QueryProvider>
 			</AxiosProvider>
 		</SentryProvider>

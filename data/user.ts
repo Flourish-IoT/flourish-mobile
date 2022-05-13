@@ -249,10 +249,31 @@ export const useMe = () => {
 	return useQuery(
 		['me'],
 		async () => {
-			return (await axios.get<User>(`/users/${userId}`)).data;
+			const me = (await axios.get<User>(`/users/${userId}`)).data;
+			return {
+				...me,
+				preferences: {
+					...me.preferences,
+					unit_preference: me.preferences?.unit_preference ?? 'Fahrenheit',
+				},
+			};
 		},
 		{
 			enabled: !!userId,
 		}
 	);
+};
+
+export interface PushNotificationParams {
+	token: string;
+}
+
+export const useSendPushNotificationsToken = () => {
+	const { data: user } = useMe();
+	const axios = useAxios();
+
+	return useMutation(async ({ token }: PushNotificationParams) => {
+		const query = `/users/${user.id}/pushNotificationToken`;
+		return axios.post<string>(query, { token });
+	});
 };
