@@ -128,7 +128,6 @@ export default function AppBarStack() {
 	const sendPushNotificationsToken = useSendPushNotificationsToken()
 
 	const registerForPushNotificationsAsync = async () => {
-		console.log("TEST TEST TEST");
 		if (Device.isDevice) {
 			console.log("here1");
 			const { status: existingStatus } = await Notifications.getPermissionsAsync();
