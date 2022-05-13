@@ -58,10 +58,7 @@ export const usePlants = (userId: number | 'me') => {
 			const tempPref = user.preferences.unit_preference;
 
 			return plants.map((plant) => {
-				const singlePlantQuery = ['users', userId, 'plants', plant.id];
-				if (!!queryClient.getQueryData(singlePlantQuery)) {
-					queryClient.setQueryData(singlePlantQuery, plant);
-				}
+				queryClient.setQueryData(['users', userId, 'plants', plant.id], plant);
 
 				return {
 					...plant,
@@ -167,7 +164,6 @@ export const useAddPlant = () => {
 	const axios = useAxios();
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		const res = await axios.post<string>(query, { params });
-		return res.data;
+		return (await axios.post<string>(query, { params })).data;
 	});
 };
