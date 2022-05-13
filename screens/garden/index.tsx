@@ -69,7 +69,7 @@ export function GardenList({ navigation }: GardenScreenProps) {
 			<View style={styles.viewContainer}>
 				{plantsIsLoading ? (
 					<Loading animation='rings' text='Loading plants...' />
-				) : plantsIsError ? (
+				) : plantsIsError || !plants ? (
 					<Empty animation='error' text='There was an error getting your plants...' />
 				) : filterData(plants, searchQuery).length === 0 ? (
 					<Empty

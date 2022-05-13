@@ -1,7 +1,6 @@
-import axios from 'axios';
+import { useAxios } from '../providers/Axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { formatTemp } from '../lib/utils/helper';
-import { ApiUrl } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -46,6 +45,7 @@ export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 
 export type GaugeValue = 1 | 2 | 3 | 4 | 5;
 
 export const usePlants = (userId: number | 'me') => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 	if (userId === 'me') userId = user?.id;
@@ -53,7 +53,7 @@ export const usePlants = (userId: number | 'me') => {
 	return useQuery(
 		['users', userId, 'plants'],
 		async () => {
-			const query = `${ApiUrl}/users/${userId}/plants`;
+			const query = `/users/${userId}/plants`;
 			const plants = (await axios.get<Plant[]>(query)).data;
 			const tempPref = user.preferences.unit_preference;
 
@@ -103,6 +103,7 @@ export interface PlantType {
 }
 
 export const usePlantTypes = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
@@ -110,7 +111,7 @@ export const usePlantTypes = () => {
 		['garden', 'plant-types'],
 		async () => {
 			const query = '/plant_types';
-			const plants = (await axios.get<PlantType[]>(ApiUrl + query)).data;
+			const plants = (await axios.get<PlantType[]>(query)).data;
 			const tempPref = user.preferences.unit_preference;
 
 			return plants.map((p) => {
@@ -137,12 +138,13 @@ export const useSinglePlantType = (plantTypeId: number) => {
 };
 
 export const useAddDevice = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(async (sensor: Sensor) => {
 		const query = `/users/${user.id}/devices`;
 
-		const res = await axios.post<string>(ApiUrl + query, {
+		const res = await axios.post<string>(query, {
 			deviceType: sensor.deviceType,
 			model: sensor.model,
 			name: sensor.name,
@@ -162,9 +164,10 @@ interface AddPlantParams {
 }
 
 export const useAddPlant = () => {
+	const axios = useAxios();
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		const res = await axios.post<string>(ApiUrl + query, { params });
+		const res = await axios.post<string>(query, { params });
 		return res.data;
 	});
 };

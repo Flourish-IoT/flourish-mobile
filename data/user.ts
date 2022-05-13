@@ -1,8 +1,93 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getXpReqForLevel } from '../lib/utils/helper';
-import { AxiosInstance, mockEndpoint } from './api';
-import { getUserId, setUserId, logOut } from './auth';
-import { tempMyMissions } from './rewards';
+import { getJwtObj, logOut, setJwt } from './auth';
+import { useAxios, mockEndpoint, mockAxios } from '../providers/Axios';
+import { useEffect, useState } from 'react';
+interface SendEmailVerificationCodeParams {
+	email: string;
+	username: string;
+	password: string;
+}
+
+export const useSendVerifyEmail = () => {
+	const axios = useAxios();
+	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
+		return axios.post<string>('/users', { email, username, password });
+	});
+};
+
+interface CheckEmailVerificationCodeParams {
+	email: string;
+	code: number[];
+}
+
+export const useVerifyEmail = () => {
+	const axios = useAxios();
+	return useMutation(
+		({ email, code }: CheckEmailVerificationCodeParams) => {
+			const query = `/users/verify`;
+			const formattedCode = Number(code.join(''));
+			return axios.post<string>(query, { email, code: formattedCode });
+		},
+		{
+			onSuccess: async ({ data: jwt }) => {
+				await setJwt(jwt);
+			},
+		}
+	);
+};
+
+interface EmailLoginParams {
+	email: string;
+	password: string;
+}
+
+export const useLoginWithEmail = () => {
+	const axios = useAxios();
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			return axios.post<string>(query, { email, password });
+		},
+		{
+			onSuccess: async ({ data: jwt }) => {
+				await setJwt(jwt);
+			},
+		}
+	);
+};
+
+interface SendResetPasswordEmailParams {
+	email: string;
+}
+
+export const useSendResetPasswordEmail = () => {
+	const axios = useAxios();
+	return useMutation(({ email }: SendResetPasswordEmailParams) => {
+		const query = `/users/reset_password`;
+		return axios.post<string>(query, { email });
+	});
+};
+
+interface CheckPasswordVerificationCodeParams {
+	email: string;
+	reset_code: number[];
+}
+
+export const useVerifyResetPasswordEmail = () => {
+	const axios = useAxios();
+	return useMutation(
+		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
+			const query = `/users/verify`;
+			const formattedCode = reset_code.join('');
+			return axios.post<string>(query, { email, reset_code: formattedCode });
+		},
+		{
+			onSuccess: async ({ data: jwt }) => {
+				await setJwt(jwt);
+			},
+		}
+	);
+};
 
 export const useChangeUsername = () => {
 	const queryClient = useQueryClient();
@@ -11,10 +96,8 @@ export const useChangeUsername = () => {
 	return useMutation(
 		(newUsername: string) => {
 			const query = `/users/${user.id}`;
-			mockEndpoint(200)
-				.onPut(query, { params: { username: newUsername } })
-				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { username: newUsername } });
+			mockEndpoint(200).onPut(query, { username: newUsername }).replyOnce<string>(200, 'OK');
+			return mockAxios.put<string>(query, { username: newUsername });
 		},
 		{
 			onSuccess: (res, newUsername) => {
@@ -34,10 +117,8 @@ export const useChangeEmail = () => {
 	return useMutation(
 		(newEmail: string) => {
 			const query = `/users/${user.id}`;
-			mockEndpoint(200)
-				.onPut(query, { params: { email: newEmail } })
-				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { email: newEmail } });
+			mockEndpoint(200).onPut(query, { email: newEmail }).replyOnce<string>(200, 'OK');
+			return mockAxios.put<string>(query, { email: newEmail });
 		},
 		{
 			onSuccess: (res, newEmail) => {
@@ -58,9 +139,9 @@ export const useChangeProfilePicture = () => {
 		(newImageUri: string | undefined) => {
 			const query = `/users/${user.id}`;
 			mockEndpoint(200)
-				.onPut(query, { params: { image: newImageUri ?? '' } })
+				.onPut(query, { image: newImageUri ?? '' })
 				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { image: newImageUri ?? '' } });
+			return mockAxios.put<string>(query, { image: newImageUri ?? '' });
 		},
 		{
 			onSuccess: (res, newImageUri) => {
@@ -83,45 +164,9 @@ export const useChangePassword = () => {
 
 	return useMutation(({ password, new_password }: ChangePasswordParams) => {
 		const query = `/users/${user.id}/password`;
-		mockEndpoint(200).onPut(query, { params: { password, new_password } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.put<string>(query, { params: { password, new_password } });
+		mockEndpoint(200).onPut(query, { password, new_password }).replyOnce<string>(200, 'OK');
+		return mockAxios.put<string>(query, { password, new_password });
 	});
-};
-
-interface SendResetPasswordEmailParams {
-	email: string;
-}
-
-export const useSendResetPasswordEmail = () => {
-	return useMutation(({ email }: SendResetPasswordEmailParams) => {
-		const query = `/users/reset_password`;
-		mockEndpoint(200).onPost(query, { params: { email } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.post<string>(query, { params: { email } });
-	});
-};
-
-interface CheckPasswordVerificationCodeParams {
-	email: string;
-	reset_code: number[];
-}
-
-export const useVerifyResetPasswordEmail = () => {
-	return useMutation(
-		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
-			const query = `/users/verify?code=password_reset`;
-			const formattedCode = reset_code.join('');
-
-			mockEndpoint(0)
-				.onPost(query, { params: { email, reset_code: formattedCode } })
-				.replyOnce<number>(200, tempMyUser.id);
-			return AxiosInstance.post<number>(query, { params: { email, reset_code: formattedCode } });
-		},
-		{
-			onSuccess: async ({ data: userId }, { email, reset_code }) => {
-				await setUserId(userId);
-			},
-		}
-	);
 };
 
 interface ResetPasswordParams {
@@ -134,8 +179,8 @@ export const useResetPassword = () => {
 
 	return useMutation(({ reset_code, new_password }: ResetPasswordParams) => {
 		const query = `/users/${user.id}/password`;
-		mockEndpoint(200).onPut(query, { params: { reset_code, new_password } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.put<string>(query, { params: { reset_code, new_password } });
+		mockEndpoint(200).onPut(query, { reset_code, new_password }).replyOnce<string>(200, 'OK');
+		return mockAxios.put<string>(query, { reset_code, new_password });
 	});
 };
 
@@ -145,7 +190,7 @@ export const useExportData = () => {
 	return useMutation(() => {
 		const query = `/users/${user.id}/export`;
 		mockEndpoint(200).onGet(query).replyOnce<string>(200, 'OK');
-		return AxiosInstance.get<string>(query);
+		return mockAxios.get<string>(query);
 	});
 };
 
@@ -158,7 +203,7 @@ export const useDeleteAccount = () => {
 			mockEndpoint(200)
 				.onDelete(query, { params: { password: currentPassword } })
 				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.delete<string>(query, { params: { password: currentPassword } });
+			return mockAxios.delete<string>(query, { params: { password: currentPassword } });
 		},
 		{
 			onSuccess: (res, req) => {
@@ -175,51 +220,39 @@ export interface User {
 	id: number;
 	email: string;
 	username: string;
-	preferences: UserPreferences;
+	preferences: {
+		unit_preference: UnitPreference;
+	} | null;
 	image: string | null;
 	xp: number;
 }
 
-export interface UserPreferences {
-	unit_preference: UnitPreference;
-	confidence_rating?: ConfidenceRating;
-}
+export const useUserId = () => {
+	const [data, setData] = useState<number | undefined>(undefined);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-export const tempMyUser: User = {
-	id: 3,
-	email: 'janedoe123@gmail.com',
-	username: 'Jane Doe',
-	image: null,
-	xp: getXpReqForLevel(1) + tempMyMissions[0].points,
-	preferences: {
-		unit_preference: 'Fahrenheit',
-		confidence_rating: 2,
-	},
+	useEffect(() => {
+		const getIt = async () => {
+			const jwt = await getJwtObj();
+			setIsLoading(false);
+			setData(jwt?.userId);
+		};
+		getIt();
+	}, []);
+
+	return { data, isLoading };
 };
-
-export const tempOtherUser: User = {
-	id: 4,
-	email: 'johnsmith321@gmail.com',
-	username: 'John Smith',
-	image: null,
-	xp: 200,
-	preferences: {
-		unit_preference: 'Fahrenheit',
-		confidence_rating: 3,
-	},
-};
-
 export const useMe = () => {
-	return useQuery(['me'], async () => {
-		const userId = await getUserId();
-		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempMyUser);
-		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
-	});
-};
+	const axios = useAxios();
+	const { data: userId } = useUserId();
 
-export const useUser = (userId: number) => {
-	return useQuery(['get', 'users', userId], async () => {
-		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempOtherUser);
-		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
-	});
+	return useQuery(
+		['me'],
+		async () => {
+			return (await axios.get<User>(`/users/${userId}`)).data;
+		},
+		{
+			enabled: !!userId,
+		}
+	);
 };
