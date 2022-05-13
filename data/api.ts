@@ -3,7 +3,6 @@ import MockAdapter from 'axios-mock-adapter';
 import createAuthResponseInterceptor from 'axios-auth-refresh';
 import * as SecureStore from 'expo-secure-store';
 import { logOut } from './auth';
-import { useMutation } from 'react-query';
 
 export const ApiUrl = 'http://3.83.190.154:5000/v1';
 
