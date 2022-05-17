@@ -1,6 +1,6 @@
 import { addDays, subDays } from 'date-fns';
 import { useQuery } from 'react-query';
-import { mockEndpoint, mockAxios } from '../providers/Axios';
+import { AxiosInstance, mockEndpoint } from './api';
 
 export type TaskCategory = 'water' | 'rotate' | 'fertilize' | 'repot' | 'prune' | 'other';
 
@@ -18,7 +18,7 @@ export const useTasks = (userId: number | 'me') => {
 	return useQuery(['tasks', userId], () => {
 		const query = `/tasks/${userId}`;
 		mockEndpoint(200).onGet(query).replyOnce<Task[]>(200, tempMyTasks);
-		return mockAxios.get<Task[]>(query).then((res) =>
+		return AxiosInstance.get<Task[]>(query).then((res) =>
 			res.data
 				.map((t) => {
 					// Turn ISO into a JS date

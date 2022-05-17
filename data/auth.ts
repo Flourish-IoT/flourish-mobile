@@ -1,78 +1,132 @@
 import * as SecureStore from 'expo-secure-store';
-import { createRef, ReactNode, useEffect, useState } from 'react';
+import { createRef, ReactNode } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { NavigationContainerRef, StackActions } from '@react-navigation/core';
-import { isPast } from 'date-fns';
-import base64 from 'react-native-base64';
+import { tempMyUser, User, useMe } from './user';
+import {
+	AxiosInstance,
+	getAccessToken,
+	getRefreshToken,
+	mockEndpoint,
+	setAccessToken,
+	setRefreshToken,
+	tempToken,
+	Token,
+} from './api';
 
-export interface JwtHeader {
-	typ: string;
-	alg: string;
-}
-
-interface RawJwtPayload {
-	user: string;
-	userId: number;
-	expiryTime: string;
-}
-
-export interface JwtPayload {
-	username: string;
-	userId: number;
-	expiryTime: Date;
-}
-
-export const useIsLoggedIn = () => {
-	const [data, setData] = useState<boolean | undefined>(undefined);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-
-	useEffect(() => {
-		const getIt = async () => {
-			const isLoggedIn = !!(await getJwtString());
-			setIsLoading(false);
-			setData(isLoggedIn);
-		};
-		getIt();
-	}, []);
-
-	return { data, isLoading };
+export const getUserId = async () => {
+	return await SecureStore.getItemAsync('userId');
 };
 
-export const setJwt = async (token: string) => {
-	await SecureStore.setItemAsync('jwt', token);
+export const setUserId = async (value: number | null) => {
+	return !!value ? await SecureStore.setItemAsync('userId', String(value)) : await SecureStore.deleteItemAsync('userId');
 };
 
-export const getJwtString = async (): Promise<string | undefined> => {
-	const token = await SecureStore.getItemAsync('jwt');
-	return token ?? undefined;
+export const isLoggedIn = async () => {
+	return !!(await getAccessToken()) && !!((await getRefreshToken()) && !!(await getUserId()));
 };
-
-export const getJwtObj = async (): Promise<JwtPayload | undefined> => {
-	const token = await getJwtString();
-
-	try {
-		const base64array = token.split('.');
-		const payload = base64array[1];
-		const buffered = base64.decode(payload);
-		const rawPayload = JSON.parse(buffered) as RawJwtPayload;
-
-		return {
-			username: rawPayload.user,
-			userId: rawPayload.userId,
-			expiryTime: new Date(rawPayload.expiryTime),
-		};
-	} catch {
-		return undefined;
-	}
-};
-
-export const isExpired = (jwt: JwtPayload) => isPast(jwt.expiryTime);
 
 export const navigationRef = createRef<NavigationContainerRef<ReactNode>>();
 
 export const logOut = async () => {
-	await SecureStore.deleteItemAsync('jwt');
+	await setUserId(null);
+	await SecureStore.deleteItemAsync('accessToken');
+	await SecureStore.deleteItemAsync('refreshToken');
 
 	if (navigationRef.current) {
 		navigationRef.current?.dispatch(StackActions.replace('AuthStack'));
 	}
+};
+
+interface SendEmailVerificationCodeParams {
+	email: string;
+	username: string;
+	password: string;
+}
+
+export const useSendVerifyEmail = () => {
+	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
+		const query = '/users';
+		mockEndpoint(0).onPost(query, { params: { email, username, password } }).replyOnce<string>(200, 'OK');
+		return AxiosInstance.post<string>(query, { params: { email, username, password } });
+	});
+};
+
+interface CheckEmailVerificationCodeParams {
+	email: string;
+	code: number[];
+}
+
+interface AuthResponse {
+	jwt: Token;
+	userId: number;
+}
+
+export const useVerifyEmail = () => {
+	return useMutation(
+		({ email, code }: CheckEmailVerificationCodeParams) => {
+			const query = `/users/verify?code=verification`;
+			const formattedCode = code.join('');
+
+			mockEndpoint(0)
+				.onPost(query, { params: { email, code: formattedCode } })
+				.replyOnce<AuthResponse>(200, {
+					jwt: tempToken,
+					userId: tempMyUser.id,
+				});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, code: formattedCode } });
+		},
+		{
+			onSuccess: async ({ data }, { email, code }) => {
+				await setUserId(data.userId);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
+			},
+		}
+	);
+};
+
+type FinishAccountParams = Omit<User, 'id' | 'email' | 'username' | 'xp'>;
+
+export const useFinishAccountSetup = () => {
+	const { data: user } = useMe();
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		({ preferences }: FinishAccountParams | undefined) => {
+			const query = `/users/${user.id}`;
+			mockEndpoint(0).onPut(query, { params: { preferences } }).replyOnce<string>(200, 'OK');
+			return AxiosInstance.put<string>(query, { params: { preferences } });
+		},
+		{
+			onSuccess: (res, { preferences }) => {
+				queryClient.setQueryData<User>(['me'], (oldData) => ({ ...oldData, preferences }));
+			},
+		}
+	);
+};
+
+interface EmailLoginParams {
+	email: string;
+	password: string;
+}
+
+export const useLoginWithEmail = () => {
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			mockEndpoint(0).onPost(query, { params: { email, password } }).reply<AuthResponse>(200, {
+				jwt: tempToken,
+				userId: tempMyUser.id,
+			});
+			return AxiosInstance.post<AuthResponse>(query, { params: { email, password } });
+		},
+		{
+			onSuccess: async ({ data }, { email, password }) => {
+				await setUserId(data.userId);
+				await setAccessToken(data.jwt.tokenType, data.jwt.accessToken, data.jwt.accessTokenExpiry);
+				await setRefreshToken(data.jwt.refreshToken);
+			},
+		}
+	);
 };

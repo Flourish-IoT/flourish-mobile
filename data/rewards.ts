@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { mockEndpoint, AxiosInstance } from './api';
 import { useMe, User } from './user';
-import { mockEndpoint, mockAxios } from '../providers/Axios';
 
 export interface Mission {
 	id: number;
@@ -65,7 +65,7 @@ export const useMissions = (userId: number | 'me') => {
 		async () => {
 			const query = `/missions/${userId}`;
 			mockEndpoint(200).onGet(query).replyOnce<Mission[]>(200, tempMyMissions);
-			const { data: missions } = await mockAxios.get<Mission[]>(query);
+			const { data: missions } = await AxiosInstance.get<Mission[]>(query);
 			// Sort: First by level (lower first) then by points (lower first)
 			const sorted = missions.sort((a, b) => (a.level === b.level ? a.points - b.points : a.level - b.level));
 			return sorted;
@@ -104,7 +104,7 @@ export const useClaimMission = () => {
 		(mission: Mission) => {
 			const query = `/missions/${user.id}/claim/${mission.id}`;
 			mockEndpoint(200).onPost(query).replyOnce<string>(200, 'OK');
-			return mockAxios.post<string>(query);
+			return AxiosInstance.post<string>(query);
 		},
 		{
 			onSuccess: (res, mission) => {
@@ -142,7 +142,7 @@ export const useUnClaimMission = () => {
 		(mission: Mission) => {
 			const query = `/missions/${user.id}/unclaim/${mission.id}`;
 			mockEndpoint(200).onPost(query).replyOnce<string>(200, 'OK');
-			return mockAxios.post<string>(query);
+			return AxiosInstance.post<string>(query);
 		},
 		{
 			onSuccess: (res, mission) => {

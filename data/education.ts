@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query';
 import { OurFontName } from '../providers/Theme';
+import { AxiosInstance, mockEndpoint } from './api';
 import { usePlants, usePlantTypes } from './garden';
 import { useMe } from './user';
-import { mockEndpoint, mockAxios } from '../providers/Axios';
 
 export const educationTags = ['Watering', 'Prune', 'Repot', 'Propogation'] as const;
 export type EducationTag = typeof educationTags[number];
@@ -191,7 +191,7 @@ export const useLearningCourses = () => {
 					data: tempLearningCourse,
 				},
 			]);
-		return (await mockAxios.get<Course[]>(query)).data;
+		return (await AxiosInstance.get<Course[]>(query)).data;
 	});
 };
 
@@ -221,6 +221,6 @@ export const useQuickTutorials = () => {
 					link: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
 				},
 			]);
-		return (await mockAxios.get<Tutorial[]>(query)).data;
+		return (await AxiosInstance.get<Tutorial[]>(query)).data;
 	});
 };

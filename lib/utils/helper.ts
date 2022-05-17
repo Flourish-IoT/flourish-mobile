@@ -51,7 +51,7 @@ export const formatTemp = (tempUnitPref: UnitPreference, num: number) => {
 };
 
 export function filterData<T>(data: T[], query: string) {
-	if (!data || !query || query.trim().length === 0) return data;
+	if (query.trim().length === 0) return data;
 
 	const normalize = (text: string) => text.toString().replace(/\s/g, '').toLowerCase();
 

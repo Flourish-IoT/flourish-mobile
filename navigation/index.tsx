@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from '../screens/welcome';
 import { NavigatorTheme, GlobalStackNavOptions } from '../providers/Theme';
 import ForgotPasswordScreen from '../screens/welcome/ForgotPassword';
-import { navigationRef, useIsLoggedIn } from '../data/auth';
+import { navigationRef, isLoggedIn } from '../data/auth';
 import LoginScreen from '../screens/welcome/Login';
 import SignUpStack from '../screens/welcome/SignUp';
 import SplashScreen from '../screens/welcome/Splash';
@@ -24,13 +24,22 @@ const AuthStack = () => {
 };
 
 export default function Navigation() {
-	const { isLoading: isLoggedInIsLoading, data: isLoggedIn } = useIsLoggedIn();
+	const [isLoading, setIsLoading] = useState(true);
+	const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
-	if (isLoggedInIsLoading) return <SplashScreen />;
+	useEffect(() => {
+		const checkIfLoggedIn = async () => {
+			setUserIsLoggedIn(await isLoggedIn());
+			setIsLoading(false);
+		};
+		checkIfLoggedIn();
+	}, []);
+
+	if (isLoading) return <SplashScreen />;
 
 	return (
 		<NavigationContainer theme={NavigatorTheme} ref={navigationRef}>
-			<Stack.Navigator screenOptions={GlobalStackNavOptions} initialRouteName={isLoggedIn ? 'HomeStack' : 'AuthStack'}>
+			<Stack.Navigator screenOptions={GlobalStackNavOptions} initialRouteName={userIsLoggedIn ? 'HomeStack' : 'AuthStack'}>
 				<Stack.Screen name='AuthStack' component={AuthStack} options={{ cardStyle: { backgroundColor: 'white' } }} />
 				<Stack.Screen name='HomeStack' component={AppBarStack} />
 			</Stack.Navigator>
