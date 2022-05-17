@@ -17,6 +17,12 @@ const dateParser = function (_key: string, value: any) {
 };
 
 const parseWithDate = function (json: string) {
+	/// <summary>
+	/// Wrapper around the JSON.parse() function that adds a date
+	/// filtering extension. Returns all dates as real JavaScript dates.
+	/// </summary>
+	/// <param name="json" type="string">JSON to be parsed</param>
+	/// <returns type="any">parsed value or object</returns>
 	let parse = JSON._parseSaved ? JSON._parseSaved : JSON.parse;
 	try {
 		let res = parse(json, dateParser);
