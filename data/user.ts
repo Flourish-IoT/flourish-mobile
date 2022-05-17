@@ -186,7 +186,7 @@ export interface UserPreferences {
 }
 
 export const tempMyUser: User = {
-	id: 3,
+	id: 70,
 	email: 'janedoe123@gmail.com',
 	username: 'Jane Doe',
 	image: null,
