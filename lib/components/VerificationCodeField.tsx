@@ -1,66 +1,52 @@
-import React, { useRef, useState, LegacyRef, useEffect } from 'react';
-import {
-	Keyboard,
-	NativeSyntheticEvent,
-	StyleSheet,
-	TextInput,
-	TextInputFocusEventData,
-	TextInputKeyPressEventData,
-	View,
-	ViewStyle,
-} from 'react-native';
+import React, { useRef, useState, LegacyRef } from 'react';
+import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputKeyPressEventData, View, ViewStyle } from 'react-native';
 import { Theme } from '../../providers/Theme';
 
 interface VerificationCodeFieldProps {
-	onInput: (code: number[]) => void;
-	value: number[];
+	onInput: (newValues: string[]) => void;
+	values: string[];
 	disabled?: boolean;
 	containerStyle?: ViewStyle;
 }
 
-const slots = [0, 1, 2, 3];
+const numberOfSlots = 4;
 
-export default function VerificationCodeField({ onInput, value, disabled = false, containerStyle }: VerificationCodeFieldProps) {
-	const [values, setValues] = useState(value);
-	const [focusedInput, setFocusedInput] = useState<number | null>();
+export default function VerificationCodeField({ onInput, values, disabled = false, containerStyle }: VerificationCodeFieldProps) {
+	const [focusedInput, setFocusedInput] = useState<number>();
 	const refs: LegacyRef<TextInput>[] = [useRef(), useRef(), useRef(), useRef()];
 
-	const onKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, slot: number) => {
+	const onKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
 		const key = e.nativeEvent.key;
-		const isNum = !isNaN(Number(key));
 
 		// @ts-ignore: .current is a valid property
-		const input = refs[slot].current;
+		const input = refs[index].current;
 		// @ts-ignore: .current is a valid property
-		const nextInput = refs[slot + 1]?.current;
+		const nextInput = refs[index + 1]?.current;
 		// @ts-ignore: .current is a valid property
-		const prevInput = refs[slot - 1]?.current;
+		const lastInput = refs[index - 1]?.current;
 
-		if (isNum) {
-			values[slot] = Number(key);
-			slot !== slots.length - 1 ? nextInput.focus() : input.blur();
-			values.every((v) => !isNaN(Number(v))) && input.blur();
+		if (key === 'Backspace') {
+			index !== 0 && lastInput.focus();
 		} else {
-			if (key === 'Backspace') {
-				values[slot] = null;
-				slot === 0 ? input.blur() : prevInput.focus();
-			}
+			index === numberOfSlots - 1 ? input.blur() : nextInput.focus();
 		}
+	};
 
-		setValues([...values]);
-		onInput(values);
+	const onChange = (index: number, value: string) => {
+		let newValues = [...values];
+		newValues[index] = value;
+		onInput(newValues);
 	};
 
 	return (
 		<View style={{ ...styles.container, ...containerStyle }}>
-			{slots.map((index) => {
-				// @ts-ignore: .current is a valid property
+			{[...Array(numberOfSlots)].map((x, index) => {
 				const isFocused = index === focusedInput;
 
 				return (
 					<TextInput
 						ref={refs[index]}
-						key={index}
+						key={String(index)}
 						editable={!disabled}
 						autoFocus={index === 0}
 						style={{ ...styles.input, ...(isFocused && { borderColor: Theme.colors.primary }) }}
@@ -68,9 +54,10 @@ export default function VerificationCodeField({ onInput, value, disabled = false
 						returnKeyType='done'
 						maxLength={1}
 						onKeyPress={(e) => onKeyPress(e, index)}
+						onChange={(e) => onChange(index, e.nativeEvent.text)}
 						onFocus={() => setFocusedInput(index)}
 						onBlur={() => setFocusedInput(null)}
-						value={!!value[index] ? String(value[index]) : ''}
+						value={!!values[index] ? String(values[index]) : ''}
 					/>
 				);
 			})}

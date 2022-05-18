@@ -14,8 +14,8 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, containerStyle }: TaskCardProps) {
-	const { id, plantId, datetime, title, category, description, complete } = task;
-	const isLate = isPast(datetime) && !complete;
+	const { id, plantId, dateTime, title, category, description, complete } = task;
+	const isLate = isPast(dateTime) && !complete;
 
 	const styles = StyleSheet.create({
 		container: {
@@ -51,7 +51,7 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 			<View style={styles.textContainer}>
 				<Typography variant='h3bold'>{title}</Typography>
 				<Typography variant='placeholder' style={styles.due}>
-					{getCloseDateText(datetime)} {format(datetime, "'at' p")}
+					{getCloseDateText(dateTime)} {format(dateTime, "'at' p")}
 				</Typography>
 				<Typography variant='placeholder'>{description}</Typography>
 			</View>

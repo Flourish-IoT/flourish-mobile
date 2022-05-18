@@ -7,7 +7,7 @@ import { useMissions } from '../data/rewards';
 import SplashScreen from '../screens/welcome/Splash';
 
 export default function PreloadProvider({ children }: PropsWithChildren<unknown>) {
-	const { isLoading: userIsLoading } = useMe();
+	const { isLoading: userIsLoading, data: user } = useMe();
 	const { isLoading: quickTutorialsIsLoading } = useQuickTutorials();
 	const { isLoading: learningCoursesIsLoading } = useLearningCourses();
 	const { isLoading: featuredPlantsIsLoading } = useFeaturedPlants();
@@ -15,7 +15,8 @@ export default function PreloadProvider({ children }: PropsWithChildren<unknown>
 	const { isLoading: tasksIsLoading } = useTasks('me');
 	const { isLoading: missionsIsLoading } = useMissions('me');
 
-	return userIsLoading ||
+	return !user ||
+		userIsLoading ||
 		plantsIsLoading ||
 		tasksIsLoading ||
 		missionsIsLoading ||

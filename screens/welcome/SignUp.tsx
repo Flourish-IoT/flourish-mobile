@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SsoServices from '../../lib/icons/SsoServices';
 import { AppName, getServiceColor } from '../../lib/utils/helper';
 import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
-import { useVerifyEmail, useSendVerifyEmail } from '../../data/auth';
+import { useVerifyEmail, useSendVerifyEmail } from '../../data/user';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import StyledTextInput from '../../lib/components/styled/TextInput';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';

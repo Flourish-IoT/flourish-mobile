@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
-import { useLoginWithEmail } from '../../data/auth';
+import { useLoginWithEmail } from '../../data/user';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import Button from '../../lib/components/styled/Button';
 import SegmentedList from '../../lib/components/layout/SegmentedList';
@@ -22,8 +22,8 @@ interface LoginScreenProps {
 export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const loginWithEmail = useLoginWithEmail();
 
-	const [email, setEmail] = useState('janedoe123@gmail.com');
-	const [password, setPassword] = useState('abcdJaneefg123');
+	const [email, setEmail] = useState('jane.doe@gmail.com');
+	const [password, setPassword] = useState('flourish2022');
 
 	const handleSignInWithService = (service: Service) => {
 		switch (service) {

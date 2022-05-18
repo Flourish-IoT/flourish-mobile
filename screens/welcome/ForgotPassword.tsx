@@ -83,7 +83,7 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 		try {
 			await verifyResetPasswordEmail.mutateAsync({
 				email,
-				reset_code: resetCode,
+				code: resetCode,
 			});
 			navigation.reset({
 				index: 0,
@@ -146,7 +146,7 @@ const ChangePasswordScreen = ({ navigation, route }: ForgotPasswordScreenProps) 
 
 	const onChangePasswordPress = async () => {
 		try {
-			await resetPassword.mutateAsync({ reset_code: resetCode, new_password: newPassword });
+			await resetPassword.mutateAsync({ code: resetCode, new_password: newPassword });
 			navigation.navigate('Login');
 			alert('Updated.');
 		} catch (error) {

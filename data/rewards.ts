@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { mockEndpoint, AxiosInstance } from './api';
+import { mockEndpoint, useAxios } from './api';
 import { useMe, User } from './user';
 
 export interface Mission {
@@ -57,15 +57,16 @@ export const tempMyMissions: Mission[] = [
 ];
 
 export const useMissions = (userId: number | 'me') => {
+	const axios = useAxios();
 	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
+	if (userId === 'me') userId = user?.userId;
 
 	return useQuery(
 		['missions', 'all', userId],
 		async () => {
 			const query = `/missions/${userId}`;
 			mockEndpoint(200).onGet(query).replyOnce<Mission[]>(200, tempMyMissions);
-			const { data: missions } = await AxiosInstance.get<Mission[]>(query);
+			const { data: missions } = await axios.get<Mission[]>(query);
 			// Sort: First by level (lower first) then by points (lower first)
 			const sorted = missions.sort((a, b) => (a.level === b.level ? a.points - b.points : a.level - b.level));
 			return sorted;
@@ -78,7 +79,7 @@ export const useMissions = (userId: number | 'me') => {
 
 export const useAvailableMissions = (userId: number | 'me') => {
 	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
+	if (userId === 'me') userId = user?.userId;
 	const { data: missions } = useMissions(userId);
 
 	return useQuery(['missions', 'available', userId], () => missions.filter((a) => !a.claimed), {
@@ -88,7 +89,7 @@ export const useAvailableMissions = (userId: number | 'me') => {
 
 export const useClaimedMissions = (userId: number | 'me') => {
 	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
+	if (userId === 'me') userId = user?.userId;
 	const { data: missions } = useMissions(userId);
 
 	return useQuery(['missions', 'claimed', userId], () => missions.filter((a) => a.claimed), {
@@ -97,19 +98,20 @@ export const useClaimedMissions = (userId: number | 'me') => {
 };
 
 export const useClaimMission = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(mission: Mission) => {
-			const query = `/missions/${user.id}/claim/${mission.id}`;
+			const query = `/missions/${user.userId}/claim/${mission.id}`;
 			mockEndpoint(200).onPost(query).replyOnce<string>(200, 'OK');
-			return AxiosInstance.post<string>(query);
+			return axios.post<string>(query);
 		},
 		{
 			onSuccess: (res, mission) => {
 				// Remove mission from available missions
-				queryClient.setQueryData<Mission[]>(['missions', 'available', user.id], (oldData) => {
+				queryClient.setQueryData<Mission[]>(['missions', 'available', user.userId], (oldData) => {
 					const claimedMission = oldData.find((a) => a.id === mission.id);
 
 					const index = oldData.indexOf(claimedMission);
@@ -119,7 +121,7 @@ export const useClaimMission = () => {
 				});
 
 				// Add mission to claimed badges
-				queryClient.setQueryData<Mission[]>(['missions', 'claimed', user.id], (oldData) => [
+				queryClient.setQueryData<Mission[]>(['missions', 'claimed', user.userId], (oldData) => [
 					...oldData,
 					{ ...mission, claimed: true },
 				]);
@@ -135,19 +137,20 @@ export const useClaimMission = () => {
 };
 
 export const useUnClaimMission = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(mission: Mission) => {
-			const query = `/missions/${user.id}/unclaim/${mission.id}`;
+			const query = `/missions/${user.userId}/unclaim/${mission.id}`;
 			mockEndpoint(200).onPost(query).replyOnce<string>(200, 'OK');
-			return AxiosInstance.post<string>(query);
+			return axios.post<string>(query);
 		},
 		{
 			onSuccess: (res, mission) => {
 				// Remove mission from claimed badges
-				queryClient.setQueryData<Mission[]>(['missions', 'claimed', user.id], (oldData) => {
+				queryClient.setQueryData<Mission[]>(['missions', 'claimed', user.userId], (oldData) => {
 					const claimedMission = oldData.find((a) => a.id === mission.id);
 
 					const index = oldData.indexOf(claimedMission);
@@ -157,7 +160,7 @@ export const useUnClaimMission = () => {
 				});
 
 				// Add mission to available missions
-				queryClient.setQueryData<Mission[]>(['missions', 'available', user.id], (oldData) => [
+				queryClient.setQueryData<Mission[]>(['missions', 'available', user.userId], (oldData) => [
 					...oldData,
 					{ ...mission, claimed: false },
 				]);

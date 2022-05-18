@@ -11,7 +11,6 @@ import { Task, useTasks } from '../../data/calendar';
 import TaskCard from './components/TaskCard';
 import ChipFilter from '../../lib/components/ChipFilter';
 import Empty from '../../lib/components/animations/Empty';
-import StyledModal from '../../lib/components/layout/Modal';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { Theme } from '../../providers/Theme';
 import StyledAccordion from '../../lib/components/layout/Accordion';
@@ -55,7 +54,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	if (plantsIsLoading || tasksIsLoading) return <Loading text='Gathering data...' />;
 
 	const plantFilteredTasks = selectedPlants.includes(-1) ? tasks : tasks.filter((t) => selectedPlants.includes(t.plantId));
-	const datesToHighlight = plantFilteredTasks.map((t) => format(t.datetime, 'yyyy-MM-dd'));
+	const datesToHighlight = plantFilteredTasks.map((t) => format(t.dateTime, 'yyyy-MM-dd'));
 	const highlighted = datesToHighlight.reduce(
 		(obj, date) => ((obj[date] = { marked: true, dotColor: Theme.colors.cta }), obj),
 		{}
@@ -80,7 +79,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		});
 
 	const upcomingTasks = plantFilteredTasks
-		.filter((t) => !t.complete && isFuture(t.datetime) && isBefore(t.datetime, addDays(new Date(), 30)))
+		.filter((t) => !t.complete && isFuture(t.dateTime) && isBefore(t.dateTime, addDays(new Date(), 30)))
 		// First 5 in the next 30 days
 		.slice(0, 5);
 
@@ -88,19 +87,19 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 	if (selectedInterval === 'Month') {
 		intervalTasks = plantFilteredTasks.filter((t) =>
-			isSameMonth(t.datetime, new Date(`${calendarYear}-${calendarMonth}-01`))
+			isSameMonth(t.dateTime, new Date(`${calendarYear}-${calendarMonth}-01`))
 		);
 	} else if (selectedInterval === 'Week') {
-		intervalTasks = intervalTasks.filter((t) => isSameWeek(t.datetime, firstInCalendarWeek));
+		intervalTasks = intervalTasks.filter((t) => isSameWeek(t.dateTime, firstInCalendarWeek));
 	}
 
 	const lateTasks = plantFilteredTasks
-		.filter((t) => isPast(t.datetime) && !t.complete && isAfter(t.datetime, subDays(new Date(), 30)))
+		.filter((t) => isPast(t.dateTime) && !t.complete && isAfter(t.dateTime, subDays(new Date(), 30)))
 		// Last 5 in the passed 30 days
 		.slice(1)
 		.slice(-5);
 	const selectedDateTasks = plantFilteredTasks.filter((t) =>
-		isSameDay(new Date(selectedDate), new Date(format(t.datetime, 'yyyy-MM-dd')))
+		isSameDay(new Date(selectedDate), new Date(format(t.dateTime, 'yyyy-MM-dd')))
 	);
 
 	return (

@@ -22,7 +22,7 @@ export const initializeSentry = () => {
 		});
 	} else {
 		Sentry.Native.captureMessage('No Sentry key provided; skipping initialization');
-		console.log('No Sentry key provided; skipping initialization');
+		console.error('No Sentry key provided; skipping initialization');
 	}
 };
 
@@ -58,7 +58,7 @@ export const sentryError = (namespace: string, alert = true) => {
 		}
 
 		if (__DEV__) {
-			console.log(`[${namespace}]: ${error.message}`);
+			console.error(`[${namespace}]: ${error.message}`);
 		}
 
 		if (alert) {

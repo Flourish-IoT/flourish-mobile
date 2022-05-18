@@ -25,11 +25,6 @@ interface ProfileScreenProps {
 const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	const { data: user, isLoading: userIsLoading } = useMe();
 
-	useEffect(() => {
-		setUsername(user.username);
-		setEmail(user.email);
-	}, [user]);
-
 	// Username
 	const [username, setUsername] = useState(user.username);
 	const changeUsername = useChangeUsername();

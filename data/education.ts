@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
+import { mockEndpoint, useAxios } from './api';
 import { OurFontName } from '../providers/Theme';
-import { AxiosInstance, mockEndpoint } from './api';
 import { usePlants, usePlantTypes } from './garden';
 import { useMe } from './user';
 
@@ -171,6 +171,8 @@ export const tempLearningCourse: CourseNode[] = [
 ];
 
 export const useLearningCourses = () => {
+	const axios = useAxios();
+
 	return useQuery(['education', 'learning-course'], async () => {
 		const query = `/education/learning-course`;
 		mockEndpoint(200)
@@ -191,7 +193,7 @@ export const useLearningCourses = () => {
 					data: tempLearningCourse,
 				},
 			]);
-		return (await AxiosInstance.get<Course[]>(query)).data;
+		return (await axios.get<Course[]>(query)).data;
 	});
 };
 
@@ -203,6 +205,8 @@ export interface Tutorial {
 }
 
 export const useQuickTutorials = () => {
+	const axios = useAxios();
+
 	return useQuery(['education', 'quick-tutorial'], async () => {
 		const query = `/education/quick-tutorial`;
 		mockEndpoint(200)
@@ -221,6 +225,6 @@ export const useQuickTutorials = () => {
 					link: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
 				},
 			]);
-		return (await AxiosInstance.get<Tutorial[]>(query)).data;
+		return (await axios.get<Tutorial[]>(query)).data;
 	});
 };

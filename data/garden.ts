@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { formatTemp } from '../lib/utils/helper';
-import { ApiUrl } from './api';
+import { ApiUrl, useAxios } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -46,30 +46,28 @@ export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 
 export type GaugeValue = 1 | 2 | 3 | 4 | 5;
 
 export const usePlants = (userId: number | 'me') => {
+	// const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
+	if (userId === 'me') userId = user?.userId;
 
 	return useQuery(
 		['users', userId, 'plants'],
 		async () => {
-			const query = `${ApiUrl}/users/${userId}/plants`;
-			const plants = (await axios.get<Plant[]>(query)).data;
-			const tempPref = user.preferences.unit_preference;
+			const query = `/users/${userId}/plants`;
+			const plants = (await axios.get<Plant[]>(ApiUrl + query)).data;
 
 			return plants.map((plant) => {
-				const singlePlantQuery = ['users', userId, 'plants', plant.id];
-				if (!!queryClient.getQueryData(singlePlantQuery)) {
-					queryClient.setQueryData(singlePlantQuery, plant);
-				}
-
-				return {
+				const frontEndPlant = {
 					...plant,
 					sensorData: {
 						...plant.sensorData,
-						temperature: formatTemp(tempPref, plant?.sensorData?.temperature),
+						temperature: formatTemp(user.preferences.unit_preference, plant?.sensorData?.temperature),
 					},
 				};
+
+				queryClient.setQueryData(['users', userId, 'plants', plant.id], frontEndPlant);
+				return frontEndPlant;
 			});
 		},
 		{
@@ -80,7 +78,7 @@ export const usePlants = (userId: number | 'me') => {
 
 export const useSinglePlant = (userId: number | 'me', plantId: number) => {
 	const { data: user } = useMe();
-	if (userId === 'me') userId = user?.id;
+	if (userId === 'me') userId = user?.userId;
 	const { data: plants } = usePlants(userId);
 
 	return useQuery(['users', userId, 'plants', plantId], () => plants.find((p) => p.id === plantId), {
@@ -114,12 +112,15 @@ export const usePlantTypes = () => {
 			const tempPref = user.preferences.unit_preference;
 
 			return plants.map((p) => {
-				queryClient.setQueryData(['garden', 'plant-types', p.id], p);
-				return {
+				const frontEndPlant = {
 					...p,
 					minimumTemperature: formatTemp(tempPref, p.minimumTemperature),
 					maximumTemperature: formatTemp(tempPref, p.maximumTemperature),
 				};
+
+				queryClient.setQueryData(['garden', 'plant-types', p.id], p);
+
+				return frontEndPlant;
 			});
 		},
 		{
@@ -137,20 +138,21 @@ export const useSinglePlantType = (plantTypeId: number) => {
 };
 
 export const useAddDevice = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(async (sensor: Sensor) => {
-		const query = `/users/${user.id}/devices`;
+		const query = `/users/${user.userId}/devices`;
 
-		const res = await axios.post<string>(ApiUrl + query, {
-			deviceType: sensor.deviceType,
-			model: sensor.model,
-			name: sensor.name,
-			apiVersion: sensor.apiVersion,
-			softwareVersion: sensor.softwareVersion,
-		});
-
-		return res.data;
+		return (
+			await axios.post<string>(query, {
+				deviceType: sensor.deviceType,
+				model: sensor.model,
+				name: sensor.name,
+				apiVersion: sensor.apiVersion,
+				softwareVersion: sensor.softwareVersion,
+			})
+		).data;
 	});
 };
 
@@ -162,9 +164,10 @@ interface AddPlantParams {
 }
 
 export const useAddPlant = () => {
+	const axios = useAxios();
+
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		const res = await axios.post<string>(ApiUrl + query, { params });
-		return res.data;
+		return (await axios.post<string>(query, { params })).data;
 	});
 };

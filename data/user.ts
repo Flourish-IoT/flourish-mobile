@@ -1,20 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getXpReqForLevel } from '../lib/utils/helper';
-import { AxiosInstance, mockEndpoint } from './api';
+import { mockEndpoint, useAxios } from './api';
 import { getUserId, setUserId, logOut } from './auth';
 import { tempMyMissions } from './rewards';
 
 export const useChangeUsername = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(newUsername: string) => {
-			const query = `/users/${user.id}`;
-			mockEndpoint(200)
-				.onPut(query, { params: { username: newUsername } })
-				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { username: newUsername } });
+			const query = `/users/${user.userId}`;
+			return axios.put<string>(query, { username: newUsername });
 		},
 		{
 			onSuccess: (res, newUsername) => {
@@ -28,16 +26,15 @@ export const useChangeUsername = () => {
 };
 
 export const useChangeEmail = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(newEmail: string) => {
-			const query = `/users/${user.id}`;
-			mockEndpoint(200)
-				.onPut(query, { params: { email: newEmail } })
-				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { email: newEmail } });
+			const query = `/users/${user.userId}`;
+			mockEndpoint(200).onPut(query, { email: newEmail }).replyOnce<string>(200, 'OK');
+			return axios.put<string>(query, { email: newEmail });
 		},
 		{
 			onSuccess: (res, newEmail) => {
@@ -51,16 +48,17 @@ export const useChangeEmail = () => {
 };
 
 export const useChangeProfilePicture = () => {
+	const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(newImageUri: string | undefined) => {
-			const query = `/users/${user.id}`;
+			const query = `/users/${user.userId}`;
 			mockEndpoint(200)
-				.onPut(query, { params: { image: newImageUri ?? '' } })
+				.onPut(query, { image: newImageUri ?? '' })
 				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.put<string>(query, { params: { image: newImageUri ?? '' } });
+			return axios.put<string>(query, { image: newImageUri ?? '' });
 		},
 		{
 			onSuccess: (res, newImageUri) => {
@@ -79,12 +77,13 @@ interface ChangePasswordParams {
 }
 
 export const useChangePassword = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(({ password, new_password }: ChangePasswordParams) => {
-		const query = `/users/${user.id}/password`;
-		mockEndpoint(200).onPut(query, { params: { password, new_password } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.put<string>(query, { params: { password, new_password } });
+		const query = `/users/${user.userId}/password`;
+		mockEndpoint(200).onPut(query, { password, new_password }).replyOnce<string>(200, 'OK');
+		return axios.put<string>(query, { password, new_password });
 	});
 };
 
@@ -93,31 +92,31 @@ interface SendResetPasswordEmailParams {
 }
 
 export const useSendResetPasswordEmail = () => {
+	const axios = useAxios();
+
 	return useMutation(({ email }: SendResetPasswordEmailParams) => {
 		const query = `/users/reset_password`;
-		mockEndpoint(200).onPost(query, { params: { email } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.post<string>(query, { params: { email } });
+		return axios.post<string>(query, { email });
 	});
 };
 
 interface CheckPasswordVerificationCodeParams {
 	email: string;
-	reset_code: number[];
+	code: string[];
 }
 
 export const useVerifyResetPasswordEmail = () => {
-	return useMutation(
-		({ email, reset_code }: CheckPasswordVerificationCodeParams) => {
-			const query = `/users/verify?code=password_reset`;
-			const formattedCode = reset_code.join('');
+	const axios = useAxios();
 
-			mockEndpoint(0)
-				.onPost(query, { params: { email, reset_code: formattedCode } })
-				.replyOnce<number>(200, tempMyUser.id);
-			return AxiosInstance.post<number>(query, { params: { email, reset_code: formattedCode } });
+	return useMutation(
+		({ email, code }: CheckPasswordVerificationCodeParams) => {
+			const query = `/users/verify?code_type=password_reset`;
+			const formattedCode = code.join('');
+			mockEndpoint(200).onPost(query, { email, code: formattedCode }).replyOnce<number>(200, tempMyUser.userId);
+			return axios.post<number>(query, { email, code: formattedCode });
 		},
 		{
-			onSuccess: async ({ data: userId }, { email, reset_code }) => {
+			onSuccess: async ({ data: userId }) => {
 				await setUserId(userId);
 			},
 		}
@@ -125,43 +124,46 @@ export const useVerifyResetPasswordEmail = () => {
 };
 
 interface ResetPasswordParams {
-	reset_code: string;
+	code: string;
 	new_password: string;
 }
 
 export const useResetPassword = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
-	return useMutation(({ reset_code, new_password }: ResetPasswordParams) => {
-		const query = `/users/${user.id}/password`;
-		mockEndpoint(200).onPut(query, { params: { reset_code, new_password } }).replyOnce<string>(200, 'OK');
-		return AxiosInstance.put<string>(query, { params: { reset_code, new_password } });
+	return useMutation(({ code, new_password }: ResetPasswordParams) => {
+		const query = `/users/${user.userId}/password`;
+		mockEndpoint(200).onPut(query, { code, new_password }).replyOnce<string>(200, 'OK');
+		return axios.put<string>(query, { code, new_password });
 	});
 };
 
 export const useExportData = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(() => {
-		const query = `/users/${user.id}/export`;
+		const query = `/users/${user.userId}/export`;
 		mockEndpoint(200).onGet(query).replyOnce<string>(200, 'OK');
-		return AxiosInstance.get<string>(query);
+		return axios.get<string>(query);
 	});
 };
 
 export const useDeleteAccount = () => {
+	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(
 		(currentPassword: string) => {
-			const query = `/users/${user.id}`;
+			const query = `/users/${user.userId}`;
 			mockEndpoint(200)
 				.onDelete(query, { params: { password: currentPassword } })
 				.replyOnce<string>(200, 'OK');
-			return AxiosInstance.delete<string>(query, { params: { password: currentPassword } });
+			return axios.delete<string>(query, { params: { password: currentPassword } });
 		},
 		{
-			onSuccess: (res, req) => {
+			onSuccess: () => {
 				logOut();
 			},
 		}
@@ -172,54 +174,110 @@ export type UnitPreference = 'Fahrenheit' | 'Celsius';
 export type ConfidenceRating = 1 | 2 | 3;
 
 export interface User {
-	id: number;
+	userId: number;
 	email: string;
 	username: string;
-	preferences: UserPreferences;
+	preferences: UserPreferences | null;
 	image: string | null;
 	xp: number;
 }
 
 export interface UserPreferences {
 	unit_preference: UnitPreference;
-	confidence_rating?: ConfidenceRating;
 }
 
 export const tempMyUser: User = {
-	id: 3,
+	userId: 70,
 	email: 'janedoe123@gmail.com',
 	username: 'Jane Doe',
 	image: null,
 	xp: getXpReqForLevel(1) + tempMyMissions[0].points,
 	preferences: {
 		unit_preference: 'Fahrenheit',
-		confidence_rating: 2,
-	},
-};
-
-export const tempOtherUser: User = {
-	id: 4,
-	email: 'johnsmith321@gmail.com',
-	username: 'John Smith',
-	image: null,
-	xp: 200,
-	preferences: {
-		unit_preference: 'Fahrenheit',
-		confidence_rating: 3,
 	},
 };
 
 export const useMe = () => {
+	const axios = useAxios();
+
 	return useQuery(['me'], async () => {
-		const userId = await getUserId();
-		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempMyUser);
-		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
+		const query = `/users/${tempMyUser.userId}`;
+		mockEndpoint(200).onGet(query).replyOnce<User>(200, tempMyUser);
+		return (await axios.get<User>(query)).data;
 	});
 };
 
-export const useUser = (userId: number) => {
-	return useQuery(['get', 'users', userId], async () => {
-		mockEndpoint(200).onGet(`/users/${userId}`).replyOnce<User>(200, tempOtherUser);
-		return (await AxiosInstance.get<User>(`/users/${userId}`)).data;
+export interface PushNotificationParams {
+	token: string;
+}
+
+export const useSendPushNotificationsToken = () => {
+	const axios = useAxios();
+	const { data: user } = useMe();
+
+	return useMutation(({ token }: PushNotificationParams) => {
+		const query = `/users/${user.userId}/pushNotificationToken`;
+		return axios.post<string>(query, { token });
 	});
+};
+
+interface SendEmailVerificationCodeParams {
+	email: string;
+	username: string;
+	password: string;
+}
+
+export const useSendVerifyEmail = () => {
+	const axios = useAxios();
+
+	return useMutation(({ email, username, password }: SendEmailVerificationCodeParams) => {
+		const query = '/users';
+		mockEndpoint(200).onPost(query, { email, username, password }).replyOnce<number>(200, tempMyUser.userId);
+		return axios.post<string>(query, { email, username, password });
+	});
+};
+
+interface CheckEmailVerificationCodeParams {
+	email: string;
+	code: string[];
+}
+
+export const useVerifyEmail = () => {
+	const axios = useAxios();
+
+	return useMutation(
+		({ email, code }: CheckEmailVerificationCodeParams) => {
+			const query = `/users/verify?code_type=verification`;
+			const formattedCode = code.join('');
+			mockEndpoint(200).onPost(query, { email, code: formattedCode }).replyOnce<number>(200, tempMyUser.userId);
+			return axios.post<number>(query, { email, code: formattedCode });
+		},
+		{
+			onSuccess: async ({ data: userId }) => {
+				await setUserId(userId);
+			},
+		}
+	);
+};
+
+interface EmailLoginParams {
+	email: string;
+	password: string;
+}
+
+export const useLoginWithEmail = () => {
+	const axios = useAxios();
+
+	return useMutation(
+		({ email, password }: EmailLoginParams) => {
+			const query = `/users/login`;
+			mockEndpoint(200).onPost(query, { email, password }).replyOnce<number>(200, tempMyUser.userId);
+			return axios.post<number>(query, { email, password });
+		},
+		{
+			onSuccess: async ({ data: userId }) => {
+				await setUserId(userId);
+			},
+		}
+	);
 };

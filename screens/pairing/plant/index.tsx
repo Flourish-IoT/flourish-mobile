@@ -98,7 +98,7 @@ const NameStep = ({ navigation, route }: StepProps) => {
 				<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 					Would you like to name your plant?
 				</Typography>
-				<StyledTextInput placeholder='Plant Name' onChangeText={setName} value={name} />
+				<StyledTextInput label='Plant Name' onChangeText={setName} value={name} />
 			</TopToCurvedContainer>
 
 			<CurvedContainer containerStyle={styles.curvedContainer} circleStyle={styles.curvedCircleStyle}>
