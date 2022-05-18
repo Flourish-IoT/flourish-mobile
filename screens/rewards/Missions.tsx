@@ -52,7 +52,7 @@ export default function MissionsTab({ navigation }: MissionsTabProps) {
 			) : (
 				missions.map((mission, index, { length }) => (
 					<MissionListItem
-						key={String(index + mission.id)}
+						key={'Missions' + String(index) + String(mission.id)}
 						mission={mission}
 						containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.md : 0 }}
 						onClaim={() => onClaim(mission)}

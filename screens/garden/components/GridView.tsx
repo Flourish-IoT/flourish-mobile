@@ -17,7 +17,7 @@ export default function GridView({ plants, onPress, style }: GridViewProps) {
 				const isFirstRow = index === 0 || index === 1;
 
 				return (
-					<View key={index + p.id} style={{ width: '50%' }}>
+					<View key={String(index) + String(p.id)} style={{ width: '50%' }}>
 						<PlantPot
 							image={p.image}
 							title={p.name}

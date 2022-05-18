@@ -63,9 +63,9 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 			) : (
 				chunks.map((chunk, chunkIndex) => (
 					<View key={chunkIndex} style={{ ...styles.shelf, ...(chunkIndex === 0 && { paddingTop: 0 }) }}>
-						{chunk.map((b, aIndex) => (
+						{chunk.map((b, bIndex) => (
 							<PlantPot
-								key={String(aIndex + b.id)}
+								key={'Badges' + String(bIndex) + String(b.id)}
 								image={b.image}
 								onPress={() => onBadgePress(b)}
 								containerStyle={styles.badge}

@@ -131,7 +131,7 @@ export default function SingleCourse({ navigation, route }: SingleCourseProps) {
 					) : (
 						exploreMoreCourses.map((lc, index, { length }) => (
 							<CourseCard
-								key={String(index + lc.id)}
+								key={String(index) + String(lc.id)}
 								cardData={lc}
 								containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 								onPress={() => navigation.navigate('SingleCourse', { courseId: lc.id })}

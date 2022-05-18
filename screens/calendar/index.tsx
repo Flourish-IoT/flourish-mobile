@@ -155,7 +155,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				>
 					{lateTasks.map((t, index, { length }) => (
 						<TaskCard
-							key={String(index + t.id)}
+							key={String(index) + String(t.id)}
 							task={t}
 							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
 						/>
@@ -168,7 +168,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 					{upcomingTasks.length > 0 ? (
 						upcomingTasks.map((t, index, { length }) => (
 							<TaskCard
-								key={String(index + t.id)}
+								key={String(index) + String(t.id)}
 								task={t}
 								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
 							/>
@@ -190,7 +190,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 					{selectedDateTasks.length > 0 ? (
 						selectedDateTasks.map((t, index, { length }) => (
 							<TaskCard
-								key={String(index + t.id)}
+								key={String(index) + String(t.id)}
 								task={t}
 								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
 							/>

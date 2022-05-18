@@ -49,8 +49,8 @@ export default function BluetoothScanningModal({ onPaired, onClose }: BluetoothS
 						<Typography variant='h3bold'>Select an Accessory</Typography>
 					</CenterMe>
 					<View style={styles.modal}>
-						{sensors.map((s) => (
-							<View key={s.id} style={styles.option}>
+						{sensors.map((s, sIndex) => (
+							<View key={String(s.id) + String(sIndex)} style={styles.option}>
 								<StyledButton
 									variant='text'
 									title={s.name}

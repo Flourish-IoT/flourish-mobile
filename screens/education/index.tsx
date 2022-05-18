@@ -90,7 +90,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				) : (
 					quickTutorials.map((qt, index, { length }) => (
 						<VideoCard
-							key={String(index + qt.id)}
+							key={String(index) + String(qt.id)}
 							videoData={qt}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 						/>
@@ -113,7 +113,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				) : (
 					learningCourses.map((lc, index, { length }) => (
 						<CourseCard
-							key={String(index + lc.id)}
+							key={String(index) + String(lc.id)}
 							cardData={lc}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 							onPress={() => navigation.navigate('SingleCourse', { courseId: lc.id })}
@@ -137,7 +137,7 @@ export function EducationIndex({ navigation }: EducationIndexProps) {
 				) : (
 					featuredPlants.map((fp, index, { length }) => (
 						<FeaturedPlantCard
-							key={String(index + fp.id)}
+							key={String(index) + String(fp.id)}
 							plantType={fp}
 							containerStyle={{ marginRight: index !== length - 1 ? Theme.spacing.md : 0 }}
 							onPress={() => {}} // TODO: Open featured plant page

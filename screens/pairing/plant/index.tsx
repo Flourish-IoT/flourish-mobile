@@ -47,12 +47,12 @@ const PlantTypeStep = ({ navigation, route }: StepProps) => {
 				) : !plantTypes ? (
 					<Empty animation='error' size='lg' text='Failed to load plant types...' />
 				) : (
-					filtered.map((pT) => {
+					filtered.map((pT, pTIndex) => {
 						const isSelected = pT.id === selected?.id;
 
 						return (
 							<TouchableOpacity
-								key={pT.id}
+								key={String(pT.id) + String(pTIndex)}
 								onPress={() => setSelected(pT)}
 								style={{
 									borderRadius: 50,
