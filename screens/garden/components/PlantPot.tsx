@@ -12,9 +12,10 @@ interface PlantProps {
 	onPress?: () => void;
 	containerStyle?: ViewStyle;
 	svgProps?: SvgProps;
+	isLocalImage?: boolean;
 }
 
-export default function PlantPot({ image, title, subtitle, onPress, containerStyle, svgProps }: PlantProps) {
+export default function PlantPot({ image, isLocalImage, title, subtitle, onPress, containerStyle, svgProps }: PlantProps) {
 	const svgStyle = svgProps?.style;
 
 	const styles = StyleSheet.create({
@@ -42,7 +43,7 @@ export default function PlantPot({ image, title, subtitle, onPress, containerSty
 
 	return (
 		<TouchableOpacity style={styles.touchContainer} onPress={onPress} activeOpacity={!!onPress ? Theme.activeOpacity : 1}>
-			<NewPot width='100%' style={styles.potBaseGraphic} imgLink={image} {...svgProps} />
+			<NewPot width='100%' style={styles.potBaseGraphic} imgSource={image} isLocalImage={isLocalImage} {...svgProps} />
 			{(!!title || !!subtitle) && (
 				<View style={styles.textContainer}>
 					{!!title && (

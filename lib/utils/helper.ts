@@ -5,6 +5,7 @@ import AppConfig from '../../app.config';
 import { useQuery, useQueryClient } from 'react-query';
 import { UnitPreference, useMe, User } from '../../data/user';
 import { isBefore, subDays, format, isYesterday, isToday, isTomorrow, isAfter, addDays, addWeeks } from 'date-fns';
+import { MissionImageName } from '../../data/rewards';
 
 export const AppName = AppConfig.name;
 
@@ -296,5 +297,20 @@ export const getCloseDateText = (dateTime: Date) => {
 		return format(dateTime, 'MM-dd');
 	} else {
 		return format(dateTime, 'EEEE');
+	}
+};
+
+export const getMissionImage = (missionName: MissionImageName) => {
+	const pathPrefix = `../assets/missions`;
+
+	switch (missionName) {
+		case 'fern-it-up':
+			return require(`${pathPrefix}/fern-it-up.png`);
+		case 'monstera-monster':
+			return require(`${pathPrefix}/monstera-monster.png`);
+		case 'the-journey-begins':
+			return require(`${pathPrefix}/the-journey-begins.png`);
+		case 'water-water-water':
+			return require(`${pathPrefix}/water-water-water.png`);
 	}
 };

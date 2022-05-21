@@ -11,7 +11,6 @@ export default function Confetti({ style }: ConfettiParams) {
 	return (
 		<LottieView
 			style={style}
-			resizeMode='cover'
 			// @ts-ignore
 			source={getLottie('confetti')}
 			autoPlay

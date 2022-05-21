@@ -6,7 +6,7 @@ import { EvilIcons } from '@expo/vector-icons';
 import Loading from '../../../lib/components/animations/Loading';
 import StyledButton from '../../../lib/components/styled/Button';
 import Typography from '../../../lib/components/styled/Typography';
-import { getRewardsProgress } from '../../../lib/utils/helper';
+import { getMissionImage, getRewardsProgress } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 import { StyledProgressBar } from '../../../lib/components/styled/ProgressBar';
 import StyledDivider from '../../../lib/components/styled/Divider';
@@ -35,7 +35,7 @@ export default function MissionListItem({ mission, onClaim, isLoading, container
 				{/* LEFT */}
 				<View style={styles.topLeftContainer}>
 					<>
-						<PlantPot image={image} containerStyle={styles.badge} />
+						<PlantPot image={getMissionImage(image)} isLocalImage containerStyle={styles.badge} />
 						{!!level && (
 							<View style={styles.labelContainer}>
 								<Typography variant='body'>Lvl {level}</Typography>

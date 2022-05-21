@@ -94,9 +94,12 @@ export default function MetricVisual({
 					<AnimatedGauge type={metricType} newValue={gaugeValue} />
 				</View>
 				{mode === 'block' && showBlockGaugePhrase && (
-					<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
-						{getGaugeValuePhrase(gaugeValue)}
-					</Typography>
+					<>
+						<Typography variant='subHeader'>{getFullMetricName(metricType)}</Typography>
+						<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
+							{getGaugeValuePhrase(gaugeValue)}
+						</Typography>
+					</>
 				)}
 				{mode === 'listItem' && (
 					<Typography variant='h3bold' style={{ width: '100%', textAlign: 'center' }}>

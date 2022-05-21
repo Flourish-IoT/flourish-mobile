@@ -6,6 +6,7 @@ import { Mission } from '../../../data/rewards';
 import Confetti from '../../../lib/components/animations/Confetti';
 import StyledButton from '../../../lib/components/styled/Button';
 import Typography from '../../../lib/components/styled/Typography';
+import { getMissionImage } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
 import PlantPot from '../../garden/components/PlantPot';
 
@@ -66,20 +67,21 @@ export default function ClaimedMissionDialog({ mission, onClose }: ClaimedMissio
 			position: 'absolute',
 			top: 0,
 			left: 0,
-			width: '100%',
+			right: 0,
+			width: dimensions.width,
 			transform: [{ scale: 1.25 }],
 		},
 	});
 
 	return (
 		<Portal>
-			<Confetti style={styles.confetti} />
 			<View style={{ ...styles.modal, backgroundColor: Theme.colors.backdrop }}>
+				<Confetti style={styles.confetti} />
 				<Animated.View style={[styles.contentContainer, { transform: [{ translateY: springAnim }] }]}>
 					<Typography variant='h1' style={styles.text}>
 						MISSION COMPLETE
 					</Typography>
-					<PlantPot image={mission.image} />
+					<PlantPot image={getMissionImage(mission.image)} isLocalImage />
 					<Typography variant='body' style={styles.text}>
 						+{mission.points} points
 					</Typography>

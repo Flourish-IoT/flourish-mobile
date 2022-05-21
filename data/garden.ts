@@ -144,15 +144,19 @@ export const useAddDevice = () => {
 	return useMutation(async (sensor: Sensor) => {
 		const query = `/users/${user.userId}/devices`;
 
-		return (
-			await axios.post<string>(query, {
-				deviceType: sensor.deviceType,
-				model: sensor.model,
-				name: sensor.name,
-				apiVersion: sensor.apiVersion,
-				softwareVersion: sensor.softwareVersion,
-			})
-		).data;
+		try {
+			return (
+				await axios.post<string>(query, {
+					deviceType: sensor.deviceType,
+					model: sensor.model,
+					name: sensor.name,
+					apiVersion: sensor.apiVersion,
+					softwareVersion: sensor.softwareVersion,
+				})
+			).data;
+		} catch (error) {
+			console.error('Failed to add device.');
+		}
 	});
 };
 

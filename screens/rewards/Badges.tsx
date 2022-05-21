@@ -4,7 +4,7 @@ import TopTabContainer from '../../lib/components/layout/TopTabContainer';
 import { Mission, useClaimedMissions, useUnClaimMission } from '../../data/rewards';
 import Empty from '../../lib/components/animations/Empty';
 import Loading from '../../lib/components/animations/Loading';
-import { chunkArray } from '../../lib/utils/helper';
+import { chunkArray, getMissionImage } from '../../lib/utils/helper';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
 import PlantPot from '../garden/components/PlantPot';
@@ -66,7 +66,8 @@ export default function BadgesTab({ navigation }: BadgesTabProps) {
 						{chunk.map((b, bIndex) => (
 							<PlantPot
 								key={'Badges' + String(bIndex) + String(b.id)}
-								image={b.image}
+								image={getMissionImage(b.image)}
+								isLocalImage
 								onPress={() => onBadgePress(b)}
 								containerStyle={styles.badge}
 							/>
@@ -97,6 +98,6 @@ const styles = StyleSheet.create({
 	},
 	badge: {
 		width: '25%',
-		transform: [{ translateY: 230 / 4 - 4 }], // FIX: -4 for gap between pot and shelf
+		transform: [{ translateY: 230 / 4 - 1 }], // FIX: Removes gap between pot and shelf
 	},
 });

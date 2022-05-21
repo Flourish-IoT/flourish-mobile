@@ -63,7 +63,7 @@ const PairingStep = ({ navigation }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
 			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
-				<BluetoothScanning style={{ height: '100%' }} />
+				<BluetoothScanning size='lg' />
 			</TopToCurvedContainer>
 			<CurvedContainer>
 				<Typography variant='body' style={{ marginBottom: Theme.spacing.md, textAlign: 'center' }}>

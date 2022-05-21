@@ -5,16 +5,18 @@ import { Theme } from '../../../providers/Theme';
 interface TopToCurvedContainerProps extends PropsWithChildren<unknown> {
 	containerStyle?: ViewStyle;
 	innerStyle?: ViewStyle;
+	scrolls?: boolean;
 }
 
 const dimensions = Dimensions.get('window');
 
-export function TopToCurvedContainer({ children, containerStyle, innerStyle }: TopToCurvedContainerProps) {
+export function TopToCurvedContainer({ children, containerStyle, innerStyle, scrolls = false }: TopToCurvedContainerProps) {
 	return (
 		<ScrollView
 			contentContainerStyle={{ ...styles.topToCurvedContainerOuter, ...containerStyle }}
 			style={{ ...styles.topToCurvedContainerInner, ...innerStyle }}
 			showsVerticalScrollIndicator={false}
+			scrollEnabled={scrolls}
 		>
 			{children}
 		</ScrollView>
@@ -25,9 +27,16 @@ interface CurvedContainerProps extends PropsWithChildren<unknown> {
 	containerStyle?: ViewStyle;
 	innerStyle?: ViewStyle;
 	circleStyle?: ViewStyle;
+	scrolls?: boolean;
 }
 
-export default function CurvedContainer({ children, containerStyle, innerStyle, circleStyle }: CurvedContainerProps) {
+export default function CurvedContainer({
+	children,
+	containerStyle,
+	innerStyle,
+	circleStyle,
+	scrolls = false,
+}: CurvedContainerProps) {
 	return (
 		<>
 			<View style={{ ...styles.curvedContainerCircleBg, ...circleStyle }} />
@@ -35,6 +44,7 @@ export default function CurvedContainer({ children, containerStyle, innerStyle, 
 				contentContainerStyle={{ ...styles.curvedContainerOuter, ...containerStyle }}
 				style={{ ...styles.curvedContainerInner, ...innerStyle }}
 				showsVerticalScrollIndicator={false}
+				scrollEnabled={scrolls}
 			>
 				{children}
 			</ScrollView>

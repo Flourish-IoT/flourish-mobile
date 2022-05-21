@@ -1,30 +1,26 @@
 import React from 'react';
-import Svg, { Path, SvgProps, Defs, LinearGradient, Stop, Image } from 'react-native-svg';
+import Svg, { Path, SvgProps, Defs, LinearGradient, Stop, Image, Mask, Rect } from 'react-native-svg';
 import { Theme } from '../../providers/Theme';
 import { getPlaceHolder } from '../utils/helper';
 
 export interface NewPotProps extends SvgProps {
-	imgLink: string | null;
+	imgSource: string | null;
+	isLocalImage?: boolean;
 }
 
-export default function NewPot({ imgLink, ...rest }: NewPotProps) {
+export default function NewPot({ imgSource, isLocalImage = false, ...rest }: NewPotProps) {
 	const mainColor = Theme.colors.pot;
 	const gradientStopColor = Theme.colors.darkBrown;
 	const highlightColor = '#CB9C65';
 
+	const source = () => {
+		if (isLocalImage && !!imgSource) return imgSource;
+		return imgSource ? { uri: imgSource } : getPlaceHolder('plant');
+	};
+
 	return (
 		<Svg width='160' height='230' viewBox='0 0 160 230' fill='none' {...rest}>
-			<Image
-				x='10'
-				width='140'
-				height='140'
-				href={imgLink ? { uri: imgLink } : getPlaceHolder('plant')}
-				preserveAspectRatio='xMidYMid slice'
-			/>
-			{/* <Path
-				d='M8 17C8 6.50659 16.5066 -2 27 -2H133C143.493 -2 152 6.50659 152 17H148C148 8.71573 141.284 2 133 2H27C18.7157 2 12 8.71573 12 17H8ZM150 140H10H150ZM8 140V17C8 6.50659 16.5066 -2 27 -2V2C18.7157 2 12 8.71573 12 17V140H8ZM133 -2C143.493 -2 152 6.50659 152 17V140H148V17C148 8.71573 141.284 2 133 2V-2Z'
-				fill={mainColor}
-			/> */}
+			<Image width='160' height='140' href={source()} preserveAspectRatio='xMidYMid slice' mask='url(#clip)' />
 			<Path
 				d='M159.996 164.038C159.996 168.039 157.985 170.776 155.075 170.776C154.044 170.776 153.014 170.805 151.984 170.763C151.549 170.746 151.41 170.992 151.355 171.52C150.703 177.917 150.034 192.698 149.362 199.091C148.71 205.248 148.173 211.427 147.375 217.544C146.595 223.547 142.713 227.745 138.274 227.745C99.1951 227.745 60.1151 227.745 21.0344 227.745C16.2328 227.745 12.3746 223.046 11.6877 216.487C10.6204 206.168 9.52492 187.466 8.44245 177.15C8.25986 175.284 8.06206 173.397 7.88599 171.526C7.836 170.987 7.69036 170.763 7.26215 170.761C6.06013 170.761 4.83636 170.857 3.6626 170.579C1.52155 170.075 0.0130419 167.454 0 164.475C0 154.877 0 153.667 0 144.07C0.0152155 140.568 2.03888 137.878 4.70595 137.75C4.96678 137.738 5.23197 137.75 5.49498 137.75H154.953C157.387 137.75 159.224 139.528 159.802 142.483C159.929 143.159 159.992 143.845 159.991 144.532C160.002 153.831 160.002 154.735 159.996 164.038Z'
 				fill={mainColor}
@@ -42,6 +38,17 @@ export default function NewPot({ imgLink, ...rest }: NewPotProps) {
 				fill='url(#paint1_linear_804_11408)'
 			/>
 			<Defs>
+				<Mask id='clip'>
+					<Rect
+						x='10'
+						y='0'
+						width='140'
+						height='150' // FIX: Adding extra height makes only one side appear to have radius
+						rx={Theme.borderRadius}
+						ry={Theme.borderRadius}
+						fill='#ffffff'
+					/>
+				</Mask>
 				<LinearGradient
 					id='paint0_linear_804_11408'
 					x1='62.151'

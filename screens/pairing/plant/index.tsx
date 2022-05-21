@@ -15,9 +15,9 @@ import Empty from '../../../lib/components/animations/Empty';
 import { AppName, filterData, getPlaceHolder } from '../../../lib/utils/helper';
 import PlantTypeCard from './PlantTypeCard';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import PotPlant from '../../../lib/icons/PotPlant';
 import StyledTextInput from '../../../lib/components/styled/TextInput';
 import StyledCamera from '../../../lib/components/styled/Camera';
+import PotPlantAndSensor from '../../../lib/icons/PotPlantAndSensor';
 
 interface StepProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -93,8 +93,8 @@ const NameStep = ({ navigation, route }: StepProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
-			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
-				<PotPlant />
+			<TopToCurvedContainer containerStyle={{ alignItems: 'center', marginBottom: 50 }} scrolls>
+				<PotPlantAndSensor style={{ marginBottom: Theme.spacing.md }} />
 				<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 					Would you like to name your plant?
 				</Typography>
@@ -193,7 +193,7 @@ const ImageStep = ({ navigation, route }: StepProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={styles.screenContainer} onBack={navigation.goBack}>
 			<TopToCurvedContainer containerStyle={{ alignItems: 'center' }}>
-				<PotPlant />
+				<PotPlantAndSensor style={{ marginBottom: Theme.spacing.md }} />
 				<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 					Would you like to add a picture of your plant?
 				</Typography>
