@@ -12,5 +12,5 @@ interface EmptyParams {
 }
 
 export default function Empty({ animation, loop = false, text, size, style }: EmptyParams) {
-	return <LottieBase animation={animation} text={text} size={size} style={style} loop={loop} />;
+	return <LottieBase animation={animation} text={text} size={size} style={style} loop={loop ?? animation === 'error'} />;
 }

@@ -81,10 +81,6 @@ export const getFullMetricName = (metricType: PlantMetric) => {
 };
 
 export const getMetricUnitSuffix = (metricType: PlantMetric) => {
-	const queryClient = useQueryClient();
-	const user = queryClient?.getQueryData<User>(['me']);
-	const tempUnitPref = user?.preferences?.unit_preference;
-
 	switch (metricType) {
 		case 'Water':
 		case 'Humidity':
@@ -92,7 +88,7 @@ export const getMetricUnitSuffix = (metricType: PlantMetric) => {
 		case 'Sunlight':
 			return 'k lux';
 		case 'Temperature':
-			return `°${tempUnitPref[0] ?? ''}`;
+			return '°F';
 	}
 };
 

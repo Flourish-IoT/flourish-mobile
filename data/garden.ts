@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { format, isSameDay, subDays } from 'date-fns';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { formatTemp } from '../lib/utils/helper';
-import { ApiUrl, mockEndpoint, useAxios } from './api';
+import { ApiUrl, mockEndpoint } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -46,7 +47,6 @@ export const plantMetrics: PlantMetric[] = ['Water', 'Sunlight', 'Temperature', 
 export type GaugeValue = 1 | 2 | 3 | 4 | 5;
 
 export const usePlants = (userId: number | 'me') => {
-	// const axios = useAxios();
 	const queryClient = useQueryClient();
 	const { data: user } = useMe();
 	if (userId === 'me') userId = user?.userId;
@@ -138,7 +138,6 @@ export const useSinglePlantType = (plantTypeId: number) => {
 };
 
 export const useAddDevice = () => {
-	const axios = useAxios();
 	const { data: user } = useMe();
 
 	return useMutation(async (sensor: Sensor) => {
@@ -152,8 +151,10 @@ export const useAddDevice = () => {
 		};
 
 		try {
-			mockEndpoint(200).onPost(query, params).replyOnce<string>(200, 'OK');
-			return (await axios.post<string>(query, params)).data;
+			mockEndpoint(200)
+				.onPost(ApiUrl + query, params)
+				.replyOnce<string>(200, 'OK');
+			return (await axios.post<string>(ApiUrl + query, params)).data;
 		} catch (error) {
 			console.error('Failed to add device.');
 		}
@@ -168,11 +169,102 @@ interface AddPlantParams {
 }
 
 export const useAddPlant = () => {
-	const axios = useAxios();
-
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		mockEndpoint(200).onPost(query, params).replyOnce<string>(200, 'OK');
-		return (await axios.post<string>(query, params)).data;
+		mockEndpoint(200)
+			.onPost(ApiUrl + query, params)
+			.replyOnce<string>(200, 'OK');
+		return (await axios.post<string>(ApiUrl + query, params)).data;
 	});
+};
+
+interface HistoricalRes {
+	humidity: number;
+	light: number;
+	soilMoisture: number;
+	temperature: number;
+	timestamp: string | Date;
+}
+
+interface HistoricalWeek {
+	weekDay: string;
+	percentOfBar: number;
+}
+
+const getHistoricalDataPropName = (metricType: PlantMetric) => {
+	switch (metricType) {
+		case 'Water':
+			return {
+				resProp: 'soilMoisture',
+				minProp: 'minimumSoilMoisture',
+				maxProp: 'maximumSoilMoisture',
+			};
+		case 'Sunlight':
+			return {
+				resProp: 'light',
+				minProp: 'minimumLight',
+				maxProp: 'maximumLight',
+			};
+		case 'Temperature':
+			return {
+				resProp: 'temperature',
+				minProp: 'minimumTemperature',
+				maxProp: 'maximumTemperature',
+			};
+		case 'Humidity':
+			return {
+				resProp: 'humidity',
+				minProp: 'minimumHumidity',
+				maxProp: 'maximumHumidity',
+			};
+	}
+};
+
+export const useHistoricalPlantData = (plant: Plant, dataPoint: PlantMetric) => {
+	const { data: plantType } = useSinglePlantType(plant.plantType.id);
+	const start = subDays(new Date(), 7).toISOString();
+	const end = new Date().toISOString();
+
+	return useQuery(
+		['garden', plant.id, 'historical-data', dataPoint],
+		async () => {
+			const query = `/plants/${plant.id}/data?start=${start}&end=${end}`;
+			const history = (await axios.get<HistoricalRes[]>(ApiUrl + query)).data.map((d) => {
+				// Turn ISO into a JS date
+				d.timestamp = new Date(d.timestamp);
+				return d;
+			});
+
+			const groups: HistoricalWeek[] = [];
+			const today = new Date();
+
+			for (let i = 6; i > -1; i--) {
+				const currentDay = subDays(today, i);
+				const dataPointsInDay = history.filter((d) => isSameDay(currentDay, d.timestamp as Date));
+
+				if (dataPointsInDay.length > 0) {
+					const { resProp, minProp, maxProp } = getHistoricalDataPropName(dataPoint);
+					const min = plantType[minProp];
+					const max = plantType[maxProp];
+					const average = dataPointsInDay.map((d) => d[resProp]).reduce((a, b) => a + b) / dataPointsInDay.length;
+					let percentage = ((average - min) * 100) / (max - min);
+
+					if (percentage > 100) percentage = 100;
+					if (percentage < 0) percentage = 0;
+
+					console.log({ min, average, max, percentage });
+
+					groups.push({
+						weekDay: format(currentDay, 'EEEEEE'),
+						percentOfBar: percentage,
+					});
+				}
+			}
+
+			return groups;
+		},
+		{
+			enabled: !!plantType,
+		}
+	);
 };

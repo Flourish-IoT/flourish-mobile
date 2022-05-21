@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { RouteProp } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/routers';
-import { Plant, PlantMetric, useSinglePlant } from '../../data/garden';
+import { Plant, PlantMetric, useHistoricalPlantData, useSinglePlant } from '../../data/garden';
 import ModalBackButton from '../../lib/components/ModalBackButton';
 import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import MetricVisual from './components/MetricVisual';
@@ -13,6 +13,7 @@ import { getGaugeValueColor, getGaugeValuePhrase, getMetricUnitSuffix, usePlantT
 import Loading from '../../lib/components/animations/Loading';
 
 import { BarChart } from 'react-native-chart-kit';
+import Empty from '../../lib/components/animations/Empty';
 
 interface SingleMetricScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -28,10 +29,11 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 	const { plantId, type } = route.params as SingleMetricScreenRouteProps;
 	const { data: plant, isLoading: plantDataIsLoading } = useSinglePlant('me', plantId);
 	const { data: bestRange } = usePlantTypeBestRange(plant?.plantType?.id, type);
+	const { data: history, isLoading: historyIsLoading, isError: historyIsError } = useHistoricalPlantData(plant, type);
 
 	if (plantDataIsLoading) return <Loading animation='rings' size='lg' />;
 
-	const data = getData(type, plant);
+	const { sensorVal, gaugeVal } = getData(type, plant);
 
 	return (
 		<ScreenContainer scrolls style={styles.screenContainerStyle}>
@@ -48,9 +50,9 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 					containerStyle={styles.metricVisual}
 				/>
 				<View style={styles.metricTextContainer}>
-					<Typography variant='h1'>{data.sensorVal + getMetricUnitSuffix(type)}</Typography>
-					<Typography variant='h2' style={{ color: getGaugeValueColor(data.gaugeVal) }}>
-						{getGaugeValuePhrase(data.gaugeVal)}
+					<Typography variant='h1'>{sensorVal + getMetricUnitSuffix(type)}</Typography>
+					<Typography variant='h2' style={{ color: getGaugeValueColor(gaugeVal) }}>
+						{getGaugeValuePhrase(gaugeVal)}
 					</Typography>
 				</View>
 			</View>
@@ -60,43 +62,39 @@ export default function SingleMetricScreen({ navigation, route }: SingleMetricSc
 				<Typography variant='h3bold'>{bestRange}</Typography>
 			</View>
 
-			<View
-				style={
-					{
-						// backgroundColor: Theme.colors.background,
-					}
-				}
-			>
+			{historyIsLoading ? (
+				<Loading animation='rings' text='Loading plant history' />
+			) : historyIsError || !history ? (
+				<Empty animation='error' size='lg' text='Failed to get history' />
+			) : history.length === 0 ? (
+				<Empty animation='magnifyingGlass' size='lg' text='No plant history found' />
+			) : (
 				<BarChart
-					style={
-						{
-							// backgroundColor: Theme.colors.background,
-						}
-					}
-					data={{
-						labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-						datasets: [
-							{
-								data: [50, 40, 20, 30, 50, 43],
-							},
-						],
-					}}
 					width={Dimensions.get('window').width - Theme.spacing.md * 2}
 					height={220}
 					yAxisSuffix='%'
 					yAxisLabel=''
+					fromZero
 					chartConfig={{
 						backgroundGradientFromOpacity: 0,
 						backgroundGradientToOpacity: 0,
 						fillShadowGradientOpacity: 1,
 						color: () => '#015669',
 						labelColor: () => Theme.colors.text,
-						barPercentage: 0.5,
+						barPercentage: 100 / history.length / 22,
 						barRadius: 5,
 						decimalPlaces: 0,
 					}}
+					data={{
+						labels: history.map((h) => h.weekDay),
+						datasets: [
+							{
+								data: history.map((h) => h.percentOfBar),
+							},
+						],
+					}}
 				/>
-			</View>
+			)}
 		</ScreenContainer>
 	);
 }
