@@ -252,8 +252,6 @@ export const useHistoricalPlantData = (plant: Plant, dataPoint: PlantMetric) => 
 					if (percentage > 100) percentage = 100;
 					if (percentage < 0) percentage = 0;
 
-					console.log({ min, average, max, percentage });
-
 					groups.push({
 						weekDay: format(currentDay, 'EEEEEE'),
 						percentOfBar: percentage,
