@@ -3,43 +3,64 @@ import { View, ViewStyle } from 'react-native';
 import { Text } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { LottieSize, Theme } from '../../providers/Theme';
+import { PlantMetric } from '../../data/garden';
+import MagnifyingGlass from '../assets/lottie/magnifyingGlass.json';
+import Rings from '../assets/lottie/rings.json';
+import Confetti from '../assets/lottie/confetti.json';
+import Error from '../assets/lottie/error.json';
+import Relax from '../assets/lottie/relax.json';
+import Water from '../assets/lottie/water.json';
+import Sunlight from '../assets/lottie/sunlight.json';
+import Temperature from '../assets/lottie/temperature.json';
+import Humidity from '../assets/lottie/humidity.json';
+import Bluetooth from '../assets/lottie/bluetooth.json';
 
 interface LottieBaseParams {
 	animation?: LottieName;
+	loop?: boolean;
 	text?: string;
 	style?: ViewStyle;
 	size?: LottieSize;
 }
 
-type LottieName = 'magnifyingGlass' | 'rings' | 'growing' | 'error' | 'relax';
+type LottieName = 'magnifyingGlass' | 'rings' | 'error' | 'relax' | 'confetti' | 'bluetooth' | PlantMetric;
 
 export const getLottie = (name: LottieName) => {
-	const lottieLocation = '../assets/lottie';
-
 	switch (name) {
 		case 'magnifyingGlass':
-			return require(`${lottieLocation}/magnifyingGlass.json`);
+			return MagnifyingGlass;
 		case 'rings':
-			return require(`${lottieLocation}/rings.json`);
-		case 'growing':
-			return require(`${lottieLocation}/growing.json`);
+			return Rings;
 		case 'error':
-			return require(`${lottieLocation}/error.json`);
+			return Error;
 		case 'relax':
-			return require(`${lottieLocation}/relax.json`);
+			return Relax;
+		case 'confetti':
+			return Confetti;
+		case 'Water':
+			return Water;
+		case 'Sunlight':
+			return Sunlight;
+		case 'Temperature':
+			return Temperature;
+		case 'Humidity':
+			return Humidity;
+		case 'bluetooth':
+			return Bluetooth;
 	}
 };
 
-export default function LottieBase({ animation, text, size = 'md', style }: LottieBaseParams) {
+export default function LottieBase({ animation, loop = true, text, size = 'md', style }: LottieBaseParams) {
 	return (
-		<View style={[Theme.lottie.wrapper, style]}>
+		<View style={{ ...Theme.lottie.wrapper, ...style }}>
 			{!!animation && (
 				<LottieView
 					style={{ width: Theme.lottie.width[size] }}
 					resizeMode='cover'
+					// @ts-ignore This is always an animation type
 					source={getLottie(animation)}
 					autoPlay
-					loop
+					loop={loop}
 				/>
 			)}
 			{!!text && (

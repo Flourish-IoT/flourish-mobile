@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useMemo } from 'react';
+import { Alert } from 'react-native';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 
 export default function QueryProvider({ children }: PropsWithChildren<unknown>) {
@@ -11,8 +12,9 @@ export default function QueryProvider({ children }: PropsWithChildren<unknown>) 
 					},
 				},
 				queryCache: new QueryCache({
-					onError: (error) => {
-						alert(`An error occurred while fetching data: ${error}`);
+					onError: (error, { queryKey }) => {
+						console.warn('An error occurred in query with key: ' + queryKey);
+						Alert.alert('Whoops... Network Error', String(error));
 					},
 				}),
 			}),

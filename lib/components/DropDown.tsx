@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, ViewStyle } from 'react-native';
 import { List } from 'react-native-paper';
 import { Theme } from '../../providers/Theme';
-import StyledAccordion from './styled/Accordion';
+import StyledAccordion from './layout/Accordion';
 
 interface DropDownProps {
 	title?: string;

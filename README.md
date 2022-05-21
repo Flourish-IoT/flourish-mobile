@@ -5,7 +5,11 @@ Clone the repo to your local computer
 1. In your terminal `cd` to the project root folder and run `npm install`.
 2. Install the expo cli globally with `npm install -g expo-cli@5.0.3`.
 3. Install eslint for VSCode: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-4. (Optional) Install a mobile simulator:
+4. Add the environment file
+    - Download: https://drexel0.sharepoint.com/:u:/r/sites/SeniorProject309/Shared%20Documents/Dev/Front-End%20Research/secret.env?csf=1&web=1&e=YXJeuv
+    - Rename to just `.env`
+    - Place the file in the root level of the project.
+5. (Optional) Install a mobile simulator:
 
     - Mac: Xcode or Android Simulator
     - Windows: Android Simulator

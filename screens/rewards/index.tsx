@@ -1,53 +1,37 @@
+import { StyledProgressBar } from '../../lib/components/styled/ProgressBar';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useMe } from '../../data/user';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import ProfilePicture from '../profile/components/ProfilePicture';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import React from 'react';
-import { Dimensions, ScrollView, StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 import { Theme } from '../../providers/Theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import AchievementsTab from './Achievements';
+import MissionsTab from './Missions';
 import BadgesTab from './Badges';
-import FriendsTab from './Friends';
 import Typography from '../../lib/components/styled/Typography';
-import Loading from '../../lib/components/Loading';
-import { getUserLevelName } from '../../lib/utils/helper';
-import { ProgressBar } from 'react-native-paper';
+import Loading from '../../lib/components/animations/Loading';
+import { getRewardsProgress, getUserLevelName } from '../../lib/utils/helper';
 import StyledAvatar from '../../lib/components/styled/Avatar';
 
-interface RewardsScreenProps {
-	navigation: NavigationProp<ParamListBase>;
-}
-
-const Tab = createMaterialTopTabNavigator();
-
 export const TopTabBar = ({ state, navigation }) => {
-	const buttonWidth = 130;
-	const tabBarWidth = buttonWidth * state.routes.length;
-	const tabBarScrollEnabled = Dimensions.get('window').width > tabBarWidth;
-
 	const styles = StyleSheet.create({
 		tabBar: {
-			width: tabBarWidth,
-			minWidth: '100%',
+			width: '100%',
 			flexDirection: 'row',
-			backgroundColor: 'white',
-			maxHeight: 37.3, // Fix
 		},
 		tabButton: {
-			width: buttonWidth,
-			justifyContent: 'center',
-			alignItems: 'center',
+			...Theme.util.flexCenter,
+			width: '50%',
+			padding: Theme.spacing.sm,
 		},
 		tabLabel: {
-			padding: Theme.spacing.sm,
 			opacity: 0.5,
 		},
 	});
 
 	return (
-		<ScrollView horizontal scrollEnabled={tabBarScrollEnabled} style={{ ...styles.tabBar }}>
+		<View style={styles.tabBar}>
 			{state.routes.map((route, index) => {
 				const isFocused = state.index === index;
 
@@ -58,25 +42,33 @@ export const TopTabBar = ({ state, navigation }) => {
 
 				return (
 					<TouchableOpacity
-						key={route.key}
+						key={String(index + route.key)}
 						onPress={() => navigation.navigate({ name: route.name, merge: true })}
 						style={styles.tabButton}
 					>
-						<Typography variant='heading3Bold' style={{ ...styles.tabLabel, ...(isFocused && activeTabStyle) }}>
+						<Typography variant='h3bold' style={{ ...styles.tabLabel, ...(isFocused && activeTabStyle) }}>
 							{route.name}
 						</Typography>
 					</TouchableOpacity>
 				);
 			})}
-		</ScrollView>
+		</View>
 	);
 };
+
+interface RewardsScreenProps {
+	navigation: NavigationProp<ParamListBase>;
+}
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 	const insets = useSafeAreaInsets();
 	const { data: user, isLoading: userIsLoading } = useMe();
 
 	if (userIsLoading) return <Loading animation='rings' />;
+
+	const userLevel = getRewardsProgress(user.xp).level;
 
 	const styles = StyleSheet.create({
 		screenContainer: {
@@ -88,6 +80,8 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 			width: '100%',
 			alignItems: 'center',
 			backgroundColor: 'white',
+			padding: Theme.spacing.screenContainer,
+			paddingBottom: 0,
 		},
 		avatar: {
 			marginBottom: Theme.spacing.md,
@@ -98,9 +92,8 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 		tabNavigator: {
 			width: '100%',
 		},
-		userXpBar: {
-			width: '100%',
-			borderRadius: 50,
+		progressBar: {
+			marginBottom: Theme.spacing.md,
 		},
 	});
 
@@ -108,22 +101,20 @@ export default function RewardsScreen({ navigation }: RewardsScreenProps) {
 		<ScreenContainer safePadding={false} style={styles.screenContainer}>
 			<View style={styles.topSection}>
 				<StyledAvatar user={user} style={styles.avatar} />
-				<Typography style={styles.topSectionText} variant='heading3Bold'>
+				<Typography style={styles.topSectionText} variant='h3bold'>
 					{user.username}
 				</Typography>
 				<Typography style={styles.topSectionText} variant='placeholder'>
-					{getUserLevelName(user.level)}
+					Lvl {userLevel} - {getUserLevelName(userLevel)}
 				</Typography>
-				<Typography style={styles.topSectionText} variant='heading3Bold'>
-					{user.xp} pts
+				<Typography style={styles.topSectionText} variant='h3bold'>
+					{getRewardsProgress(user.xp).percent} pts
 				</Typography>
-				{/* TODO: Progress bar isn't showing up */}
-				{/* <ProgressBar style={styles.userXpBar} progress={user.xp / 500} color={Theme.colors.primary} /> */}
+				<StyledProgressBar value={getRewardsProgress(user.xp).percent} containerStyle={styles.progressBar} />
 			</View>
-			<Tab.Navigator initialRouteName='Achievements' tabBar={TopTabBar} style={styles.tabNavigator}>
-				<Tab.Screen name='Achievements' component={AchievementsTab} />
+			<Tab.Navigator initialRouteName='Missions' tabBar={TopTabBar} style={styles.tabNavigator}>
+				<Tab.Screen name='Missions' component={MissionsTab} />
 				<Tab.Screen name='Badges' component={BadgesTab} />
-				<Tab.Screen name='Friends' component={FriendsTab} />
 			</Tab.Navigator>
 		</ScreenContainer>
 	);

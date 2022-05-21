@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
-export default function Logo({ fill = 'black', ...rest }: SvgProps) {
+export default function Grid({ fill = 'black', ...rest }: SvgProps) {
 	return (
 		<Svg width='22' height='22' viewBox='0 0 24 24' fill='none' {...rest}>
 			<Path

@@ -1,11 +1,12 @@
-import { addDays, addWeeks, format, isAfter, isBefore, isPast, isToday, isTomorrow, isYesterday, subDays } from 'date-fns';
+import { format, isPast } from 'date-fns';
 import React from 'react';
-import { Image, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Task } from '../../../data/calendar';
-import { usePlants } from '../../../data/garden';
 import Typography from '../../../lib/components/styled/Typography';
+import { getCloseDateText } from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
+import TaskIcon from './TaskIcon';
 
 interface TaskCardProps {
 	task: Task;
@@ -13,36 +14,17 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, containerStyle }: TaskCardProps) {
-	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
-
-	if (plantsIsLoading) return null;
-
-	const { id, plantId, datetime, title, description, complete } = task;
-	const isLate = isPast(datetime) && !complete;
-
-	const { image: plantImage } = plants.find((p) => p.id === plantId);
-
-	const getDateText = () => {
-		if (isBefore(datetime, subDays(new Date(), 2))) {
-			return format(datetime, 'MM/dd/yy');
-		} else if (isYesterday(datetime)) {
-			return 'Yesterday';
-		} else if (isToday(datetime)) {
-			return 'Today';
-		} else if (isTomorrow(datetime)) {
-			return 'Tomorrow';
-		} else if (isAfter(datetime, addDays(new Date(), 2)) && isBefore(datetime, addWeeks(new Date(), 1))) {
-			return format(datetime, 'MM-dd');
-		} else {
-			return format(datetime, 'EEEE');
-		}
-	};
+	const { id, plantId, dateTime, title, category, description, complete } = task;
+	const isLate = isPast(dateTime) && !complete;
 
 	const styles = StyleSheet.create({
 		container: {
 			backgroundColor: 'white',
-			display: 'flex',
 			flexDirection: 'row',
+			alignItems: 'flex-start',
+			width: '100%',
+			height: 'auto',
+			maxHeight: 100,
 			borderLeftWidth: Theme.spacing.md,
 			borderColor: Theme.colors.primary,
 			borderRadius: Theme.borderRadius,
@@ -50,27 +32,26 @@ export default function TaskCard({ task, containerStyle }: TaskCardProps) {
 		},
 		textContainer: {
 			flex: 1,
-			padding: Theme.spacing.md,
+			justifyContent: 'center',
+			paddingVertical: Theme.spacing.sm,
+			paddingRight: Theme.spacing.sm,
 		},
 		due: {
 			...(isLate && { color: Theme.colors.error }),
 		},
 		icon: {
-			height: 70,
-			width: 70,
+			width: 40,
+			paddingTop: Theme.spacing.md,
 		},
 	});
 
 	return (
 		<TouchableOpacity style={styles.container}>
-			<Image
-				style={styles.icon}
-				source={plantImage ? { uri: plantImage } : require('../../../lib/assets/placeholder/plant.png')}
-			/>
+			<TaskIcon containerStyle={styles.icon} category={category} />
 			<View style={styles.textContainer}>
-				<Typography variant='heading3Bold'>{title}</Typography>
+				<Typography variant='h3bold'>{title}</Typography>
 				<Typography variant='placeholder' style={styles.due}>
-					{getDateText()} {format(datetime, "'at' p")}
+					{getCloseDateText(dateTime)} {format(dateTime, "'at' p")}
 				</Typography>
 				<Typography variant='placeholder'>{description}</Typography>
 			</View>

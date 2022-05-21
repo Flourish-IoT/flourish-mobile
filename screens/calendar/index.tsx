@@ -2,10 +2,19 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { usePlants } from '../../data/garden';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 import Chevron from '../../lib/icons/Chevron';
 import { Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { padString } from '../../lib/utils/helper';
+import { Task, useTasks } from '../../data/calendar';
+import TaskCard from './components/TaskCard';
+import ChipFilter from '../../lib/components/ChipFilter';
+import Empty from '../../lib/components/animations/Empty';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
+import { Theme } from '../../providers/Theme';
+import StyledAccordion from '../../lib/components/layout/Accordion';
+import DropDown from '../../lib/components/DropDown';
 import {
 	format,
 	isAfter,
@@ -19,30 +28,21 @@ import {
 	startOfWeek,
 	isSameDay,
 } from 'date-fns';
-import { padString } from '../../lib/utils/helper';
-import { Task, useTasks } from '../../data/calendar';
-import TaskCard from './components/TaskCard';
-import ChipFilter from '../../lib/components/ChipFilter';
-import Empty from '../../lib/components/Empty';
-import StyledModal from '../../lib/components/styled/Modal';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import { Theme } from '../../providers/Theme';
-import StyledAccordion from '../../lib/components/styled/Accordion';
-import DropDown from '../../lib/components/DropDown';
+import Typography from '../../lib/components/styled/Typography';
 
 interface CalendarScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
-export type CalendarView = 'Month' | 'Week';
-const calendarViews: CalendarView[] = ['Month', 'Week'];
+export const calendarViews = ['Month', 'List'] as const;
+export type CalendarView = typeof calendarViews[number];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
 	const { data: tasks, isLoading: tasksIsLoading } = useTasks('me');
 
 	const [selectedInterval, setSelectedInterval] = useState<CalendarView>(calendarViews[0]);
-	const [selectedDate, setSelectedDate] = useState<string | -1>(-1); // -1 meaning none
+	const [selectedDate, setSelectedDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
 	const [calendarYear, setCalendarYear] = useState(format(new Date(), 'yyyy'));
 	const [calendarMonth, setCalendarMonth] = useState(format(new Date(), 'MM'));
 	const [firstInCalendarWeek, setFirstInCalendarWeek] = useState(startOfWeek(new Date()));
@@ -54,20 +54,20 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 	if (plantsIsLoading || tasksIsLoading) return <Loading text='Gathering data...' />;
 
 	const plantFilteredTasks = selectedPlants.includes(-1) ? tasks : tasks.filter((t) => selectedPlants.includes(t.plantId));
-	const datesToHighlight = plantFilteredTasks.map((t) => format(t.datetime, 'yyyy-MM-dd'));
+	const datesToHighlight = plantFilteredTasks.map((t) => format(t.dateTime, 'yyyy-MM-dd'));
 	const highlighted = datesToHighlight.reduce(
 		(obj, date) => ((obj[date] = { marked: true, dotColor: Theme.colors.cta }), obj),
 		{}
 	);
 
-	// If a date is selected, add it to the marked dates obj
-	selectedDate !== -1 &&
-		(highlighted[selectedDate] = {
-			...highlighted[selectedDate],
-			selected: true,
-			selectedColor: Theme.colors.primary,
-			dotColor: 'white',
-		});
+	// Add the selected date to the marked dates obj
+	highlighted[selectedDate] = {
+		...highlighted[selectedDate],
+		selected: true,
+		selectedColor: Theme.colors.primary,
+		dotColor: 'white',
+	};
+
 	// Add permanent highlight to today's date
 	const todayFormatted = format(new Date(), 'yyyy-MM-dd');
 	selectedDate !== todayFormatted &&
@@ -79,7 +79,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		});
 
 	const upcomingTasks = plantFilteredTasks
-		.filter((t) => !t.complete && isFuture(t.datetime) && isBefore(t.datetime, addDays(new Date(), 30)))
+		.filter((t) => !t.complete && isFuture(t.dateTime) && isBefore(t.dateTime, addDays(new Date(), 30)))
 		// First 5 in the next 30 days
 		.slice(0, 5);
 
@@ -87,23 +87,23 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 
 	if (selectedInterval === 'Month') {
 		intervalTasks = plantFilteredTasks.filter((t) =>
-			isSameMonth(t.datetime, new Date(`${calendarYear}-${calendarMonth}-01`))
+			isSameMonth(t.dateTime, new Date(`${calendarYear}-${calendarMonth}-01`))
 		);
-	} else if (selectedInterval === 'Week') {
-		intervalTasks = intervalTasks.filter((t) => isSameWeek(t.datetime, firstInCalendarWeek));
-	}
+	} // else if (selectedInterval === 'Week') {
+	// 	intervalTasks = intervalTasks.filter((t) => isSameWeek(t.dateTime, firstInCalendarWeek));
+	// }
 
 	const lateTasks = plantFilteredTasks
-		.filter((t) => isPast(t.datetime) && !t.complete && isAfter(t.datetime, subDays(new Date(), 30)))
+		.filter((t) => isPast(t.dateTime) && !t.complete && isAfter(t.dateTime, subDays(new Date(), 30)))
 		// Last 5 in the passed 30 days
 		.slice(1)
 		.slice(-5);
 	const selectedDateTasks = plantFilteredTasks.filter((t) =>
-		isSameDay(new Date(selectedDate), new Date(format(t.datetime, 'yyyy-MM-dd')))
+		isSameDay(new Date(selectedDate), new Date(format(t.dateTime, 'yyyy-MM-dd')))
 	);
 
 	return (
-		<ScreenContainer scrolls style={{ alignItems: 'flex-start' }}>
+		<ScreenContainer scrolls style={styles.screenContainer}>
 			<DropDown
 				title={selectedInterval}
 				showAllOption={false}
@@ -123,27 +123,30 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				displayKey='name'
 				valueKey='id'
 				onFilterChange={setSelectedPlants}
-				style={{ marginVertical: Theme.spacing.md }}
+				containerStyle={{ marginVertical: Theme.spacing.md }}
 			/>
 
-			<Calendar
-				style={styles.calendarStyle}
-				theme={{ calendarBackground: 'transparent' }}
-				onDayPress={(day) => {
-					setSelectedDate(day.dateString === selectedDate ? -1 : day.dateString);
-				}}
-				onMonthChange={(month) => {
-					setCalendarYear(String(month.year));
-					setCalendarMonth(padString(month.month, 'left', 2, '0'));
-				}}
-				renderArrow={(direction) => <Chevron direction={direction} />}
-				onPressArrowLeft={(subtractMonth) => subtractMonth()}
-				onPressArrowRight={(addMonth) => addMonth()}
-				enableSwipeMonths={true}
-				markedDates={highlighted}
-			/>
+			{selectedInterval === 'Month' && (
+				<Calendar
+					renderArrow={(direction) => <Chevron direction={direction} />}
+					enableSwipeMonths={true}
+					markedDates={highlighted}
+					style={styles.calendarStyle}
+					theme={{ calendarBackground: 'transparent' }}
+					onPressArrowLeft={(subtractMonth) => subtractMonth()}
+					onPressArrowRight={(addMonth) => addMonth()}
+					onDayPress={(day) => {
+						if (day.dateString === selectedDate) return;
+						setSelectedDate(day.dateString);
+					}}
+					onMonthChange={(month) => {
+						setCalendarYear(String(month.year));
+						setCalendarMonth(padString(month.month, 'left', 2, '0'));
+					}}
+				/>
+			)}
 
-			{lateTasks.length > 0 && (
+			{selectedInterval === 'List' && lateTasks.length > 0 && (
 				<StyledAccordion
 					title='Late Tasks'
 					titleStyle={{ color: Theme.colors.error }}
@@ -152,7 +155,7 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				>
 					{lateTasks.map((t, index, { length }) => (
 						<TaskCard
-							key={t.id}
+							key={String(index) + String(t.id)}
 							task={t}
 							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
 						/>
@@ -160,52 +163,54 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 				</StyledAccordion>
 			)}
 
-			<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
-				{upcomingTasks.length > 0 ? (
-					upcomingTasks.map((t, index, { length }) => (
-						<TaskCard
-							key={t.id}
-							task={t}
-							containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
-						/>
-					))
-				) : (
-					<View style={{ height: 100 }}>
-						<Empty animation='relax' text='No upcoming tasks!' />
-					</View>
-				)}
-			</StyledAccordion>
+			{selectedInterval === 'List' && (
+				<StyledAccordion title='Upcoming Tasks' expanded={upcomingTasksExpanded} setExpanded={setUpcomingTasksExpanded}>
+					{upcomingTasks.length > 0 ? (
+						upcomingTasks.map((t, index, { length }) => (
+							<TaskCard
+								key={String(index) + String(t.id)}
+								task={t}
+								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+							/>
+						))
+					) : (
+						<View style={{ height: 100 }}>
+							<Empty animation='relax' text='No upcoming tasks!' />
+						</View>
+					)}
+				</StyledAccordion>
+			)}
 
-			<StyledModal
-				height='50%'
-				visible={selectedDate !== -1}
-				onClose={() => setSelectedDate(-1)}
-				title={format(addDays(new Date(selectedDate), 1), 'MMMM do')} // Add 1 day because new Date() thinks day 01 is the 2nd of a month
-				content={
-					<>
-						{selectedDateTasks.length > 0 ? (
-							selectedDateTasks.map((t, index, { length }) => (
-								<TaskCard
-									key={t.id}
-									task={t}
-									containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
-								/>
-							))
-						) : (
-							<View style={{ height: '50%' }}>
-								<Empty animation='relax' text='No tasks on this date.' />
-							</View>
-						)}
-					</>
-				}
-			/>
+			{selectedInterval === 'Month' && (
+				<>
+					<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
+						{format(addDays(new Date(selectedDate), 1), 'MMMM do')}
+						{/* Add 1 day because new Date() thinks day 01 is the 2nd of a month */}
+					</Typography>
+					{selectedDateTasks.length > 0 ? (
+						selectedDateTasks.map((t, index, { length }) => (
+							<TaskCard
+								key={String(index) + String(t.id)}
+								task={t}
+								containerStyle={{ marginBottom: index !== length - 1 ? Theme.spacing.sm : 0 }}
+							/>
+						))
+					) : (
+						<View style={{ width: '100%' }}>
+							<Empty animation='relax' text='No tasks on this date.' size='lg' />
+						</View>
+					)}
+				</>
+			)}
 		</ScreenContainer>
 	);
 }
 
 const styles = StyleSheet.create({
+	screenContainer: {
+		alignItems: 'flex-start',
+	},
 	calendarStyle: {
-		// TODO: Figure out why '100%' doesn't work
 		width: Dimensions.get('window').width - Theme.spacing.md * 2,
 		backgroundColor: 'transparent',
 		marginBottom: Theme.spacing.md,

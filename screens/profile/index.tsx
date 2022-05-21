@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationProp } from '@react-navigation/core';
 import { ParamListBase } from '@react-navigation/routers';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { TextInput } from 'react-native-paper';
 import { Theme, GlobalStackNavOptions } from '../../providers/Theme';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,10 +11,10 @@ import ChangePasswordScreen from './ChangePassword';
 import DeleteAccountScreen from './DeleteAccount';
 import StyledTextInput from '../../lib/components/styled/TextInput';
 import { useChangeEmail, useChangeUsername, useExportData, useMe } from '../../data/user';
-import Loading from '../../lib/components/Loading';
+import Loading from '../../lib/components/animations/Loading';
 import { isValidEmail, isValidUsername } from '../../lib/utils/validation';
 import Button from '../../lib/components/styled/Button';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Typography from '../../lib/components/styled/Typography';
 import ProfilePicture from './components/ProfilePicture';
 
@@ -24,11 +24,6 @@ interface ProfileScreenProps {
 
 const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	const { data: user, isLoading: userIsLoading } = useMe();
-
-	useEffect(() => {
-		setUsername(user.username);
-		setEmail(user.email);
-	}, [user]);
 
 	// Username
 	const [username, setUsername] = useState(user.username);
@@ -60,25 +55,43 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 
 	// Export Data
 	const exportData = useExportData();
-	const onExportDataBtnPress = async () => {
-		try {
-			await exportData.mutateAsync();
-			alert(
-				`We have sent your data to ${user.email} please wait a few minutes and be sure to check your spam or junk folders.`
-			);
-		} catch (error) {
-			alert(`Error: ${error}`);
-		}
+	const onExportDataBtnPress = () => {
+		Alert.alert(
+			'Export Data?',
+			`This will send an email to "${user.email}" with a spreadsheet containing all the data related to your profile.`,
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: 'Send',
+					onPress: async () => {
+						try {
+							await exportData.mutateAsync();
+							Alert.alert(
+								'Request Received',
+								`We will send an email to "${user.email}". Please wait a few minutes and be sure to check your spam or junk folders.`
+							);
+						} catch (error) {
+							alert(error);
+						}
+					},
+				},
+			]
+		);
 	};
 
 	// Logout
 	const onLogOutBtnPress = () => {
 		Alert.alert('Are your sure?', 'You are about to log out.', [
 			{
-				text: 'No',
+				text: 'Cancel',
+				style: 'cancel',
 			},
 			{
 				text: 'Yes',
+				style: 'destructive',
 				onPress: logOut,
 			},
 		]);
@@ -87,22 +100,26 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 	if (userIsLoading) return <Loading animation='rings' />;
 
 	return (
-		<ScreenContainer scrolls style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+		<ScreenContainer scrolls style={styles.screenContainer}>
 			<View style={{ ...Theme.util.flexCenter, width: '100%', marginBottom: Theme.spacing.md }}>
 				<ProfilePicture user={user} />
-				<Typography variant='heading3Bold'>{user.username}</Typography>
+				<Typography variant='h3bold'>{user.username}</Typography>
 			</View>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				General
 			</Typography>
 			{
-				<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+				<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 					<StyledTextInput
 						label='Display Name'
 						value={username}
 						error={!isValidUsername(username)}
 						onChangeText={setUsername}
-						style={styles.segmentedTextInput}
+						style={{
+							// FIX: This input isn't getting the top radius from the SegmentedList
+							borderTopLeftRadius: Theme.borderRadius,
+							borderTopRightRadius: Theme.borderRadius,
+						}}
 						right={
 							usernameChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateUsername} />
@@ -116,7 +133,6 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 						value={email}
 						error={!isValidEmail(email)}
 						onChangeText={setEmail}
-						style={styles.segmentedTextInput}
 						right={
 							emailChanged ? (
 								<TextInput.Icon name='content-save' onPress={updateEmail} />
@@ -128,16 +144,16 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 					<Button variant='in-list' title='FAQ' />
 				</SegmentedList>
 			}
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Data
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList containerStyle={{ marginBottom: Theme.spacing.md }}>
 				<Button variant='in-list' onPress={onExportDataBtnPress} title='Export Data' />
 			</SegmentedList>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
+			<Typography variant='h3bold' style={{ marginBottom: Theme.spacing.md }}>
 				Account
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
+			<SegmentedList>
 				<Button variant='in-list' onPress={() => navigation.navigate('ChangePassword')} title='Change Password' />
 				<Button variant='in-list' onPress={onLogOutBtnPress} title='Log Out' />
 				<Button
@@ -150,6 +166,13 @@ const ProfileIndex = ({ navigation }: ProfileScreenProps) => {
 		</ScreenContainer>
 	);
 };
+
+const styles = StyleSheet.create({
+	screenContainer: {
+		justifyContent: 'space-between',
+		alignItems: 'flex-start',
+	},
+});
 
 const Stack = createStackNavigator();
 
@@ -165,9 +188,3 @@ export default function ProfileScreenStack() {
 		</Stack.Navigator>
 	);
 }
-
-const styles = StyleSheet.create({
-	segmentedTextInput: {
-		backgroundColor: 'white',
-	},
-});

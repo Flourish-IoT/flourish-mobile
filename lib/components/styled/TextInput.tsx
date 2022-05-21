@@ -1,10 +1,12 @@
 import React from 'react';
-import { KeyboardTypeOptions, StyleProp, TextStyle } from 'react-native';
+import { KeyboardTypeOptions, NativeSyntheticEvent, StyleProp, TextInputFocusEventData, TextStyle } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Theme } from '../../../providers/Theme';
 
 interface StyledTextInputProps {
 	value?: string;
+	onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+	onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 	onChangeText?: (input: string) => void;
 	mode?: 'flat' | 'outlined';
 	label?: string;
@@ -33,6 +35,8 @@ export default function StyledTextInput({
 	left,
 	right,
 	style,
+	onBlur,
+	onFocus,
 	...rest
 }: StyledTextInputProps) {
 	return (
@@ -47,11 +51,14 @@ export default function StyledTextInput({
 			keyboardType={keyboardType}
 			disabled={disabled}
 			secureTextEntry={secureTextEntry}
+			returnKeyType='done'
 			left={left}
 			right={right}
-			style={{ maxHeight: 64, width: '100%', backgroundColor: Theme.colors.background, ...(style as object) }}
+			style={{ maxHeight: 64, width: '100%', backgroundColor: 'white', ...(style as object) }}
 			underlineColor='transparent'
 			placeholderTextColor={Theme.colors.text}
+			onBlur={onBlur}
+			onFocus={onFocus}
 			{...rest}
 		/>
 	);

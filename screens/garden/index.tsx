@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import Grid from '../../lib/icons/Grid';
+import { StyleSheet, View } from 'react-native';
 import { Plant, usePlants } from '../../data/garden';
-import Loading from '../../lib/components/Loading';
-import Empty from '../../lib/components/Empty';
-import ScreenContainer from '../../lib/components/ScreenContainer';
-import CarouselIcon from '../../lib/icons/Carousel';
+import Loading from '../../lib/components/animations/Loading';
+import Empty from '../../lib/components/animations/Empty';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import CarouselView from './components/CarouselView';
 import GridView from './components/GridView';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,6 +12,12 @@ import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import SinglePlantStack from './SinglePlant';
 import SearchField from '../../lib/components/SearchField';
 import { filterData } from '../../lib/utils/helper';
+import PreSearchGraphic from './components/PreSearchGraphic';
+import ViewModeToggle from './components/ViewModeToggle';
+import StyledButton from '../../lib/components/styled/Button';
+import ConnectDeviceStack from '../pairing/device';
+import AddPlantStack from '../pairing/plant';
+import Plus from '../../lib/icons/Plus';
 
 interface GardenScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -23,8 +27,12 @@ export type ViewMode = 'Carousel' | 'Grid';
 
 export function GardenList({ navigation }: GardenScreenProps) {
 	const [viewMode, setViewMode] = useState<ViewMode>('Carousel');
-	const { data: plants, isLoading: plantsIsLoading } = usePlants('me');
+	const { data: plants, isLoading: plantsIsLoading, isError: plantsIsError } = usePlants('me');
 	const [searchQuery, setSearchQuery] = useState('');
+	const [searchFocused, setSearchFocused] = useState(false);
+
+	const showSearchGraphic = searchFocused;
+	const showSearchResults = searchQuery.trim().length !== 0;
 
 	const onPlantSelect = (plant: Plant) => {
 		navigation.navigate('SinglePlantStack', { plant });
@@ -37,33 +45,34 @@ export function GardenList({ navigation }: GardenScreenProps) {
 	return (
 		<ScreenContainer scrolls>
 			<View style={styles.filterContainer}>
-				<SearchField onQuery={setSearchQuery} />
+				<SearchField
+					placeholder='Search in my garden...'
+					onQuery={setSearchQuery}
+					onFocus={() => setSearchFocused(true)}
+					onBlur={() => setSearchFocused(false)}
+				/>
 			</View>
 
-			<TouchableOpacity style={styles.segmentBtn} onPress={toggleView}>
-				<View
-					style={{
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Carousel' ? Theme.colors.primary : 'transparent',
-					}}
-				>
-					<CarouselIcon fill={viewMode === 'Carousel' ? 'white' : Theme.colors.primary} />
+			{!showSearchGraphic && !showSearchResults && (
+				<View style={styles.controlsTBar}>
+					<View style={{ width: styles.addButton.width }} />
+					<ViewModeToggle viewMode={viewMode} onPress={toggleView} containerStyle={styles.viewModeButton} />
+					<StyledButton
+						variant='button'
+						buttonStyle={styles.addButton}
+						icon={<Plus fill='white' />}
+						onPress={() => navigation.navigate('ConnectDeviceStack')}
+					/>
 				</View>
-				<View
-					style={{
-						...styles.segmentBtnContent,
-						backgroundColor: viewMode === 'Grid' ? Theme.colors.primary : 'transparent',
-					}}
-				>
-					<Grid fill={viewMode === 'Grid' ? 'white' : Theme.colors.primary} />
-				</View>
-			</TouchableOpacity>
+			)}
 
 			<View style={styles.viewContainer}>
 				{plantsIsLoading ? (
 					<Loading animation='rings' text='Loading plants...' />
-				) : !plants ? (
-					<Empty animation='error' text='There was an error getting your plants...' />
+				) : plantsIsError || !plants ? (
+					<Empty animation='error' size='lg' text='There was an error getting your plants...' />
+				) : plants.length === 0 ? (
+					<Empty animation='magnifyingGlass' size='lg' text='You have no plants, try adding one.' />
 				) : filterData(plants, searchQuery).length === 0 ? (
 					<Empty
 						animation='magnifyingGlass'
@@ -74,8 +83,10 @@ export function GardenList({ navigation }: GardenScreenProps) {
 								: 'No plants found with the current filters.'
 						}
 					/>
-				) : viewMode === 'Carousel' ? (
-					<CarouselView navigation={navigation} plants={filterData(plants, searchQuery)} onPress={onPlantSelect} />
+				) : viewMode === 'Carousel' && !showSearchGraphic && !showSearchResults ? (
+					<CarouselView navigation={navigation} plants={plants} onPress={onPlantSelect} />
+				) : showSearchGraphic && !showSearchResults ? (
+					<PreSearchGraphic containerStyle={styles.preSearchState} />
 				) : (
 					<GridView plants={filterData(plants, searchQuery)} onPress={onPlantSelect} />
 				)}
@@ -95,6 +106,8 @@ export default function GardenScreenStack() {
 				component={SinglePlantStack}
 				options={{ presentation: 'modal', headerLeft: null }}
 			/>
+			<Stack.Screen name='ConnectDeviceStack' component={ConnectDeviceStack} />
+			<Stack.Screen name='AddPlantStack' component={AddPlantStack} />
 		</Stack.Navigator>
 	);
 }
@@ -104,23 +117,23 @@ const styles = StyleSheet.create({
 		width: '100%',
 		marginBottom: Theme.spacing.md,
 	},
-	segmentBtn: {
-		display: 'flex',
+	controlsTBar: {
+		width: '100%',
 		flexDirection: 'row',
-		borderRadius: 50,
-		borderStyle: 'solid',
-		borderColor: Theme.colors.primary,
-		borderWidth: Theme.borderWidth,
-		overflow: 'hidden',
+		justifyContent: 'space-between',
+		marginBottom: Theme.spacing.md,
 	},
-	segmentBtnContent: {
-		width: 50,
-		height: 30,
-		margin: 0,
-		...Theme.util.flexCenter,
+	viewModeButton: {},
+	addButton: {
+		height: 34,
+		width: 34,
+		backgroundColor: Theme.colors.cta,
 	},
 	viewContainer: {
 		width: '100%',
 		overflow: 'visible',
+	},
+	preSearchState: {
+		marginTop: 100,
 	},
 });

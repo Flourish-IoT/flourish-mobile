@@ -1,122 +1,128 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { SvgProps } from 'react-native-svg';
-import { MetricRange, PlantMetric, usePlantData } from '../../../data/garden';
-import { useShowHumidity } from '../../../data/user';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { GaugeValue, Plant, PlantMetric, useSinglePlant } from '../../../data/garden';
+import AnimatedGauge from '../../../lib/components/animations/AnimatedGauge';
 import Typography from '../../../lib/components/styled/Typography';
 import Chevron from '../../../lib/icons/Chevron';
-import MeasurementGauge from '../../../lib/icons/MeasurementGauge';
-import MeasurementGraphic from '../../../lib/icons/MeasurementGraphic';
-import Sunlight from '../../../lib/icons/Sunlight';
-import Temperature from '../../../lib/icons/Temperature';
-import WaterDrop from '../../../lib/icons/WaterDrop';
-import { getFullMetricName, getMetricGaugeColor, getMetricRangeDescription } from '../../../lib/utils/helper';
+import {
+	getFullMetricName,
+	getGaugeValueColor,
+	getGaugeValuePhrase,
+	getMetricSuggestion,
+	getMetricUnitSuffix,
+	usePlantTypeBestRange,
+} from '../../../lib/utils/helper';
 import { Theme } from '../../../providers/Theme';
-
-interface MetricIconProps extends SvgProps {
-	type: PlantMetric;
-}
-
-function MetricIcon({ type, ...rest }: MetricIconProps) {
-	switch (type) {
-		case 'Water':
-			return <WaterDrop {...rest} />;
-		case 'Sunlight':
-			return <Sunlight {...rest} />;
-		case 'Temperature':
-			return <Temperature {...rest} />;
-		case 'Humidity':
-			// TODO: Need different icon for this
-			return <WaterDrop {...rest} />;
-	}
-}
 
 interface MetricVisualProps {
 	mode: 'block' | 'listItem';
+	showBlockGaugePhrase?: boolean;
 	metricType: PlantMetric;
 	plantId: number;
 	onPress?: () => void;
+	containerStyle?: ViewStyle;
+	innerContainerStyle?: ViewStyle;
 }
 
-export default function MetricVisual({ mode, metricType, plantId, onPress }: MetricVisualProps) {
-	const { data: showHumidity, isLoading: showHumidityIsLoading } = useShowHumidity();
-	const { data: plantData, isLoading: plantDataIsLoading } = usePlantData(plantId);
-
-	if (metricType === 'Humidity' && (showHumidityIsLoading || !showHumidity)) return null;
-
-	let raw: number;
-	let range: MetricRange;
+const getSensorAndGaugeVals = (
+	plant: Plant,
+	metricType: PlantMetric
+): { sensorValue: number | undefined; gaugeValue: GaugeValue | undefined } => {
+	const sensorData = plant?.sensorData;
+	const gaugeRatings = plant?.gaugeRatings;
 
 	switch (metricType) {
 		case 'Water':
-			raw = plantData?.soilMoisture?.raw;
-			range = plantData?.soilMoisture?.range;
-			break;
+			return { sensorValue: sensorData?.soilMoisture, gaugeValue: gaugeRatings?.soilMoisture };
 		case 'Sunlight':
-			raw = plantData?.light?.raw;
-			range = plantData?.light?.range;
-			break;
+			return { sensorValue: sensorData?.light, gaugeValue: gaugeRatings?.light };
 		case 'Temperature':
-			raw = plantData?.temperature?.raw;
-			range = plantData?.temperature?.range;
-			break;
+			return { sensorValue: sensorData?.temperature, gaugeValue: gaugeRatings?.temperature };
 		case 'Humidity':
-			raw = plantData?.humidity?.raw;
-			range = plantData?.humidity?.range;
-			break;
+			return { sensorValue: sensorData?.humidity, gaugeValue: gaugeRatings?.humidity };
 	}
+};
+
+export default function MetricVisual({
+	mode,
+	showBlockGaugePhrase = true,
+	metricType,
+	plantId,
+	onPress,
+	containerStyle,
+	innerContainerStyle,
+}: MetricVisualProps) {
+	const { data: plant, isLoading: plantIsLoading } = useSinglePlant('me', plantId);
+	const { data: bestRange } = usePlantTypeBestRange(plant?.plantType?.id, metricType);
+	const { sensorValue, gaugeValue } = getSensorAndGaugeVals(plant, metricType);
+
+	if (plantIsLoading || !plant) return null;
 
 	const styles = StyleSheet.create({
 		container: {
-			// width: mode === 'block' ? 100 : Dimensions.get('window').width,
-			width: mode === 'block' ? 100 : '100%',
-			display: 'flex',
+			backgroundColor: mode === 'block' ? 'transparent' : Theme.colors.background,
+			width: '100%',
 			flexDirection: mode === 'block' ? 'column' : 'row',
 			justifyContent: mode === 'block' ? 'center' : 'space-between',
 			alignItems: 'center',
+			borderRadius: Theme.borderRadius,
+			padding: Theme.spacing.sm,
+			...containerStyle,
 		},
 		iconContainer: {
-			height: 80,
-			width: 70,
-			display: 'flex',
+			height: mode === 'block' ? 80 : undefined,
+			width: '100%',
 			alignItems: 'center',
 			justifyContent: 'space-between',
-			...Theme.util.flexCenter,
+			...(mode === 'listItem' && Theme.util.flexCenter),
 		},
-		textContainer: { flex: 1, paddingLeft: Theme.spacing.md },
-		graphic: {
-			...(mode === 'block' && {
-				position: 'absolute',
-				bottom: 0,
-				left: '50%',
-				transform: [{ translateX: -35 }],
-			}),
+		innerContainer: {
+			width: mode === 'block' ? '100%' : 90,
+			alignItems: 'center',
+			...innerContainerStyle,
 		},
-		gauge: {
-			width: mode === 'block' ? '100%' : 100,
-			...Theme.util.flexCenter,
+		textContainer: {
+			flex: 1,
+			paddingHorizontal: Theme.spacing.sm,
 		},
 	});
 
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
-			<View style={styles.iconContainer}>
-				{mode === 'block' && <MeasurementGauge range={range} style={styles.gauge} />}
-				<MeasurementGraphic type={metricType} range={range} width='100%' style={styles.graphic} />
+			<View style={styles.innerContainer}>
+				<View style={styles.iconContainer}>
+					<AnimatedGauge type={metricType} newValue={gaugeValue} />
+				</View>
+				{mode === 'block' && showBlockGaugePhrase && (
+					<>
+						<Typography variant='subHeader'>{getFullMetricName(metricType)}</Typography>
+						<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
+							{getGaugeValuePhrase(gaugeValue)}
+						</Typography>
+					</>
+				)}
+				{mode === 'listItem' && (
+					<Typography variant='h3bold' style={{ width: '100%', textAlign: 'center' }}>
+						{sensorValue + getMetricUnitSuffix(metricType)}
+					</Typography>
+				)}
 			</View>
 			{mode === 'listItem' && (
-				<View style={styles.textContainer}>
-					<Typography variant='body' style={{ fontWeight: 'bold' }}>
-						{getFullMetricName(metricType)}
-						{': '}
-						<Typography variant='heading3Bold' style={{ color: getMetricGaugeColor(range) }}>
-							{getMetricRangeDescription(range)}
+				<>
+					<View style={styles.textContainer}>
+						<Typography variant='body' style={{ fontWeight: 'bold' }}>
+							{getFullMetricName(metricType)}
+							{': '}
+							<Typography variant='h3bold' style={{ color: getGaugeValueColor(gaugeValue) }}>
+								{getGaugeValuePhrase(gaugeValue)}
+							</Typography>
 						</Typography>
-					</Typography>
-					<Typography variant='placeholder'>{raw}</Typography>
-				</View>
+						{!!bestRange && <Typography variant='placeholder'>Best Range: {bestRange}</Typography>}
+						<Typography variant='paragraph'>{getMetricSuggestion(metricType, gaugeValue, plant.name)}</Typography>
+					</View>
+					{!!onPress && <Chevron direction='right' withBackground />}
+				</>
 			)}
-			{mode === 'listItem' && <Chevron direction='right' />}
 		</TouchableOpacity>
 	);
 }

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { Keyboard, View } from 'react-native';
 import { NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
-import ScreenContainer from '../../lib/components/ScreenContainer';
+import ScreenContainer from '../../lib/components/layout/ScreenContainer';
 import { useResetPassword, useSendResetPasswordEmail, useVerifyResetPasswordEmail } from '../../data/user';
 import { isValidEmail, isValidPassword } from '../../lib/utils/validation';
 import TextInput from '../../lib/components/styled/TextInput';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Keyboard, View } from 'react-native';
 import { GlobalStackNavOptions, Theme } from '../../providers/Theme';
 import Typography from '../../lib/components/styled/Typography';
-import SegmentedList from '../../lib/components/styled/SegmentedList';
+import SegmentedList from '../../lib/components/layout/SegmentedList';
 import Button from '../../lib/components/styled/Button';
+import VerificationCodeField from '../../lib/components/VerificationCodeField';
 
 interface ForgotPasswordScreenProps {
 	navigation: NavigationProp<ParamListBase>;
@@ -36,12 +37,7 @@ const EnterEmailStep = ({ navigation }: ForgotPasswordScreenProps) => {
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'space-between' }}>
 			<SegmentedList>
-				<TextInput
-					label={'Your Email'}
-					value={email}
-					disabled={sendResetPasswordEmail.isLoading}
-					onChangeText={setEmail}
-				/>
+				<TextInput label='Your Email' value={email} disabled={sendResetPasswordEmail.isLoading} onChangeText={setEmail} />
 			</SegmentedList>
 			<Button
 				variant='primary'
@@ -63,10 +59,10 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 	const verifyResetPasswordEmail = useVerifyResetPasswordEmail();
 	const { email } = route.params as VerifyStepRouteProps;
 
-	const [resetCode, setResetCode] = useState<string>('2022');
+	const [resetCode, setResetCode] = useState<number[]>([null, null, null, null]);
 	const [attempts, setAttempts] = useState(0);
 
-	const formIsValid = String(resetCode).trim().length === 4;
+	const formIsValid = !resetCode.some((n) => n === null);
 	const disableVerifyBtn = !formIsValid || attempts > 0;
 	const disableResendBtn = attempts === 0;
 
@@ -87,7 +83,7 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 		try {
 			await verifyResetPasswordEmail.mutateAsync({
 				email,
-				reset_code: resetCode,
+				code: resetCode,
 			});
 			navigation.reset({
 				index: 0,
@@ -104,21 +100,18 @@ const VerifyStep = ({ navigation, route }: ForgotPasswordScreenProps) => {
 
 	return (
 		<ScreenContainer appBarPadding={false} style={{ justifyContent: 'center' }}>
-			<Typography variant='heading3Bold' style={{ marginBottom: Theme.spacing.md }}>
-				Verification Code
+			<Typography variant='h1' style={{ marginBottom: Theme.spacing.md }}>
+				Verification
 			</Typography>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
-				We have sent a password reset code to "{email}"
+				We have sent a verification code to the email {email}
 			</Typography>
-			<SegmentedList style={{ marginBottom: Theme.spacing.md }}>
-				<TextInput
-					label='Security Code'
-					keyboardType='numeric'
-					maxLength={4}
-					onChangeText={setResetCode}
-					value={resetCode}
-				/>
-			</SegmentedList>
+			<VerificationCodeField
+				onInput={setResetCode}
+				value={resetCode}
+				containerStyle={{ marginBottom: Theme.spacing.md }}
+				disabled={formIsLoading}
+			/>
 			<Typography variant='body' style={{ marginBottom: Theme.spacing.md }}>
 				Didn't receive a code?
 			</Typography>
@@ -153,7 +146,7 @@ const ChangePasswordScreen = ({ navigation, route }: ForgotPasswordScreenProps) 
 
 	const onChangePasswordPress = async () => {
 		try {
-			await resetPassword.mutateAsync({ reset_code: resetCode, new_password: newPassword });
+			await resetPassword.mutateAsync({ code: resetCode, new_password: newPassword });
 			navigation.navigate('Login');
 			alert('Updated.');
 		} catch (error) {
