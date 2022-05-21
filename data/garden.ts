@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { formatTemp } from '../lib/utils/helper';
-import { ApiUrl, useAxios } from './api';
+import { ApiUrl, mockEndpoint, useAxios } from './api';
 import { useMe } from './user';
 
 export interface Sensor {
@@ -143,17 +143,17 @@ export const useAddDevice = () => {
 
 	return useMutation(async (sensor: Sensor) => {
 		const query = `/users/${user.userId}/devices`;
+		const params = {
+			deviceType: sensor.deviceType,
+			model: sensor.model,
+			name: sensor.name,
+			apiVersion: sensor.apiVersion,
+			softwareVersion: sensor.softwareVersion,
+		};
 
 		try {
-			return (
-				await axios.post<string>(query, {
-					deviceType: sensor.deviceType,
-					model: sensor.model,
-					name: sensor.name,
-					apiVersion: sensor.apiVersion,
-					softwareVersion: sensor.softwareVersion,
-				})
-			).data;
+			mockEndpoint(200).onPost(query, params).replyOnce<string>(200, 'OK');
+			return (await axios.post<string>(query, params)).data;
 		} catch (error) {
 			console.error('Failed to add device.');
 		}
@@ -172,6 +172,7 @@ export const useAddPlant = () => {
 
 	return useMutation(async (params: AddPlantParams) => {
 		const query = '/plants';
-		return (await axios.post<string>(query, { params })).data;
+		mockEndpoint(200).onPost(query, params).replyOnce<string>(200, 'OK');
+		return (await axios.post<string>(query, params)).data;
 	});
 };

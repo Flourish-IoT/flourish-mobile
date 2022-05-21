@@ -35,7 +35,7 @@ export const useTasks = (userId: number | 'me') => {
 export const tempMyTasks: Task[] = [
 	{
 		id: 1,
-		plantId: 1,
+		plantId: 6,
 		dateTime: new Date(),
 		title: 'Water Edward',
 		category: 'water',
@@ -44,16 +44,16 @@ export const tempMyTasks: Task[] = [
 	},
 	{
 		id: 2,
-		plantId: 2,
+		plantId: 10,
 		dateTime: subDays(new Date(), 2),
-		title: 'Water RichLucifernard',
+		title: 'Water Lucifern',
 		category: 'water',
 		description: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet',
 		complete: false,
 	},
 	{
 		id: 3,
-		plantId: 1,
+		plantId: 6,
 		dateTime: addDays(new Date(), 2),
 		title: 'Fertilize Edward',
 		category: 'fertilize',
@@ -62,7 +62,7 @@ export const tempMyTasks: Task[] = [
 	},
 	{
 		id: 4,
-		plantId: 2,
+		plantId: 10,
 		dateTime: addDays(new Date(), 3),
 		title: 'Prune Lucifern',
 		category: 'prune',
@@ -71,7 +71,7 @@ export const tempMyTasks: Task[] = [
 	},
 	{
 		id: 5,
-		plantId: 3,
+		plantId: 8,
 		dateTime: addDays(new Date(), 4),
 		title: 'Prune Momo',
 		category: 'prune',
@@ -80,7 +80,7 @@ export const tempMyTasks: Task[] = [
 	},
 	{
 		id: 6,
-		plantId: 4,
+		plantId: 9,
 		dateTime: addDays(new Date(), 4),
 		title: 'Prune Boo',
 		category: 'prune',

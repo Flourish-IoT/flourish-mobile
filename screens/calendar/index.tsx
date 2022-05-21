@@ -34,7 +34,7 @@ interface CalendarScreenProps {
 	navigation: NavigationProp<ParamListBase>;
 }
 
-export const calendarViews = ['Month', 'Week', 'List'] as const;
+export const calendarViews = ['Month', 'List'] as const;
 export type CalendarView = typeof calendarViews[number];
 
 export default function CalendarScreen({ navigation }: CalendarScreenProps) {
@@ -89,9 +89,9 @@ export default function CalendarScreen({ navigation }: CalendarScreenProps) {
 		intervalTasks = plantFilteredTasks.filter((t) =>
 			isSameMonth(t.dateTime, new Date(`${calendarYear}-${calendarMonth}-01`))
 		);
-	} else if (selectedInterval === 'Week') {
-		intervalTasks = intervalTasks.filter((t) => isSameWeek(t.dateTime, firstInCalendarWeek));
-	}
+	} // else if (selectedInterval === 'Week') {
+	// 	intervalTasks = intervalTasks.filter((t) => isSameWeek(t.dateTime, firstInCalendarWeek));
+	// }
 
 	const lateTasks = plantFilteredTasks
 		.filter((t) => isPast(t.dateTime) && !t.complete && isAfter(t.dateTime, subDays(new Date(), 30)))

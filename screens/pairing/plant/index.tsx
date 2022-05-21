@@ -108,7 +108,7 @@ const NameStep = ({ navigation, route }: StepProps) => {
 				<Button
 					variant='primary'
 					title='Done'
-					onPress={() => navigation.navigate('ImageStep', { plantTypeId, deviceId, name })}
+					onPress={() => navigation.navigate('Garden', { plantTypeId, deviceId, name })}
 					disabled={name.trim().length === 0}
 					buttonStyle={{ marginBottom: Theme.spacing.md }}
 				/>

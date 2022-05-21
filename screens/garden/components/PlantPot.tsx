@@ -36,6 +36,7 @@ export default function PlantPot({ image, isLocalImage, title, subtitle, onPress
 		},
 		text: {
 			width: '100%',
+			paddingHorizontal: '7%',
 			color: 'white',
 			textAlign: 'center',
 		},
